@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand color tokens */
+  --color-background: #FFFFFF;
+  --color-surface: #F9F9F9;
+  --color-border: #E5E5E5;
+  --color-muted-foreground: #9E9E9E;
+  --color-foreground: #1A1A1A;
+  --color-primary-dark: #000000;
+  --color-primary: #E91E8C;
+  --color-primary-hover: #C4177A;
+  --color-primary-subtle: #FCE4F3;
+
+  /* Mapeo semántico shadcn */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --primary: var(--color-primary);
+  --primary-foreground: #FFFFFF;
+  --muted: var(--color-surface);
+  --muted-foreground: var(--color-muted-foreground);
+  --border: var(--color-border);
+  --ring: var(--color-primary);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-foreground);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
