@@ -3,22 +3,19 @@ import { CategoriesGrid } from '@/features/home/components/categories-grid'
 import { FeaturedProducts } from '@/features/home/components/featured-products'
 import { ServicesStrip } from '@/features/home/components/services-strip'
 import { fetchFeaturedProducts } from '@/features/home/queries/home-queries'
+import { fetchProductCategories } from '@/features/products/queries/product-queries'
 
 export default async function HomePage() {
-  const featuredProducts = await fetchFeaturedProducts()
+  const [featuredProducts, categories] = await Promise.all([
+    fetchFeaturedProducts(),
+    fetchProductCategories(),
+  ])
 
   return (
     <main>
-      {/* 1. Banner full-screen con heading editorial */}
       <HeroSection />
-
-      {/* 2. Categorías: Buzos, Remeras, Gorras, Bijuterie */}
-      <CategoriesGrid />
-
-      {/* 3. Productos destacados (admin-selectable en producción) */}
+      <CategoriesGrid categories={categories} />
       <FeaturedProducts products={featuredProducts} />
-
-      {/* 4. Servicios: envíos, descuentos, formas de pago */}
       <ServicesStrip />
     </main>
   )

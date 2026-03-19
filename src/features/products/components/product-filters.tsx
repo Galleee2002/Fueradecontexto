@@ -2,15 +2,13 @@
 
 import { useProductFilters } from '../hooks/use-product-filters'
 
-const CATEGORIES = ['Remeras', 'Pantalones', 'Accesorios', 'Camperas', 'Calzado']
-
 const SORT_OPTIONS = [
   { label: 'Novedades', value: 'newest' },
   { label: 'Menor precio', value: 'price-asc' },
   { label: 'Mayor precio', value: 'price-desc' },
 ]
 
-export function ProductFilters() {
+export function ProductFilters({ categories }: { categories: string[] }) {
   const { category, sort, setCategory, setSort, resetFilters, hasFilters } = useProductFilters()
 
   return (
@@ -36,7 +34,7 @@ export function ProductFilters() {
               </span>
             </button>
           </li>
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <li key={cat}>
               <button
                 onClick={() => setCategory(cat)}

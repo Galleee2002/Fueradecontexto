@@ -2,20 +2,15 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
 import { Container } from '@/components/shared/layout/container'
 
-interface CategoryItem {
-  name: string
-  slug: string
-  index: number
-}
+export function CategoriesGrid({ categories }: { categories: string[] }) {
+  if (categories.length === 0) return null
 
-const CATEGORIES: CategoryItem[] = [
-  { name: 'Buzos', slug: 'buzos', index: 0 },
-  { name: 'Remeras', slug: 'remeras', index: 1 },
-  { name: 'Gorras', slug: 'gorras', index: 2 },
-  { name: 'Bijuterie', slug: 'bijuterie', index: 3 },
-]
+  const CATEGORIES = categories.map((name, index) => ({
+    name,
+    slug: name.toLowerCase(),
+    index,
+  }))
 
-export function CategoriesGrid() {
   return (
     <section className="py-16 lg:py-20 bg-background border-t border-border">
       <Container>

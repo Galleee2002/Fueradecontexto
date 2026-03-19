@@ -1,7 +1,7 @@
 import { ProductGrid } from '@/features/products/components/product-grid'
 import { ProductFilters } from '@/features/products/components/product-filters'
 import { ProductPagination } from '@/features/products/components/product-pagination'
-import { fetchProducts } from '@/features/products/queries/product-queries'
+import { fetchProducts, fetchProductCategories } from '@/features/products/queries/product-queries'
 import { ServicesStrip } from '@/features/home/components/services-strip'
 import { Container } from '@/components/shared/layout/container'
 import { PageHeader } from '@/components/shared/layout/page-header'
@@ -20,7 +20,10 @@ export default async function ProductsPage({
     ...(sort === 'price-asc' || sort === 'price-desc' || sort === 'newest' ? { sort } : {}),
   }
 
-  const { products, total, totalPages } = await fetchProducts(filters, currentPage)
+  const [{ products, total, totalPages }, categories] = await Promise.all([
+    fetchProducts(filters, currentPage),
+    fetchProductCategories(),
+  ])
 
   return (
     <main>
@@ -31,7 +34,7 @@ export default async function ProductsPage({
         />
         <div className="flex gap-8 py-8">
           <aside className="hidden lg:block w-64 shrink-0">
-            <ProductFilters />
+            <ProductFilters categories={categories} />
           </aside>
           <div className="flex-1 space-y-8">
             <ProductGrid products={products} />

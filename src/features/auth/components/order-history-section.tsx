@@ -1,0 +1,83 @@
+import { LogoutButton } from './logout-button'
+import type { UserOrder } from '@/features/auth/queries/user-queries'
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: 'Pendiente',
+  paid: 'Pagado',
+  shipped: 'Enviado',
+  delivered: 'Entregado',
+  cancelled: 'Cancelado',
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  paid: 'bg-green-50 text-green-700 border-green-200',
+  shipped: 'bg-blue-50 text-blue-700 border-blue-200',
+  delivered: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  cancelled: 'bg-red-50 text-red-700 border-red-200',
+}
+
+interface OrderHistorySectionProps {
+  user: { name?: string | null; email?: string | null }
+  orders: UserOrder[]
+}
+
+export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) {
+  return (
+    <div className="py-12 space-y-10">
+      {/* User header */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="font-serif text-2xl text-foreground">{user.name ?? 'Mi cuenta'}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{user.email}</p>
+        </div>
+        <LogoutButton />
+      </div>
+
+      {/* Order history */}
+      <div className="space-y-4">
+        <h3 className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+          Historial de órdenes
+        </h3>
+
+        {orders.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-8 text-center">
+            Todavía no realizaste ninguna compra.
+          </p>
+        ) : (
+          <div className="divide-y divide-border border border-border">
+            {orders.map((order) => {
+              const statusClass =
+                STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
+              const statusLabel = STATUS_LABELS[order.status] ?? order.status
+
+              return (
+                <div key={order.id} className="flex items-center justify-between gap-4 px-5 py-4">
+                  <div>
+                    <p className="font-mono text-xs text-muted-foreground">
+                      {order.id.slice(0, 8)}…
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {order.itemCount} {order.itemCount === 1 ? 'artículo' : 'artículos'} ·{' '}
+                      {new Date(order.createdAt).toLocaleDateString('es-AR')}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span
+                      className={`inline-block border px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase ${statusClass}`}
+                    >
+                      {statusLabel}
+                    </span>
+                    <span className="font-semibold text-foreground tabular-nums text-sm">
+                      ${order.total.toLocaleString('es-AR')}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

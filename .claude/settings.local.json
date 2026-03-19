@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\gaelg\\OneDrive\\Desktop\\Fueradecontexto\\src\\app\\api\\auth"
+    ]
+  }
+}

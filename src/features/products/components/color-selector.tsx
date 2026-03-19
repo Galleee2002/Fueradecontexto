@@ -10,7 +10,7 @@ const COLOR_OPTIONS = [
 ]
 
 export function ColorSelector() {
-  const [selected, setSelected] = useState(COLOR_OPTIONS[0].name)
+  const [selected, setSelected] = useState(COLOR_OPTIONS[0]!.name)
 
   return (
     <div className="space-y-3">

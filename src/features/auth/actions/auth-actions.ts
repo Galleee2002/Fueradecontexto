@@ -1,10 +1,11 @@
 'use server'
 
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache'
+import { AuthError } from 'next-auth'
+import { signIn, signOut } from '@/auth'
 
 const loginSchema = z.object({
-  email: z.email('Email inválido'),
+  email: z.string().email('Email inválido'),
   password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
 })
 
@@ -15,15 +16,23 @@ export async function loginAction(formData: FormData) {
   })
 
   if (!parsed.success) {
-    return { error: parsed.error.flatten() }
+    return { error: 'Credenciales inválidas' }
   }
 
-  // Auth logic will be implemented here
-  revalidatePath('/')
-  return { success: true }
+  try {
+    await signIn('credentials', {
+      email: parsed.data.email,
+      password: parsed.data.password,
+      redirectTo: '/admin',
+    })
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: 'Email o contraseña incorrectos' }
+    }
+    throw error // Re-throw redirect (NEXT_REDIRECT)
+  }
 }
 
 export async function logoutAction() {
-  // Logout logic will be implemented here
-  revalidatePath('/')
+  await signOut({ redirectTo: '/' })
 }

@@ -56,9 +56,14 @@ export async function fetchProductBySlug(slug: string): Promise<ProductFull | nu
 
 export async function fetchProductCategories(): Promise<string[]> {
   const rows = await sql`
-    SELECT DISTINCT category FROM "Product" WHERE active = true ORDER BY category
+    SELECT c.name
+    FROM "Category" c
+    WHERE EXISTS (
+      SELECT 1 FROM "Product" p WHERE p.category = c.name AND p.active = true
+    )
+    ORDER BY c.name
   `
-  return rows.map((r) => (r as { category: string }).category)
+  return rows.map((r) => (r as { name: string }).name)
 }
 
 export async function fetchRelatedProducts(

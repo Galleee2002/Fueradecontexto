@@ -15,11 +15,11 @@ export function LoginForm() {
     const formData = new FormData(event.currentTarget)
     const result = await loginAction(formData)
 
-    if ('error' in result) {
-      setError('Credenciales inválidas. Por favor intentá de nuevo.')
+    // If result is undefined, a redirect is happening (login succeeded)
+    if (result && 'error' in result) {
+      setError(result.error)
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (

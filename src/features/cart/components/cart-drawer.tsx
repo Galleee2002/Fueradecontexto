@@ -41,9 +41,12 @@ export function CartDrawer() {
         <p className="text-xs text-muted-foreground">
           El envío se calcula en el checkout.
         </p>
-        <button className="bg-primary text-white hover:bg-[var(--color-primary-hover)] rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full">
+        <Link
+          href="/checkout"
+          className="bg-primary text-white hover:bg-[var(--color-primary-hover)] rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full text-center block"
+        >
           Proceder al pago
-        </button>
+        </Link>
       </div>
     </div>
   )

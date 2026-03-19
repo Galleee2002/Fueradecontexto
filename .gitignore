@@ -2,3 +2,12 @@
 node_modules/
 
 /generated/prisma
+
+# Next.js build output
+.next/
+
+# TypeScript incremental build
+tsconfig.tsbuildinfo
+
+# Dev screenshots
+screenshot-*.png

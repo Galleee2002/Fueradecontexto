@@ -15,7 +15,7 @@ export function ProductImageGallery({ imageUrl, productName }: ProductImageGalle
     <div className="space-y-4">
       <div className="relative aspect-[3/4] overflow-hidden bg-surface">
         <Image
-          src={thumbnails[selectedIndex]}
+          src={thumbnails[selectedIndex]!}
           alt={`${productName} — Fueradecontexto`}
           fill
           className="object-cover transition-opacity duration-300"
