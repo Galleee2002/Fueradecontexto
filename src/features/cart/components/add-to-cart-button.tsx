@@ -10,6 +10,11 @@ interface AddToCartButtonProps {
   productPrice?: number
   productImageUrl?: string
   productSlug?: string
+  quantity?: number
+  selectedColor?: string
+  selectedSize?: string
+  selectedStampSize?: string
+  selectedStampLocation?: string
 }
 
 export function AddToCartButton({
@@ -18,6 +23,11 @@ export function AddToCartButton({
   productPrice = 0,
   productImageUrl = '',
   productSlug = '',
+  quantity = 1,
+  selectedColor,
+  selectedSize,
+  selectedStampSize,
+  selectedStampLocation,
 }: AddToCartButtonProps) {
   const [loading, setLoading] = useState(false)
   const { addItem, openCart } = useCart()
@@ -30,7 +40,11 @@ export function AddToCartButton({
       productPrice,
       productImageUrl,
       productSlug,
-      quantity: 1,
+      quantity,
+      ...(selectedColor !== undefined ? { selectedColor } : {}),
+      ...(selectedSize !== undefined ? { selectedSize } : {}),
+      ...(selectedStampSize !== undefined ? { selectedStampSize } : {}),
+      ...(selectedStampLocation !== undefined ? { selectedStampLocation } : {}),
     })
     openCart()
     setLoading(false)

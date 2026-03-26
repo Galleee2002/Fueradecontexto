@@ -8,9 +8,23 @@ export const productSchema = z.object({
   imageUrl: z.string().url('URL de imagen inválida'),
   category: z.string().min(1, 'La categoría es requerida'),
   active: z.boolean().default(true),
+  availableColors: z.array(z.string()).default([]),
+  availableSizes: z.array(z.string()).default([]),
+  stampSizes: z.array(z.string()).default([]),
+  stampLocations: z.array(z.string()).default([]),
 })
 
 export type ProductInput = z.infer<typeof productSchema>
+
+export const sizeGuideSchema = z.object({
+  category: z.string().min(1, 'La categoría es requerida'),
+  rows: z.array(
+    z.object({ talle: z.string().min(1, 'El talle es requerido') })
+      .catchall(z.union([z.number(), z.string()]))
+  ).min(1, 'Debe tener al menos una fila'),
+})
+
+export type SizeGuideInput = z.infer<typeof sizeGuideSchema>
 
 export const productFiltersSchema = z.object({
   category: z.string().optional(),

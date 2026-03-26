@@ -6,6 +6,11 @@ export interface CartItemUI {
   productImageUrl: string
   productSlug: string
   quantity: number
+  variantKey: string
+  selectedColor?: string
+  selectedSize?: string
+  selectedStampSize?: string
+  selectedStampLocation?: string
 }
 
 export interface CartState {

@@ -1,6 +1,6 @@
 import { sql } from '@/lib/db/client'
 import { MAX_PRODUCTS_PER_PAGE } from '@/lib/constants/site'
-import type { ProductCard, ProductFull, ProductFilters } from '../types'
+import type { ProductCard, ProductFull, ProductFilters, SizeGuide } from '../types'
 
 export async function fetchProducts(
   filters?: ProductFilters,
@@ -46,12 +46,23 @@ export async function fetchProducts(
 
 export async function fetchProductBySlug(slug: string): Promise<ProductFull | null> {
   const rows = await sql`
-    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt"
+    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
+           "availableColors", "availableSizes", "stampSizes", "stampLocations"
     FROM "Product"
     WHERE slug = ${slug} AND active = true
     LIMIT 1
   `
   return (rows[0] as ProductFull) ?? null
+}
+
+export async function fetchSizeGuideByCategory(category: string): Promise<SizeGuide | null> {
+  const rows = await sql`
+    SELECT id, category, rows, "createdAt", "updatedAt"
+    FROM "SizeGuide"
+    WHERE category = ${category}
+    LIMIT 1
+  `
+  return (rows[0] as SizeGuide) ?? null
 }
 
 export async function fetchProductCategories(): Promise<string[]> {

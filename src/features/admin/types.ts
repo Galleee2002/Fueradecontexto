@@ -9,6 +9,10 @@ export interface AdminProduct {
   active: boolean
   createdAt: Date
   updatedAt: Date
+  availableColors: string[]
+  availableSizes: string[]
+  stampSizes: string[]
+  stampLocations: string[]
 }
 
 export interface AdminStats {

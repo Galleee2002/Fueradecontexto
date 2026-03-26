@@ -1,34 +1,43 @@
 'use client'
-import { useState } from 'react'
 
-const COLOR_OPTIONS = [
-  { name: 'Negro',   hex: '#1A1A1A' },
-  { name: 'Blanco',  hex: '#F5F5F5' },
-  { name: 'Camel',   hex: '#C19A6B' },
-  { name: 'Fucsia',  hex: '#E91E8C' },
-  { name: 'Marengo', hex: '#4A4E54' },
-]
+const COLOR_HEX: Record<string, string> = {
+  Negro: '#1A1A1A',
+  Blanco: '#F5F5F5',
+  Camel: '#C19A6B',
+  Fucsia: '#E91E8C',
+  Marengo: '#4A4E54',
+  Rojo: '#D32F2F',
+  Verde: '#388E3C',
+  Azul: '#1565C0',
+  Gris: '#757575',
+}
 
-export function ColorSelector() {
-  const [selected, setSelected] = useState(COLOR_OPTIONS[0]!.name)
+interface ColorSelectorProps {
+  colors: string[]
+  selected: string | null
+  onChange: (color: string) => void
+}
+
+export function ColorSelector({ colors, selected, onChange }: ColorSelectorProps) {
+  if (colors.length === 0) return null
 
   return (
     <div className="space-y-3">
       <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
-        Color — <span className="text-foreground">{selected}</span>
+        Color{selected ? <> — <span className="text-foreground">{selected}</span></> : null}
       </p>
       <div className="flex items-center gap-3">
-        {COLOR_OPTIONS.map((color) => (
+        {colors.map((name) => (
           <button
-            key={color.name}
-            onClick={() => setSelected(color.name)}
-            aria-label={`Color ${color.name}`}
+            key={name}
+            onClick={() => onChange(name)}
+            aria-label={`Color ${name}`}
             className={`w-7 h-7 rounded-full transition-all duration-150 focus:outline-none ${
-              selected === color.name
+              selected === name
                 ? 'ring-2 ring-offset-2 ring-foreground'
                 : 'ring-1 ring-transparent hover:ring-border'
             }`}
-            style={{ backgroundColor: color.hex }}
+            style={{ backgroundColor: COLOR_HEX[name] ?? '#ccc' }}
           />
         ))}
       </div>

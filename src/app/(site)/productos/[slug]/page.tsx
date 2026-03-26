@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ProductDetail } from '@/features/products/components/product-detail'
 import { RelatedProducts } from '@/features/products/components/related-products'
-import { fetchProductBySlug, fetchProducts } from '@/features/products/queries/product-queries'
+import { fetchProductBySlug, fetchProducts, fetchSizeGuideByCategory } from '@/features/products/queries/product-queries'
 import { Container } from '@/components/shared/layout/container'
 import { SITE_NAME } from '@/lib/constants/site'
 
@@ -36,6 +36,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const product = await fetchProductBySlug(slug)
   if (!product) notFound()
 
+  const sizeGuide = await fetchSizeGuideByCategory(product.category)
+
   return (
     <main>
       <Container>
@@ -46,7 +48,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <span>/</span>
           <span className="text-foreground truncate max-w-[200px]">{product.name}</span>
         </nav>
-        <ProductDetail product={product} />
+        <ProductDetail product={product} sizeGuide={sizeGuide} />
       </Container>
       <RelatedProducts category={product.category} currentSlug={product.slug} />
     </main>

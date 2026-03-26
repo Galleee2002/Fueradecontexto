@@ -7,6 +7,11 @@ import Link from 'next/link'
 import { ArrowLeft, ImageOff, Loader2 } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
 import type { AdminProduct } from '../types'
+const COLOR_PALETTE = ['Negro', 'Blanco', 'Camel', 'Fucsia', 'Marengo', 'Rojo', 'Verde', 'Azul', 'Gris']
+const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+const STAMP_SIZE_OPTIONS = ['Pequeña', 'Mediana', 'Grande']
+const STAMP_LOCATION_OPTIONS = ['Pecho izquierdo', 'Pecho derecho', 'Espalda', 'Manga izquierda', 'Manga derecha']
+
 interface ProductFormProps {
   product?: AdminProduct
   categories: string[]
@@ -49,6 +54,49 @@ function FormField({
   )
 }
 
+function CheckboxGroup({
+  label,
+  options,
+  selected,
+  onChange,
+}: {
+  label: string
+  options: string[]
+  selected: string[]
+  onChange: (v: string[]) => void
+}) {
+  function toggle(option: string) {
+    onChange(
+      selected.includes(option)
+        ? selected.filter((s) => s !== option)
+        : [...selected, option]
+    )
+  }
+  return (
+    <div className="space-y-2">
+      <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => (
+          <label
+            key={option}
+            className="flex items-center gap-1.5 cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              checked={selected.includes(option)}
+              onChange={() => toggle(option)}
+              className="h-3.5 w-3.5 accent-primary"
+            />
+            <span className="text-xs text-foreground">{option}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function ProductForm({ product, categories }: ProductFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -70,6 +118,10 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? '')
   const [imagePreview, setImagePreview] = useState(product?.imageUrl ?? '')
   const [active, setActive] = useState(product?.active ?? true)
+  const [availableColors, setAvailableColors] = useState<string[]>(product?.availableColors ?? [])
+  const [availableSizes, setAvailableSizes] = useState<string[]>(product?.availableSizes ?? [])
+  const [stampSizes, setStampSizes] = useState<string[]>(product?.stampSizes ?? [])
+  const [stampLocations, setStampLocations] = useState<string[]>(product?.stampLocations ?? [])
 
   const allCategories = categories
 
@@ -105,6 +157,10 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       imageUrl,
       category: effectiveCategory,
       active,
+      availableColors,
+      availableSizes,
+      stampSizes,
+      stampLocations,
     }
 
     startTransition(async () => {
@@ -325,6 +381,37 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                 <ImageOff className="h-8 w-8 opacity-40" strokeWidth={1} />
               </div>
             )}
+          </div>
+
+          <div className="bg-background border border-border p-6 space-y-6">
+            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+              Opciones de personalización
+            </p>
+
+            <CheckboxGroup
+              label="Colores disponibles"
+              options={COLOR_PALETTE}
+              selected={availableColors}
+              onChange={setAvailableColors}
+            />
+            <CheckboxGroup
+              label="Talles disponibles"
+              options={SIZE_OPTIONS}
+              selected={availableSizes}
+              onChange={setAvailableSizes}
+            />
+            <CheckboxGroup
+              label="Tamaños de estampa"
+              options={STAMP_SIZE_OPTIONS}
+              selected={stampSizes}
+              onChange={setStampSizes}
+            />
+            <CheckboxGroup
+              label="Ubicaciones de estampa"
+              options={STAMP_LOCATION_OPTIONS}
+              selected={stampLocations}
+              onChange={setStampLocations}
+            />
           </div>
         </div>
 

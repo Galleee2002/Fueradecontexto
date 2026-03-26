@@ -12,6 +12,21 @@ export interface ProductFull extends ProductCard {
   active: boolean
   createdAt: Date
   updatedAt: Date
+  availableColors: string[]
+  availableSizes: string[]
+  stampSizes: string[]
+  stampLocations: string[]
+}
+
+export interface SizeGuideRow {
+  talle: string
+  [measurement: string]: string | number
+}
+
+export interface SizeGuide {
+  id: string
+  category: string
+  rows: SizeGuideRow[]
 }
 
 export interface ProductFilters {

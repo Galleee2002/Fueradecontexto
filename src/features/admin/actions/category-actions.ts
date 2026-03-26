@@ -1,7 +1,13 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { auth } from '@/auth'
 import { sql } from '@/lib/db/client'
+
+async function requireAdmin() {
+  const session = await auth()
+  if (!session?.user) throw new Error('Unauthorized')
+}
 
 function revalidateAll() {
   revalidatePath('/admin/categorias')
@@ -11,6 +17,7 @@ function revalidateAll() {
 }
 
 export async function createCategory(name: string) {
+  await requireAdmin()
   const trimmed = name.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -24,6 +31,7 @@ export async function createCategory(name: string) {
 }
 
 export async function renameCategory(oldName: string, newName: string) {
+  await requireAdmin()
   const trimmed = newName.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -42,6 +50,7 @@ export async function renameCategory(oldName: string, newName: string) {
 }
 
 export async function deleteCategory(name: string) {
+  await requireAdmin()
   // Products lose their category (set to empty string) — admin can reassign later
   await sql`UPDATE "Product" SET category = '', "updatedAt" = NOW() WHERE category = ${name}`
   await sql`DELETE FROM "Category" WHERE name = ${name}`

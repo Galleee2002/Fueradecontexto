@@ -29,7 +29,7 @@ export function CartItem({ item }: CartItemProps) {
         <div className="flex justify-between">
           <h4 className="text-sm font-medium leading-snug">{item.productName}</h4>
           <button
-            onClick={() => removeItem(item.productId)}
+            onClick={() => removeItem(item.id)}
             className="text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Eliminar producto"
           >
@@ -39,9 +39,20 @@ export function CartItem({ item }: CartItemProps) {
 
         <p className="text-sm font-semibold">{formatPrice(item.productPrice)}</p>
 
+        {(item.selectedColor || item.selectedSize || item.selectedStampSize || item.selectedStampLocation) && (
+          <p className="text-[11px] text-muted-foreground leading-snug">
+            {[
+              item.selectedColor && `Color: ${item.selectedColor}`,
+              item.selectedSize && `Talle: ${item.selectedSize}`,
+              item.selectedStampSize && `Estampa: ${item.selectedStampSize}`,
+              item.selectedStampLocation && item.selectedStampLocation,
+            ].filter(Boolean).join(' · ')}
+          </p>
+        )}
+
         <div className="flex items-center gap-3">
           <button
-            onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+            onClick={() => updateQuantity(item.id, item.quantity - 1)}
             className="h-7 w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors"
             aria-label="Disminuir cantidad"
           >
@@ -49,7 +60,7 @@ export function CartItem({ item }: CartItemProps) {
           </button>
           <span className="text-sm w-4 text-center">{item.quantity}</span>
           <button
-            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+            onClick={() => updateQuantity(item.id, item.quantity + 1)}
             className="h-7 w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors"
             aria-label="Aumentar cantidad"
           >

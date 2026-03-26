@@ -1,5 +1,6 @@
 import { sql } from '@/lib/db/client'
 import type { AdminProduct, AdminStats, AdminProductStatus, AdminOrder, AdminClient } from '../types'
+import type { SizeGuide } from '@/features/products/types'
 
 const ADMIN_PAGE_SIZE = 20
 
@@ -19,7 +20,8 @@ export async function fetchAdminProducts(
         : sql``
 
   const rows = await sql`
-    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt"
+    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
+           "availableColors", "availableSizes", "stampSizes", "stampLocations"
     FROM "Product"
     WHERE 1=1
     ${search ? sql`AND name ILIKE ${'%' + search + '%'}` : sql``}
@@ -46,12 +48,22 @@ export async function fetchAdminProducts(
 
 export async function fetchAdminProductById(id: string): Promise<AdminProduct | null> {
   const rows = await sql`
-    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt"
+    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
+           "availableColors", "availableSizes", "stampSizes", "stampLocations"
     FROM "Product"
     WHERE id = ${id}
     LIMIT 1
   `
   return (rows[0] as AdminProduct) ?? null
+}
+
+export async function fetchSizeGuides(): Promise<SizeGuide[]> {
+  const rows = await sql`
+    SELECT id, category, rows, "createdAt", "updatedAt"
+    FROM "SizeGuide"
+    ORDER BY category
+  `
+  return rows as SizeGuide[]
 }
 
 export async function fetchAdminStats(): Promise<AdminStats> {

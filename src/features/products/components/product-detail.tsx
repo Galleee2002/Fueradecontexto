@@ -1,11 +1,30 @@
+'use client'
+
+import { useState } from 'react'
 import { AddToCartButton } from '@/features/cart/components/add-to-cart-button'
 import { formatPrice } from '@/lib/utils/format-price'
 import { ProductImageGallery } from './product-image-gallery'
 import { ColorSelector } from './color-selector'
+import { SizeSelector } from './size-selector'
+import { StampSelector } from './stamp-selector'
+import { QuantitySelector } from './quantity-selector'
+import { SizeGuideModal } from './size-guide-modal'
 import { ServiceStripe } from './service-stripe'
-import type { ProductFull } from '../types'
+import type { ProductFull, SizeGuide } from '../types'
 
-export function ProductDetail({ product }: { product: ProductFull }) {
+interface ProductDetailProps {
+  product: ProductFull
+  sizeGuide: SizeGuide | null
+}
+
+export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
+  const [quantity, setQuantity] = useState(1)
+  const [selectedColor, setSelectedColor] = useState<string | null>(null)
+  const [selectedSize, setSelectedSize] = useState<string | null>(null)
+  const [selectedStampSize, setSelectedStampSize] = useState<string | null>(null)
+  const [selectedStampLocation, setSelectedStampLocation] = useState<string | null>(null)
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
+
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 py-12">
       <ProductImageGallery imageUrl={product.imageUrl} productName={product.name} />
@@ -19,11 +38,38 @@ export function ProductDetail({ product }: { product: ProductFull }) {
           <p className="text-2xl font-semibold">{formatPrice(product.price)}</p>
         </div>
 
-        <ColorSelector />
+        <ColorSelector
+          colors={product.availableColors}
+          selected={selectedColor}
+          onChange={setSelectedColor}
+        />
+
+        <SizeSelector
+          sizes={product.availableSizes}
+          selected={selectedSize}
+          onChange={setSelectedSize}
+          onGuideClick={() => setSizeGuideOpen(true)}
+        />
+
+        <StampSelector
+          label="Tamaño de estampa"
+          options={product.stampSizes}
+          selected={selectedStampSize}
+          onChange={setSelectedStampSize}
+        />
+
+        <StampSelector
+          label="Ubicación de estampa"
+          options={product.stampLocations}
+          selected={selectedStampLocation}
+          onChange={setSelectedStampLocation}
+        />
 
         {product.description && (
           <p className="text-base text-muted-foreground leading-relaxed">{product.description}</p>
         )}
+
+        <QuantitySelector value={quantity} onChange={setQuantity} max={10} />
 
         <AddToCartButton
           productId={product.id}
@@ -31,10 +77,22 @@ export function ProductDetail({ product }: { product: ProductFull }) {
           productPrice={product.price}
           productImageUrl={product.imageUrl}
           productSlug={product.slug}
+          quantity={quantity}
+          {...(selectedColor !== null ? { selectedColor } : {})}
+          {...(selectedSize !== null ? { selectedSize } : {})}
+          {...(selectedStampSize !== null ? { selectedStampSize } : {})}
+          {...(selectedStampLocation !== null ? { selectedStampLocation } : {})}
         />
 
         <ServiceStripe />
       </div>
+
+      <SizeGuideModal
+        isOpen={sizeGuideOpen}
+        onClose={() => setSizeGuideOpen(false)}
+        category={product.category}
+        guide={sizeGuide}
+      />
     </section>
   )
 }

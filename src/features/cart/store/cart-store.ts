@@ -8,9 +8,9 @@ import { MAX_CART_ITEMS } from '@/lib/constants/site'
 interface CartStore {
   items: CartItemUI[]
   isOpen: boolean
-  addItem: (item: Omit<CartItemUI, 'id'>) => void
-  removeItem: (productId: string) => void
-  updateQuantity: (productId: string, quantity: number) => void
+  addItem: (item: Omit<CartItemUI, 'id' | 'variantKey'>) => void
+  removeItem: (id: string) => void
+  updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
   openCart: () => void
   closeCart: () => void
@@ -25,12 +25,19 @@ export const useCartStore = create<CartStore>()(
       isOpen: false,
 
       addItem: (item) => {
+        const variantKey = [
+          item.productId,
+          item.selectedColor ?? '',
+          item.selectedSize ?? '',
+          item.selectedStampSize ?? '',
+          item.selectedStampLocation ?? '',
+        ].join('|')
         set((state) => {
-          const existing = state.items.find((i) => i.productId === item.productId)
+          const existing = state.items.find((i) => i.variantKey === variantKey)
           if (existing) {
             return {
               items: state.items.map((i) =>
-                i.productId === item.productId
+                i.variantKey === variantKey
                   ? { ...i, quantity: Math.min(i.quantity + item.quantity, MAX_CART_ITEMS) }
                   : i
               ),
@@ -39,24 +46,24 @@ export const useCartStore = create<CartStore>()(
           return {
             items: [
               ...state.items,
-              { ...item, id: crypto.randomUUID(), quantity: Math.min(item.quantity, MAX_CART_ITEMS) },
+              { ...item, id: crypto.randomUUID(), variantKey, quantity: Math.min(item.quantity, MAX_CART_ITEMS) },
             ],
           }
         })
       },
 
-      removeItem: (productId) => {
-        set((state) => ({ items: state.items.filter((i) => i.productId !== productId) }))
+      removeItem: (id) => {
+        set((state) => ({ items: state.items.filter((i) => i.id !== id) }))
       },
 
-      updateQuantity: (productId, quantity) => {
+      updateQuantity: (id, quantity) => {
         if (quantity <= 0) {
-          get().removeItem(productId)
+          get().removeItem(id)
           return
         }
         set((state) => ({
           items: state.items.map((i) =>
-            i.productId === productId
+            i.id === id
               ? { ...i, quantity: Math.min(quantity, MAX_CART_ITEMS) }
               : i
           ),
