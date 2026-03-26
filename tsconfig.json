@@ -39,7 +39,6 @@
   ],
   "exclude": [
     "node_modules",
-    "prisma.config.ts",
-    "generated"
+    "prisma.config.ts"
   ]
 }
