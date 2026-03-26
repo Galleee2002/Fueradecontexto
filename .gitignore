@@ -1,8 +1,6 @@
 .env
 node_modules/
 
-/generated/prisma
-
 # Next.js build output
 .next/
 
