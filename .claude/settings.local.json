@@ -1,7 +1,20 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(cat ~/.claude/plugins/*.json)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if ''''mcp'''' in k.lower\\(\\) or ''''skill'''' in k.lower\\(\\)}, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(python3 -c \":*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:mcpservers.org)",
+      "WebFetch(domain:www.mercadopago.com.ar)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:neon.com)",
+      "Bash(docker --version)"
     ],
     "additionalDirectories": [
       "C:\\Users\\gaelg\\OneDrive\\Desktop\\Fueradecontexto\\src\\app\\api\\auth"

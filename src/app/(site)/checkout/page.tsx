@@ -10,8 +10,7 @@ import { StepShipping } from '@/features/checkout/components/step-shipping'
 import { StepPayment } from '@/features/checkout/components/step-payment'
 import { OrderSummary } from '@/features/checkout/components/order-summary'
 import { useCheckout } from '@/features/checkout/hooks/use-checkout'
-import { createOrder } from '@/features/checkout/actions/checkout-actions'
-import type { PaymentData } from '@/features/checkout/types'
+import { createOrderAndPreference } from '@/features/checkout/actions/checkout-actions'
 
 export default function CheckoutPage() {
   const { isEmpty, clearCart, items } = useCart()
@@ -26,17 +25,14 @@ export default function CheckoutPage() {
     }
   }, [isEmpty, router])
 
-  async function handlePayment(paymentData: PaymentData) {
+  async function handleConfirmPayment() {
     if (!state.contactData || !state.shippingData) return
 
     setIsLoading(true)
     setError(null)
 
     const cartInput = items.map((i) => ({ productId: i.productId, quantity: i.quantity }))
-    const result = await createOrder(
-      { contact: state.contactData, shipping: state.shippingData, payment: paymentData },
-      cartInput,
-    )
+    const result = await createOrderAndPreference(state.contactData, state.shippingData, cartInput)
 
     if ('error' in result) {
       setError(result.error)
@@ -45,8 +41,7 @@ export default function CheckoutPage() {
     }
 
     clearCart()
-    const params = new URLSearchParams({ orderId: result.orderId, email: state.contactData.email })
-    router.push(`/checkout/confirmacion?${params.toString()}`)
+    window.location.href = result.initPoint
   }
 
   if (isEmpty && items.length === 0) return null
@@ -82,9 +77,11 @@ export default function CheckoutPage() {
               />
             )}
 
-            {state.step === 3 && (
+            {state.step === 3 && state.contactData && state.shippingData && (
               <StepPayment
-                onSubmit={handlePayment}
+                contactData={state.contactData}
+                shippingData={state.shippingData}
+                onConfirm={handleConfirmPayment}
                 onBack={prevStep}
                 isLoading={isLoading}
               />

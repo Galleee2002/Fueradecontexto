@@ -26,7 +26,7 @@ export interface PaymentData {
 export interface CheckoutFormData {
   contact: ContactData
   shipping: ShippingData
-  payment: PaymentData
+  payment?: PaymentData
 }
 
 export interface CheckoutState {
