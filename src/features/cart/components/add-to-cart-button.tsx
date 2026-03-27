@@ -54,7 +54,7 @@ export function AddToCartButton({
     <button
       onClick={handleAddToCart}
       disabled={loading}
-      className="flex items-center gap-3 bg-primary text-white hover:bg-[var(--color-primary-hover)] disabled:opacity-50 rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full justify-center"
+      className="flex items-center gap-3 bg-primary text-primary-foreground hover:bg-primary-hover disabled:opacity-50 rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full justify-center"
     >
       <ShoppingBag className="h-4 w-4 stroke-[1.5]" />
       {loading ? 'Agregando...' : 'Agregar al carrito'}

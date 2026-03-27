@@ -27,7 +27,7 @@ export function ServicesStrip() {
           {SERVICES.map((service) => (
             <div
               key={service.title}
-              className="flex flex-col gap-4 py-10 px-0 sm:px-10 first:pl-0 last:pr-0"
+              className="flex flex-col gap-4 py-8 sm:py-10 px-0 sm:px-10 sm:first:pl-0 sm:last:pr-0"
             >
               <service.icon
                 className="h-5 w-5 text-background/50 stroke-[1.5]"

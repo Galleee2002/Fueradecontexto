@@ -49,7 +49,7 @@ export function StepPayment({ contactData, shippingData, onConfirm, onBack, isLo
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
         <button
           type="button"
           onClick={onBack}
@@ -64,11 +64,11 @@ export function StepPayment({ contactData, shippingData, onConfirm, onBack, isLo
           type="button"
           onClick={onConfirm}
           disabled={isLoading}
-          className="bg-[#009EE3] hover:bg-[#0080BB] disabled:opacity-60 text-white px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors flex items-center gap-3"
+          className="w-full sm:w-auto bg-mp-blue hover:bg-mp-blue-hover disabled:opacity-60 text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors flex items-center justify-center gap-3"
         >
           {isLoading ? (
             <>
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
               Procesando…
             </>
           ) : (

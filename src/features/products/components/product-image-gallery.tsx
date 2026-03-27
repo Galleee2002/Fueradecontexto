@@ -9,11 +9,37 @@ interface ProductImageGalleryProps {
 
 export function ProductImageGallery({ imageUrl, productName }: ProductImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [touchEndX, setTouchEndX] = useState<number | null>(null)
   const thumbnails = [imageUrl, imageUrl, imageUrl, imageUrl]
+
+  function handleTouchStart(e: React.TouchEvent) {
+    setTouchStartX(e.targetTouches[0]!.clientX)
+    setTouchEndX(null)
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    setTouchEndX(e.targetTouches[0]!.clientX)
+  }
+
+  function handleTouchEnd() {
+    if (touchStartX === null || touchEndX === null) return
+    const diff = touchStartX - touchEndX
+    if (diff > 50) {
+      setSelectedIndex((i) => Math.min(i + 1, thumbnails.length - 1))
+    } else if (diff < -50) {
+      setSelectedIndex((i) => Math.max(i - 1, 0))
+    }
+  }
 
   return (
     <div className="space-y-4">
-      <div className="relative aspect-[3/4] overflow-hidden bg-surface">
+      <div
+        className="relative aspect-[3/4] overflow-hidden bg-surface"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <Image
           src={thumbnails[selectedIndex]!}
           alt={`${productName} — Fueradecontexto`}
@@ -23,7 +49,23 @@ export function ProductImageGallery({ imageUrl, productName }: ProductImageGalle
           priority
         />
       </div>
-      <div className="grid grid-cols-4 gap-2">
+
+      {/* Dot indicators — mobile only */}
+      <div className="flex justify-center gap-1.5 lg:hidden">
+        {thumbnails.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setSelectedIndex(i)}
+            className={`w-1.5 h-1.5 rounded-full transition-colors ${
+              selectedIndex === i ? 'bg-foreground' : 'bg-border'
+            }`}
+            aria-label={`Ir a imagen ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Thumbnail grid — desktop */}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
         {thumbnails.map((src, index) => (
           <button
             key={index}

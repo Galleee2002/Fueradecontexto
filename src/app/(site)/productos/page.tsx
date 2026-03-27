@@ -1,10 +1,12 @@
 import { ProductGrid } from '@/features/products/components/product-grid'
 import { ProductFilters } from '@/features/products/components/product-filters'
 import { ProductPagination } from '@/features/products/components/product-pagination'
+import { MobileFilterDrawer } from '@/features/products/components/mobile-filter-drawer'
 import { fetchProducts, fetchProductCategories } from '@/features/products/queries/product-queries'
 import { ServicesStrip } from '@/features/home/components/services-strip'
 import { Container } from '@/components/shared/layout/container'
 import { PageHeader } from '@/components/shared/layout/page-header'
+import { SearchBar } from '@/features/navigation/components/search-bar'
 import type { ProductFilters as ProductFiltersType } from '@/features/products/types'
 
 export default async function ProductsPage({
@@ -26,11 +28,13 @@ export default async function ProductsPage({
   ])
 
   return (
-    <main>
+    <main className="pb-20 lg:pb-0">
+      <MobileFilterDrawer categories={categories} />
       <Container>
         <PageHeader
           title="Colección"
           breadcrumb={[{ label: 'Inicio', href: '/' }, { label: 'Productos' }]}
+          right={<SearchBar />}
         />
         <div className="flex gap-8 py-8">
           <aside className="hidden lg:block w-64 shrink-0">

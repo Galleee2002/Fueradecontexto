@@ -9,6 +9,7 @@ import { StepContact } from '@/features/checkout/components/step-contact'
 import { StepShipping } from '@/features/checkout/components/step-shipping'
 import { StepPayment } from '@/features/checkout/components/step-payment'
 import { OrderSummary } from '@/features/checkout/components/order-summary'
+import { OrderSummaryAccordion } from '@/features/checkout/components/order-summary-accordion'
 import { useCheckout } from '@/features/checkout/hooks/use-checkout'
 import { createOrderAndPreference } from '@/features/checkout/actions/checkout-actions'
 
@@ -56,7 +57,7 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12">
           <div>
             {error && (
-              <div className="mb-6 border border-red-300 bg-red-50 text-red-700 px-4 py-3 text-sm">
+              <div className="mb-6 border border-error-border bg-error-subtle text-error-foreground px-4 py-3 text-sm">
                 {error}
               </div>
             )}
@@ -88,9 +89,9 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          <aside className="bg-surface p-8 h-fit sticky top-24 border border-border">
+          <OrderSummaryAccordion>
             <OrderSummary />
-          </aside>
+          </OrderSummaryAccordion>
         </div>
       </Container>
     </main>

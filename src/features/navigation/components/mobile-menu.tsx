@@ -36,8 +36,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                   >
                     {link.label}
                     <ChevronDown
-                      className="h-4 w-4 transition-transform duration-200"
-                      style={{ transform: expanded === link.href ? 'rotate(180deg)' : 'rotate(0)' }}
+                      className={`h-4 w-4 transition-transform duration-200${expanded === link.href ? ' rotate-180' : ''}`}
                     />
                   </button>
                   {expanded === link.href && (

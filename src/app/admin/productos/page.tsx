@@ -27,7 +27,7 @@ function CategoryFilter({
 }) {
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <span className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground shrink-0">
+      <span className="text-2xs font-medium tracking-widest uppercase text-muted-foreground shrink-0">
         Categoría:
       </span>
       <div className="flex gap-1 flex-wrap">
@@ -35,7 +35,7 @@ function CategoryFilter({
           href="/admin/productos"
           className={`px-3 py-1.5 text-xs border transition-colors ${
             !current
-              ? 'bg-foreground text-white border-foreground'
+              ? 'bg-foreground text-primary-foreground border-foreground'
               : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
           }`}
         >
@@ -47,7 +47,7 @@ function CategoryFilter({
             href={`/admin/productos?category=${encodeURIComponent(cat)}`}
             className={`px-3 py-1.5 text-xs border transition-colors ${
               current === cat
-                ? 'bg-foreground text-white border-foreground'
+                ? 'bg-foreground text-primary-foreground border-foreground'
                 : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
             }`}
           >
@@ -68,7 +68,7 @@ function StatusFilter({ current }: { current: AdminProductStatus }) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground shrink-0">
+      <span className="text-2xs font-medium tracking-widest uppercase text-muted-foreground shrink-0">
         Estado:
       </span>
       <div className="flex">
@@ -78,7 +78,7 @@ function StatusFilter({ current }: { current: AdminProductStatus }) {
             href={`/admin/productos?status=${value}`}
             className={`px-3 py-1.5 text-xs border-y border-r first:border-l transition-colors ${
               current === value
-                ? 'bg-foreground text-white border-foreground'
+                ? 'bg-foreground text-primary-foreground border-foreground'
                 : 'border-border text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -118,7 +118,7 @@ export default async function AdminProductosPage({
         </div>
         <Link
           href="/admin/productos/nuevo"
-          className="flex items-center gap-2 bg-primary text-white px-5 py-3 text-xs font-medium tracking-widest uppercase hover:bg-[var(--color-primary-hover)] transition-colors rounded-none shrink-0"
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none shrink-0"
         >
           <Plus className="h-4 w-4" strokeWidth={2} />
           <span className="hidden sm:inline">Nuevo producto</span>

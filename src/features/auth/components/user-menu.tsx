@@ -43,8 +43,7 @@ export function UserMenu() {
       >
         <User className="h-5 w-5 stroke-[1.5]" />
         <ChevronDown
-          className="h-3 w-3 transition-transform duration-200"
-          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0)' }}
+          className={`h-3 w-3 transition-transform duration-200${open ? ' rotate-180' : ''}`}
         />
       </button>
 

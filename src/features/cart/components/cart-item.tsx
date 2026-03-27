@@ -40,7 +40,7 @@ export function CartItem({ item }: CartItemProps) {
         <p className="text-sm font-semibold">{formatPrice(item.productPrice)}</p>
 
         {(item.selectedColor || item.selectedSize || item.selectedStampSize || item.selectedStampLocation) && (
-          <p className="text-[11px] text-muted-foreground leading-snug">
+          <p className="text-xs text-muted-foreground leading-snug">
             {[
               item.selectedColor && `Color: ${item.selectedColor}`,
               item.selectedSize && `Talle: ${item.selectedSize}`,
@@ -53,7 +53,7 @@ export function CartItem({ item }: CartItemProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-            className="h-7 w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors"
+            className="h-11 w-11 sm:h-7 sm:w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors touch-manipulation"
             aria-label="Disminuir cantidad"
           >
             <Minus className="h-3 w-3" />
@@ -61,7 +61,7 @@ export function CartItem({ item }: CartItemProps) {
           <span className="text-sm w-4 text-center">{item.quantity}</span>
           <button
             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-            className="h-7 w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors"
+            className="h-11 w-11 sm:h-7 sm:w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors touch-manipulation"
             aria-label="Aumentar cantidad"
           >
             <Plus className="h-3 w-3" />

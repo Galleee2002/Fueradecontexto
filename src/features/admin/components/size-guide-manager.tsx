@@ -94,7 +94,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
     <div className="space-y-8">
       {/* Editor */}
       <form onSubmit={handleSave} className="bg-background border border-border p-6 space-y-6">
-        <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+        <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
           Crear / editar guía
         </p>
 
@@ -103,7 +103,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
         )}
 
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+          <label className="block text-2xs font-medium tracking-widest uppercase text-muted-foreground">
             Categoría <span className="text-primary">*</span>
           </label>
           <select
@@ -120,7 +120,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
 
         {/* Columns */}
         <div className="space-y-2">
-          <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+          <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
             Columnas
           </p>
           <div className="flex flex-wrap gap-2">
@@ -161,14 +161,14 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
 
         {/* Table rows */}
         <div className="space-y-2 overflow-x-auto">
-          <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+          <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
             Filas
           </p>
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr>
                 {columns.map((col) => (
-                  <th key={col} className="text-left py-1 pr-3 text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+                  <th key={col} className="text-left py-1 pr-3 text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                     {col}
                   </th>
                 ))}
@@ -216,7 +216,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
         <button
           type="submit"
           disabled={isPending}
-          className="flex items-center gap-2 bg-primary text-white px-6 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-[var(--color-primary-hover)] transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
           Guardar guía
@@ -226,7 +226,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
       {/* Existing guides */}
       <div className="bg-background border border-border">
         <div className="px-6 py-3 border-b border-border">
-          <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+          <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
             Guías existentes
             <span className="ml-2 font-normal text-foreground">{guides.length}</span>
           </p>
@@ -248,7 +248,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
                   <Ruler className="h-4 w-4 text-muted-foreground shrink-0" strokeWidth={1.5} />
                   <div>
                     <span className="text-sm font-medium">{guide.category}</span>
-                    <p className="text-[11px] text-muted-foreground">{guide.rows.length} filas</p>
+                    <p className="text-xs text-muted-foreground">{guide.rows.length} filas</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -263,7 +263,7 @@ export function SizeGuideManager({ guides, categories }: SizeGuideManagerProps) 
                       <button
                         onClick={() => handleDelete(guide.category)}
                         disabled={isDeletePending}
-                        className="text-xs font-medium text-white bg-foreground px-2.5 py-1 hover:bg-primary transition-colors disabled:opacity-50"
+                        className="text-xs font-medium text-primary-foreground bg-foreground px-2.5 py-1 hover:bg-primary transition-colors disabled:opacity-50"
                       >
                         {isDeletePending ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Eliminar'}
                       </button>

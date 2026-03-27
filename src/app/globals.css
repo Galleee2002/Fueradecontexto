@@ -27,6 +27,30 @@
   /* Typography */
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
+
+  /* Font sizes micro — labels, badges, metadata */
+  --font-size-2xs: 0.625rem; /* 10px */
+
+  /* Font sizes display — hero heading (valores exactos de diseño) */
+  --font-size-display-sm: 2.25rem;  /* 36px */
+  --font-size-display-md: 3.75rem;  /* 60px */
+  --font-size-display-lg: 6.5rem;   /* 104px */
+  --font-size-display-xl: 7.75rem;  /* 124px */
+
+  /* Font sizes watermark — número decorativo en categories-grid */
+  --font-size-watermark-sm: 4.375rem; /* 70px */
+  --font-size-watermark-md: 6.25rem;  /* 100px */
+  --font-size-watermark-lg: 8.125rem; /* 130px */
+
+  /* Error state — formularios de checkout */
+  --color-error: #EF4444;
+  --color-error-subtle: #FEF2F2;
+  --color-error-border: #FCA5A5;
+  --color-error-foreground: #B91C1C;
+
+  /* Mercado Pago brand colors — no modificar */
+  --color-mp-blue: #009EE3;
+  --color-mp-blue-hover: #0080BB;
 }
 
 @layer base {

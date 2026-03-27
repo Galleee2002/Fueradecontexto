@@ -26,7 +26,7 @@ export function OrderSummary() {
                 className="object-cover"
               />
               {/* Badge de cantidad */}
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-foreground text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+              <span className="absolute -top-2 -right-2 w-5 h-5 bg-foreground text-primary-foreground text-2xs font-medium flex items-center justify-center rounded-full">
                 {item.quantity}
               </span>
             </div>

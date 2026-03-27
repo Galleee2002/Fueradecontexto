@@ -18,7 +18,7 @@ export function SizeSelector({ sizes, selected, onChange, onGuideClick }: SizeSe
         </p>
         <button
           onClick={onGuideClick}
-          className="text-[11px] underline underline-offset-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           Guía de talles
         </button>
@@ -28,7 +28,7 @@ export function SizeSelector({ sizes, selected, onChange, onGuideClick }: SizeSe
           <button
             key={size}
             onClick={() => onChange(size)}
-            className={`px-3 py-1.5 text-xs uppercase font-medium tracking-wider border transition-colors ${
+            className={`px-3 py-2.5 min-h-[44px] sm:py-1.5 sm:min-h-0 text-xs uppercase font-medium tracking-wider border transition-colors ${
               selected === size
                 ? 'bg-foreground text-background border-foreground'
                 : 'border-border text-foreground hover:border-foreground'

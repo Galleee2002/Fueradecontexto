@@ -21,7 +21,7 @@ interface StepContactProps {
 }
 
 const inputBase =
-  'w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 rounded-none transition-colors'
+  'w-full border border-border bg-background px-4 py-3 text-base sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 rounded-none transition-colors'
 
 const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
 
@@ -73,9 +73,9 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
             value={values.email}
             onChange={(e) => handleChange('email', e.target.value)}
             placeholder="tu@email.com"
-            className={cn(inputBase, errors.email && 'border-red-500 focus-visible:ring-red-500')}
+            className={cn(inputBase, errors.email && 'border-error focus-visible:ring-error')}
           />
-          {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
+          {errors.email && <p className="mt-1.5 text-xs text-error">{errors.email}</p>}
         </div>
 
         {/* Nombre + Apellido */}
@@ -91,9 +91,9 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
               value={values.nombre}
               onChange={(e) => handleChange('nombre', e.target.value)}
               placeholder="Juan"
-              className={cn(inputBase, errors.nombre && 'border-red-500 focus-visible:ring-red-500')}
+              className={cn(inputBase, errors.nombre && 'border-error focus-visible:ring-error')}
             />
-            {errors.nombre && <p className="mt-1.5 text-xs text-red-500">{errors.nombre}</p>}
+            {errors.nombre && <p className="mt-1.5 text-xs text-error">{errors.nombre}</p>}
           </div>
 
           <div>
@@ -107,9 +107,9 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
               value={values.apellido}
               onChange={(e) => handleChange('apellido', e.target.value)}
               placeholder="García"
-              className={cn(inputBase, errors.apellido && 'border-red-500 focus-visible:ring-red-500')}
+              className={cn(inputBase, errors.apellido && 'border-error focus-visible:ring-error')}
             />
-            {errors.apellido && <p className="mt-1.5 text-xs text-red-500">{errors.apellido}</p>}
+            {errors.apellido && <p className="mt-1.5 text-xs text-error">{errors.apellido}</p>}
           </div>
         </div>
 
@@ -125,16 +125,16 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
             value={values.telefono}
             onChange={(e) => handleChange('telefono', e.target.value)}
             placeholder="+54 9 11 1234-5678"
-            className={cn(inputBase, errors.telefono && 'border-red-500 focus-visible:ring-red-500')}
+            className={cn(inputBase, errors.telefono && 'border-error focus-visible:ring-error')}
           />
-          {errors.telefono && <p className="mt-1.5 text-xs text-red-500">{errors.telefono}</p>}
+          {errors.telefono && <p className="mt-1.5 text-xs text-error">{errors.telefono}</p>}
         </div>
       </div>
 
-      <div className="flex items-center justify-end mt-10">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 mt-10">
         <button
           type="submit"
-          className="bg-primary hover:bg-[var(--color-primary-hover)] text-white px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+          className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
         >
           Continuar
         </button>

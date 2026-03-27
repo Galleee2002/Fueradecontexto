@@ -36,7 +36,7 @@ export default async function PendientePage({ searchParams }: Props) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/productos"
-              className="bg-foreground text-white hover:bg-primary px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+              className="bg-foreground text-primary-foreground hover:bg-primary px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
             >
               Seguir comprando
             </Link>

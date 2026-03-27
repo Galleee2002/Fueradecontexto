@@ -30,7 +30,7 @@ export function DeleteProductButton({ id, name }: DeleteProductButtonProps) {
         <button
           onClick={handleDelete}
           disabled={isPending}
-          className="text-xs font-medium text-white bg-foreground px-2 py-0.5 hover:bg-primary transition-colors disabled:opacity-50"
+          className="text-xs font-medium text-primary-foreground bg-foreground px-2 py-0.5 hover:bg-primary transition-colors disabled:opacity-50"
         >
           {isPending ? '...' : 'Sí'}
         </button>

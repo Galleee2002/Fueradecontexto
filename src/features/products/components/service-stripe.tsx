@@ -13,8 +13,8 @@ export function ServiceStripe() {
         <div key={badge.label} className="flex flex-col items-center gap-2 py-4 px-3 text-center">
           <badge.icon className="h-5 w-5 text-muted-foreground stroke-[1.5]" aria-hidden="true" />
           <div>
-            <p className="text-[11px] font-medium text-foreground leading-snug">{badge.label}</p>
-            <p className="text-[10px] text-muted-foreground leading-snug">{badge.sublabel}</p>
+            <p className="text-xs font-medium text-foreground leading-snug">{badge.label}</p>
+            <p className="text-2xs text-muted-foreground leading-snug">{badge.sublabel}</p>
           </div>
         </div>
       ))}

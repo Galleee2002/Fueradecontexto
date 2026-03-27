@@ -26,7 +26,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
 
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 py-12">
+    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 py-8 lg:py-12">
       <ProductImageGallery imageUrl={product.imageUrl} productName={product.name} />
 
       <div className="space-y-6">
@@ -34,7 +34,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
           <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
             {product.category}
           </p>
-          <h1 className="text-5xl font-normal font-serif leading-tight">{product.name}</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-serif leading-tight">{product.name}</h1>
           <p className="text-2xl font-semibold">{formatPrice(product.price)}</p>
         </div>
 

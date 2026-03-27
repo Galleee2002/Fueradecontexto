@@ -5,7 +5,6 @@ import { ChevronDown } from 'lucide-react'
 import { Container } from '@/components/shared/layout/container'
 import { UserMenu } from '@/features/auth/components/user-menu'
 import { CartIcon } from './cart-icon'
-import { SearchBar } from './search-bar'
 import { MobileMenuTrigger } from './mobile-menu'
 import { SITE_NAME } from '@/lib/constants/site'
 
@@ -47,8 +46,7 @@ export function Navbar({ categories }: { categories: string[] }) {
               >
                 Productos
                 <ChevronDown
-                  className="h-3 w-3 transition-transform duration-200"
-                  style={{ transform: productsOpen ? 'rotate(180deg)' : 'rotate(0)' }}
+                  className={`h-3 w-3 transition-transform duration-200${productsOpen ? ' rotate-180' : ''}`}
                 />
               </Link>
 
@@ -89,7 +87,6 @@ export function Navbar({ categories }: { categories: string[] }) {
           </ul>
 
           <div className="flex items-center gap-5">
-            <SearchBar />
             <UserMenu />
             <CartIcon />
             <MobileMenuTrigger links={NAV_LINKS} />

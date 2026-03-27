@@ -34,7 +34,7 @@ export function SizeGuideModal({ isOpen, onClose, category, guide }: SizeGuideMo
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-foreground/50 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
@@ -67,7 +67,7 @@ export function SizeGuideModal({ isOpen, onClose, category, guide }: SizeGuideMo
                     {columns.map((col) => (
                       <th
                         key={col}
-                        className="text-left py-2 pr-4 text-[10px] font-medium tracking-widest uppercase text-muted-foreground"
+                        className="text-left py-2 pr-4 text-2xs font-medium tracking-widest uppercase text-muted-foreground"
                       >
                         {col}
                       </th>

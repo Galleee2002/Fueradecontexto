@@ -17,14 +17,14 @@ export async function RelatedProducts({ category, currentSlug }: RelatedProducts
       <Container>
         <div className="flex items-end justify-between mb-10">
           <div className="space-y-2">
-            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-muted-foreground">
+            <p className="text-2xs font-medium tracking-[0.25em] uppercase text-muted-foreground">
               También te puede gustar
             </p>
-            <h2 className="text-4xl font-normal font-serif">De la misma colección</h2>
+            <h2 className="text-3xl lg:text-4xl font-normal font-serif">De la misma colección</h2>
           </div>
           <Link
             href={`/productos?category=${encodeURIComponent(category)}`}
-            className="text-[11px] font-medium tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
+            className="text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
           >
             Ver todo →
           </Link>

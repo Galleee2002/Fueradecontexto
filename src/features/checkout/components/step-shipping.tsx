@@ -51,7 +51,7 @@ interface StepShippingProps {
 }
 
 const inputBase =
-  'w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 rounded-none transition-colors'
+  'w-full border border-border bg-background px-4 py-3 text-base sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 rounded-none transition-colors'
 
 const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
 
@@ -106,9 +106,9 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               value={values.calle}
               onChange={(e) => handleChange('calle', e.target.value)}
               placeholder="Av. Corrientes"
-              className={cn(inputBase, errors.calle && 'border-red-500 focus-visible:ring-red-500')}
+              className={cn(inputBase, errors.calle && 'border-error focus-visible:ring-error')}
             />
-            {errors.calle && <p className="mt-1.5 text-xs text-red-500">{errors.calle}</p>}
+            {errors.calle && <p className="mt-1.5 text-xs text-error">{errors.calle}</p>}
           </div>
 
           <div>
@@ -121,9 +121,9 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               value={values.numero}
               onChange={(e) => handleChange('numero', e.target.value)}
               placeholder="1234"
-              className={cn(inputBase, errors.numero && 'border-red-500 focus-visible:ring-red-500')}
+              className={cn(inputBase, errors.numero && 'border-error focus-visible:ring-error')}
             />
-            {errors.numero && <p className="mt-1.5 text-xs text-red-500">{errors.numero}</p>}
+            {errors.numero && <p className="mt-1.5 text-xs text-error">{errors.numero}</p>}
           </div>
         </div>
 
@@ -157,9 +157,9 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               value={values.ciudad}
               onChange={(e) => handleChange('ciudad', e.target.value)}
               placeholder="Buenos Aires"
-              className={cn(inputBase, errors.ciudad && 'border-red-500 focus-visible:ring-red-500')}
+              className={cn(inputBase, errors.ciudad && 'border-error focus-visible:ring-error')}
             />
-            {errors.ciudad && <p className="mt-1.5 text-xs text-red-500">{errors.ciudad}</p>}
+            {errors.ciudad && <p className="mt-1.5 text-xs text-error">{errors.ciudad}</p>}
           </div>
 
           <div>
@@ -173,10 +173,10 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               value={values.codigoPostal}
               onChange={(e) => handleChange('codigoPostal', e.target.value)}
               placeholder="C1043"
-              className={cn(inputBase, errors.codigoPostal && 'border-red-500 focus-visible:ring-red-500')}
+              className={cn(inputBase, errors.codigoPostal && 'border-error focus-visible:ring-error')}
             />
             {errors.codigoPostal && (
-              <p className="mt-1.5 text-xs text-red-500">{errors.codigoPostal}</p>
+              <p className="mt-1.5 text-xs text-error">{errors.codigoPostal}</p>
             )}
           </div>
         </div>
@@ -193,7 +193,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
             className={cn(
               inputBase,
               'cursor-pointer appearance-none',
-              errors.provincia && 'border-red-500 focus-visible:ring-red-500',
+              errors.provincia && 'border-error focus-visible:ring-error',
               values.provincia === '' && 'text-muted-foreground'
             )}
           >
@@ -206,11 +206,11 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               </option>
             ))}
           </select>
-          {errors.provincia && <p className="mt-1.5 text-xs text-red-500">{errors.provincia}</p>}
+          {errors.provincia && <p className="mt-1.5 text-xs text-error">{errors.provincia}</p>}
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-10">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 mt-10">
         <button
           type="button"
           onClick={onBack}
@@ -222,7 +222,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
 
         <button
           type="submit"
-          className="bg-primary hover:bg-[var(--color-primary-hover)] text-white px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+          className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
         >
           Continuar
         </button>

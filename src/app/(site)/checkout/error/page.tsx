@@ -8,7 +8,7 @@ export default function ErrorPagoPage() {
       <Container>
         <div className="max-w-md mx-auto text-center">
           <XCircle
-            className="w-16 h-16 mx-auto mb-8 text-red-400"
+            className="w-16 h-16 mx-auto mb-8 text-error"
             strokeWidth={1.5}
           />
 
@@ -23,7 +23,7 @@ export default function ErrorPagoPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/carrito"
-              className="bg-foreground text-white hover:bg-primary px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+              className="bg-foreground text-primary-foreground hover:bg-primary px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
             >
               Volver al carrito
             </Link>

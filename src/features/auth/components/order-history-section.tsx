@@ -36,7 +36,7 @@ export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) 
 
       {/* Order history */}
       <div className="space-y-4">
-        <h3 className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+        <h3 className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
           Historial de órdenes
         </h3>
 
@@ -64,7 +64,7 @@ export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) 
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <span
-                      className={`inline-block border px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase ${statusClass}`}
+                      className={`inline-block border px-2 py-0.5 text-2xs font-medium tracking-wide uppercase ${statusClass}`}
                     >
                       {statusLabel}
                     </span>

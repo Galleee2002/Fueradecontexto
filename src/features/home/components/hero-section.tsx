@@ -19,19 +19,19 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-foreground/25" />
 
       {/* Contenido */}
-      <div className="relative z-10 pb-20 lg:pb-32">
+      <div className="relative z-10 pt-24 sm:pt-32 lg:pt-40 pb-14 sm:pb-20 lg:pb-32">
         <Container>
           <div className="max-w-2xl lg:max-w-3xl space-y-8 lg:space-y-10">
             {/* Badge animado */}
             <div className="inline-flex items-center gap-3 border border-background/20 px-4 py-2 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <p className="text-[10px] font-medium tracking-[0.3em] uppercase text-background/70">
+              <p className="text-2xs font-medium tracking-[0.3em] uppercase text-background/70">
                 Nueva colección — 2026
               </p>
             </div>
 
             {/* Mensaje principal — orientado al usuario */}
-            <h1 className="text-[60px] sm:text-[80px] lg:text-[104px] xl:text-[124px] font-light font-serif leading-[0.88] text-background">
+            <h1 className="text-display-sm sm:text-display-md lg:text-display-lg xl:text-display-xl font-light font-serif leading-[0.88] text-background">
               Viste lo que
               <br />
               <span className="italic">otros no se</span>
@@ -49,13 +49,13 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6 pt-2">
               <Link
                 href="/productos"
-                className="bg-primary text-primary-foreground hover:bg-[var(--color-primary-hover)] rounded-none px-10 py-4 text-[11px] font-medium tracking-[0.22em] uppercase transition-colors"
+                className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary-hover rounded-none px-10 py-4 text-xs font-medium tracking-[0.22em] uppercase transition-colors"
               >
                 Ver colección
               </Link>
               <Link
                 href="/productos"
-                className="group flex items-center gap-3 text-[11px] font-medium tracking-[0.22em] uppercase text-background/55 hover:text-background transition-colors"
+                className="group flex items-center gap-3 text-xs font-medium tracking-[0.22em] uppercase text-background/55 hover:text-background transition-colors"
               >
                 <span className="h-px w-6 bg-current block transition-all duration-300 group-hover:w-10" />
                 Novedades

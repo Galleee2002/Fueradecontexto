@@ -13,11 +13,21 @@ const NAV_LINKS = [
   { label: 'Clientes', href: '/admin/clientes', icon: Users },
 ]
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname()
 
   return (
-    <aside className="w-56 shrink-0 bg-background border-r border-border flex flex-col h-full">
+    <aside
+      className={cn(
+        'fixed lg:relative inset-y-0 left-0 z-40 w-64 lg:w-56 shrink-0 bg-background border-r border-border flex flex-col h-full transition-transform duration-300',
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+      )}
+    >
       {/* Logo */}
       <div className="h-14 flex items-center gap-3 px-5 border-b border-border">
         <LayoutGrid className="h-4 w-4 text-primary shrink-0" strokeWidth={1.5} />
@@ -28,7 +38,7 @@ export function AdminSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 overflow-y-auto">
-        <p className="px-3 mb-2 text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+        <p className="px-3 mb-2 text-2xs font-medium tracking-widest uppercase text-muted-foreground">
           Panel
         </p>
         <ul className="space-y-0.5">
@@ -38,6 +48,7 @@ export function AdminSidebar() {
               <li key={href}>
                 <Link
                   href={href}
+                  onClick={onClose}
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 text-sm transition-colors rounded-none',
                     isActive

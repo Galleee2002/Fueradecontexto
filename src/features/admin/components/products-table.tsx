@@ -28,22 +28,22 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-surface">
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground w-14">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground w-14">
                 Img
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Nombre
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
                 Categoría
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground hidden sm:table-cell">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden sm:table-cell">
                 Precio
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Estado
               </th>
-              <th className="py-3 px-4 text-right text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+              <th className="py-3 px-4 text-right text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Acciones
               </th>
             </tr>
@@ -75,14 +75,14 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
                   >
                     {product.name}
                   </Link>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 font-mono">
+                  <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                     {product.slug}
                   </p>
                 </td>
 
                 {/* Category */}
                 <td className="py-3 px-4 hidden md:table-cell">
-                  <span className="text-[10px] font-medium tracking-wide uppercase text-muted-foreground bg-surface border border-border px-2 py-1">
+                  <span className="text-2xs font-medium tracking-wide uppercase text-muted-foreground bg-surface border border-border px-2 py-1">
                     {product.category}
                   </span>
                 </td>
@@ -98,7 +98,7 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2">
                     <ToggleActiveButton id={product.id} active={product.active} />
-                    <span className={`text-[10px] font-medium tracking-wide uppercase hidden lg:block ${product.active ? 'text-primary' : 'text-muted-foreground'}`}>
+                    <span className={`text-2xs font-medium tracking-wide uppercase hidden lg:block ${product.active ? 'text-primary' : 'text-muted-foreground'}`}>
                       {product.active ? 'Activo' : 'Inactivo'}
                     </span>
                   </div>

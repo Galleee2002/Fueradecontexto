@@ -42,7 +42,7 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="block text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+      <label className="block text-2xs font-medium tracking-widest uppercase text-muted-foreground">
         {label}
         {required && <span className="text-primary ml-1">*</span>}
       </label>
@@ -74,7 +74,7 @@ function CheckboxGroup({
   }
   return (
     <div className="space-y-2">
-      <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+      <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
         {label}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -214,7 +214,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         {/* Left column — main fields */}
         <div className="space-y-6">
           <div className="bg-background border border-border p-6 space-y-6">
-            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Información básica
             </p>
 
@@ -248,13 +248,13 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                       setSlug(slugify(name))
                       setSlugLocked(false)
                     }}
-                    className="px-3 py-2.5 text-[10px] font-medium tracking-widest uppercase border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors whitespace-nowrap"
+                    className="px-3 py-2.5 text-2xs font-medium tracking-widest uppercase border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors whitespace-nowrap"
                   >
                     Regenerar
                   </button>
                 )}
               </div>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 /productos/<span className="text-foreground">{slug || '...'}</span>
               </p>
             </FormField>
@@ -267,14 +267,14 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                 placeholder="Describe el producto: materiales, talle, fit, cuidados..."
                 className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground resize-none"
               />
-              <p className="text-[11px] text-muted-foreground text-right">
+              <p className="text-xs text-muted-foreground text-right">
                 {description.length}/2000
               </p>
             </FormField>
           </div>
 
           <div className="bg-background border border-border p-6 space-y-6">
-            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Precio y categoría
             </p>
 
@@ -314,7 +314,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                     <button
                       type="button"
                       onClick={() => setUseCustomCategory(true)}
-                      className="text-[11px] text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
                     >
                       + Crear nueva categoría
                     </button>
@@ -335,7 +335,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                         setUseCustomCategory(false)
                         setCustomCategory('')
                       }}
-                      className="text-[11px] text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
                     >
                       ← Volver a categorías existentes
                     </button>
@@ -346,7 +346,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
           </div>
 
           <div className="bg-background border border-border p-6 space-y-4">
-            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Imagen del producto
             </p>
 
@@ -359,7 +359,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                 placeholder="https://ejemplo.com/imagen.webp"
                 className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
               />
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Pegá la URL de la imagen (Cloudinary, Uploadthing, etc.)
               </p>
             </FormField>
@@ -384,7 +384,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
           </div>
 
           <div className="bg-background border border-border p-6 space-y-6">
-            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Opciones de personalización
             </p>
 
@@ -418,7 +418,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         {/* Right column — status + actions */}
         <div className="space-y-4">
           <div className="bg-background border border-border p-6 space-y-4">
-            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Visibilidad
             </p>
 
@@ -436,7 +436,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                 }`}
               >
                 <span
-                  className={`absolute top-0.5 h-4 w-4 bg-white shadow-sm transition-transform ${
+                  className={`absolute top-0.5 h-4 w-4 bg-background shadow-sm transition-transform ${
                     active ? 'translate-x-5' : 'translate-x-0.5'
                   }`}
                 />
@@ -446,7 +446,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
 
           {/* Summary card */}
           <div className="bg-surface border border-border p-6 space-y-3">
-            <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
               Resumen
             </p>
             <div className="space-y-2 text-xs">
@@ -479,7 +479,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full flex items-center justify-center gap-2 bg-primary text-white px-6 py-3.5 text-xs font-medium tracking-widest uppercase hover:bg-[var(--color-primary-hover)] transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isPending ? (
               <>

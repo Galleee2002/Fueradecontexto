@@ -28,8 +28,8 @@ export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
               <div
                 className={cn(
                   'w-8 h-8 flex items-center justify-center transition-colors duration-200',
-                  isCompleted && 'bg-foreground text-white',
-                  isActive && 'bg-primary text-white',
+                  isCompleted && 'bg-foreground text-primary-foreground',
+                  isActive && 'bg-primary text-primary-foreground',
                   !isCompleted && !isActive && 'border border-border text-muted-foreground bg-background'
                 )}
               >

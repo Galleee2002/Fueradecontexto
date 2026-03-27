@@ -16,7 +16,7 @@ export function CartDrawer() {
         action={
           <Link
             href="/productos"
-            className="border border-foreground text-foreground hover:bg-foreground hover:text-white rounded-none px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors"
+            className="border border-foreground text-foreground hover:bg-foreground hover:text-primary-foreground rounded-none px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors"
           >
             Ver colección
           </Link>
@@ -43,7 +43,7 @@ export function CartDrawer() {
         </p>
         <Link
           href="/checkout"
-          className="bg-primary text-white hover:bg-[var(--color-primary-hover)] rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full text-center block"
+          className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full text-center block"
         >
           Proceder al pago
         </Link>

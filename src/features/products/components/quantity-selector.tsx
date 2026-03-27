@@ -19,7 +19,7 @@ export function QuantitySelector({ value, onChange, min = 1, max = 10 }: Quantit
         <button
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
-          className="h-9 w-9 border border-border flex items-center justify-center hover:bg-surface transition-colors disabled:opacity-40"
+          className="h-11 w-11 sm:h-9 sm:w-9 border border-border flex items-center justify-center hover:bg-surface transition-colors disabled:opacity-40"
           aria-label="Disminuir cantidad"
         >
           <Minus className="h-3.5 w-3.5" />
@@ -28,7 +28,7 @@ export function QuantitySelector({ value, onChange, min = 1, max = 10 }: Quantit
         <button
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
-          className="h-9 w-9 border border-border flex items-center justify-center hover:bg-surface transition-colors disabled:opacity-40"
+          className="h-11 w-11 sm:h-9 sm:w-9 border border-border flex items-center justify-center hover:bg-surface transition-colors disabled:opacity-40"
           aria-label="Aumentar cantidad"
         >
           <Plus className="h-3.5 w-3.5" />

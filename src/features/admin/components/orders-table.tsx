@@ -39,22 +39,22 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-surface">
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 ID
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Cliente
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground hidden sm:table-cell">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden sm:table-cell">
                 Items
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground hidden sm:table-cell">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden sm:table-cell">
                 Total
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Estado
               </th>
-              <th className="py-3 px-4 text-left text-[10px] font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
                 Fecha
               </th>
             </tr>
@@ -74,7 +74,7 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
                   </td>
                   <td className="py-3 px-4 max-w-[200px]">
                     <p className="font-medium text-foreground line-clamp-1">{order.customerName}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{order.customerEmail}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{order.customerEmail}</p>
                   </td>
                   <td className="py-3 px-4 hidden sm:table-cell">
                     <span className="text-muted-foreground tabular-nums">{order.itemCount}</span>
@@ -86,7 +86,7 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
                   </td>
                   <td className="py-3 px-4">
                     <span
-                      className={`inline-block border px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase ${statusClass}`}
+                      className={`inline-block border px-2 py-0.5 text-2xs font-medium tracking-wide uppercase ${statusClass}`}
                     >
                       {statusLabel}
                     </span>

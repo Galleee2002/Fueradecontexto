@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 
 interface BreadcrumbItem {
@@ -8,9 +9,10 @@ interface BreadcrumbItem {
 interface PageHeaderProps {
   title: string
   breadcrumb?: BreadcrumbItem[]
+  right?: React.ReactNode
 }
 
-export function PageHeader({ title, breadcrumb }: PageHeaderProps) {
+export function PageHeader({ title, breadcrumb, right }: PageHeaderProps) {
   return (
     <div className="py-8 border-b border-border">
       {breadcrumb && breadcrumb.length > 0 && (
@@ -29,7 +31,10 @@ export function PageHeader({ title, breadcrumb }: PageHeaderProps) {
           ))}
         </nav>
       )}
-      <h1 className="text-5xl font-normal font-serif">{title}</h1>
+      <div className="flex items-end justify-between">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal font-serif">{title}</h1>
+        {right && <div>{right}</div>}
+      </div>
     </div>
   )
 }

@@ -95,7 +95,7 @@ function CategoryRow({
               )}
             />
             {renameError && (
-              <p className="text-[11px] text-primary" role="alert">{renameError}</p>
+              <p className="text-xs text-primary" role="alert">{renameError}</p>
             )}
           </div>
           <div className="flex items-center gap-1 shrink-0 mt-0.5">
@@ -127,7 +127,7 @@ function CategoryRow({
             <div className="min-w-0">
               <span className="text-sm font-medium text-foreground">{cat.name}</span>
               {cat.count > 0 && (
-                <p className="text-[11px] text-muted-foreground mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {cat.count} producto{cat.count === 1 ? '' : 's'} quedará{cat.count === 1 ? '' : 'n'} sin categoría
                 </p>
               )}
@@ -137,7 +137,7 @@ function CategoryRow({
             <button
               onClick={handleDelete}
               disabled={isDeletePending}
-              className="text-xs font-medium text-white bg-foreground px-2.5 py-1 hover:bg-primary transition-colors disabled:opacity-50"
+              className="text-xs font-medium text-primary-foreground bg-foreground px-2.5 py-1 hover:bg-primary transition-colors disabled:opacity-50"
             >
               {isDeletePending ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Eliminar'}
             </button>
@@ -220,14 +220,14 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
     <div className="space-y-6">
       {/* Add form */}
       <div className="bg-background border border-border p-6">
-        <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3 mb-5">
+        <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3 mb-5">
           Nueva categoría
         </p>
         <form onSubmit={handleAdd} className="flex gap-3 items-start">
           <div className="flex-1 space-y-1.5">
             <label
               htmlFor="category-name"
-              className="block text-[10px] font-medium tracking-widest uppercase text-muted-foreground"
+              className="block text-2xs font-medium tracking-widest uppercase text-muted-foreground"
             >
               Nombre
             </label>
@@ -252,7 +252,7 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
           <button
             type="submit"
             disabled={isPending}
-            className="mt-[26px] flex items-center gap-2 bg-primary text-white px-4 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-[var(--color-primary-hover)] transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+            className="mt-[26px] flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
           >
             {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" strokeWidth={2} />}
             Agregar
@@ -263,7 +263,7 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
       {/* Category list */}
       <div className="bg-background border border-border">
         <div className="px-6 py-3 border-b border-border">
-          <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground">
+          <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
             Categorías existentes
             <span className="ml-2 font-normal text-foreground">{categories.length}</span>
           </p>

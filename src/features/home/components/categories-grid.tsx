@@ -18,14 +18,14 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
         {/* Header de sección */}
         <div className="flex items-end justify-between mb-10">
           <div className="space-y-2">
-            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-muted-foreground">
+            <p className="text-2xs font-medium tracking-[0.25em] uppercase text-muted-foreground">
               Explorar
             </p>
-            <h2 className="text-4xl font-normal font-serif">Por categoría</h2>
+            <h2 className="text-3xl lg:text-4xl font-normal font-serif">Por categoría</h2>
           </div>
           <Link
             href="/productos"
-            className="text-[11px] font-medium tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
+            className="text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
           >
             Ver todo →
           </Link>
@@ -52,7 +52,7 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
                   aria-hidden="true"
                   className={cn(
                     'absolute bottom-4 right-3 font-light font-serif leading-none select-none pointer-events-none',
-                    'text-[100px] lg:text-[130px]',
+                    'text-watermark-sm sm:text-watermark-md lg:text-watermark-lg',
                     'transition-opacity duration-500',
                     isDark
                       ? 'text-background/[0.07] group-hover:text-background/[0.12]'
@@ -65,7 +65,7 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
                 {/* Top: índice pequeño */}
                 <p
                   className={cn(
-                    'text-[10px] font-medium tracking-[0.25em] uppercase',
+                    'text-2xs font-medium tracking-[0.25em] uppercase',
                     isDark ? 'text-background/40' : 'text-muted-foreground',
                   )}
                 >
@@ -90,7 +90,7 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
                   {/* Flecha visible en hover */}
                   <p
                     className={cn(
-                      'text-[11px] font-medium tracking-[0.15em] uppercase',
+                      'text-xs font-medium tracking-[0.15em] uppercase',
                       'opacity-0 group-hover:opacity-100 transition-opacity duration-300',
                       isDark ? 'text-background/60' : 'text-muted-foreground',
                     )}
