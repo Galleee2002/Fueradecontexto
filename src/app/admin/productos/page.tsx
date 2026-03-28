@@ -33,10 +33,10 @@ function CategoryFilter({
       <div className="flex gap-1 flex-wrap">
         <Link
           href="/admin/productos"
-          className={`px-3 py-1.5 text-xs border transition-colors ${
+          className={`px-3 py-1.5 text-xs border transition-colors focus:outline-none ${
             !current
-              ? 'bg-foreground text-primary-foreground border-foreground'
-              : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
+              ? 'bg-primary-subtle text-foreground border-primary hover:bg-primary-subtle hover:text-primary focus:bg-primary focus:text-primary-foreground'
+              : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
           }`}
         >
           Todas
@@ -45,10 +45,10 @@ function CategoryFilter({
           <Link
             key={cat}
             href={`/admin/productos?category=${encodeURIComponent(cat)}`}
-            className={`px-3 py-1.5 text-xs border transition-colors ${
+            className={`px-3 py-1.5 text-xs border transition-colors focus:outline-none ${
               current === cat
-                ? 'bg-foreground text-primary-foreground border-foreground'
-                : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
+                ? 'bg-primary-subtle text-primary-foreground border-primary hover:bg-primary focus:bg-primary focus:text-primary-foreground'
+                : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
             }`}
           >
             {cat}
@@ -76,10 +76,10 @@ function StatusFilter({ current }: { current: AdminProductStatus }) {
           <Link
             key={value}
             href={`/admin/productos?status=${value}`}
-            className={`px-3 py-1.5 text-xs border-y border-r first:border-l transition-colors ${
+            className={`px-3 py-1.5 text-xs border-y border-r first:border-l transition-colors focus:outline-none ${
               current === value
-                ? 'bg-foreground text-primary-foreground border-foreground'
-                : 'border-border text-muted-foreground hover:text-foreground'
+                ? 'bg-primary-subtle text-primary-foreground border-primary hover:bg-primary focus:bg-primary focus:text-primary-foreground'
+                : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
             }`}
           >
             {label}

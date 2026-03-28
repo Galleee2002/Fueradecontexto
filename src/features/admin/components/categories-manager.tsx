@@ -223,7 +223,7 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
         <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3 mb-5">
           Nueva categoría
         </p>
-        <form onSubmit={handleAdd} className="flex gap-3 items-start">
+        <form onSubmit={handleAdd} className="flex gap-3 items-center">
           <div className="flex-1 space-y-1.5">
             <label
               htmlFor="category-name"
@@ -252,7 +252,7 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
           <button
             type="submit"
             disabled={isPending}
-            className="mt-[26px] flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
           >
             {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" strokeWidth={2} />}
             Agregar
