@@ -154,7 +154,7 @@ export type SizeGuideGroupByOutputType = {
   _max: SizeGuideMaxAggregateOutputType | null
 }
 
-type GetSizeGuideGroupByPayload<T extends SizeGuideGroupByArgs> = Prisma.PrismaPromise<
+export type GetSizeGuideGroupByPayload<T extends SizeGuideGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SizeGuideGroupByOutputType, T['by']> &
       {

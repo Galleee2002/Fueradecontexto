@@ -47,7 +47,7 @@ function CategoryFilter({
             href={`/admin/productos?category=${encodeURIComponent(cat)}`}
             className={`px-3 py-1.5 text-xs border transition-colors focus:outline-none ${
               current === cat
-                ? 'bg-primary-subtle text-primary-foreground border-primary hover:bg-primary focus:bg-primary focus:text-primary-foreground'
+                ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover'
                 : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
             }`}
           >
@@ -78,7 +78,7 @@ function StatusFilter({ current }: { current: AdminProductStatus }) {
             href={`/admin/productos?status=${value}`}
             className={`px-3 py-1.5 text-xs border-y border-r first:border-l transition-colors focus:outline-none ${
               current === value
-                ? 'bg-primary-subtle text-primary-foreground border-primary hover:bg-primary focus:bg-primary focus:text-primary-foreground'
+                ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover'
                 : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
             }`}
           >

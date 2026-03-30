@@ -4,66 +4,86 @@ import { Container } from "@/components/shared/layout/container";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[92svh] bg-foreground overflow-hidden flex flex-col justify-end">
+    <section className="relative min-h-[92svh] overflow-hidden flex flex-col justify-end">
+      {/* Imagen de fondo */}
       <Image
-        src="/img/fashion_model.png"
-        alt="Fueradecontexto — Nueva colección 2026"
+        src="/img/hero-img.jpeg"
+        alt="Colección Fuera de Contexto"
         fill
+        className="object-cover"
         priority
-        className="object-cover object-center"
-        sizes="100vw"
+        quality={85}
       />
-
-      {/* Overlay doble: lateral para desktop + vertical para legibilidad */}
-      <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/55 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-foreground/25" />
+      
+      {/* Overlay lateral — crea profundidad hacia el texto */}
+      <div className="absolute inset-0 bg-gradient-to-r from-foreground/85 via-foreground/50 to-transparent" />
+      {/* Overlay vertical — legibilidad del texto inferior */}
+      <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-transparent to-foreground/20" />
 
       {/* Contenido */}
-      <div className="relative z-10 pt-24 sm:pt-32 lg:pt-40 pb-14 sm:pb-20 lg:pb-32">
+      <div className="relative z-10 pb-16 sm:pb-24 lg:pb-36 pt-24 sm:pt-32">
         <Container>
-          <div className="max-w-2xl lg:max-w-3xl space-y-8 lg:space-y-10">
-            {/* Badge animado */}
-            <div className="inline-flex items-center gap-3 border border-background/20 px-4 py-2 backdrop-blur-sm">
+          <div className="max-w-2xl lg:max-w-[56rem] space-y-6 lg:space-y-8">
+
+            {/* Badge */}
+            <div className="inline-flex items-center gap-3 border border-white/15 px-4 py-2 backdrop-blur-sm bg-white/5">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <p className="text-2xs font-medium tracking-[0.3em] uppercase text-background/70">
+              <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-white/60">
                 Nueva colección — 2026
               </p>
             </div>
 
-            {/* Mensaje principal — orientado al usuario */}
-            <h1 className="text-display-sm sm:text-display-md lg:text-display-lg xl:text-display-xl font-light font-serif leading-[0.88] text-background">
+            {/* Titular principal */}
+            <h1
+              className="font-serif font-light text-white leading-[0.88] tracking-[-0.01em]"
+              style={{ fontSize: "clamp(3.5rem, 9vw, 7.75rem)" }}
+            >
               Viste lo que
               <br />
-              <span className="italic">otros no se</span>
+              <em className="not-italic italic text-white/90">otros no se</em>
               <br />
               atreven.
             </h1>
 
-            {/* Descripción breve */}
-            <p className="text-sm lg:text-base text-background/55 max-w-sm lg:max-w-md leading-relaxed tracking-wide">
-              Piezas diseñadas para quienes marcan tendencia, no para quienes la
-              siguen.
+            {/* Línea divisoria sutil */}
+            <div className="w-12 h-px bg-white/25" />
+
+            {/* Descripción */}
+            <p className="text-base sm:text-lg text-white/70 max-w-xs sm:max-w-sm leading-relaxed font-light tracking-wide">
+              Piezas diseñadas para quienes marcan tendencia.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6 pt-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-8 pt-2">
               <Link
                 href="/productos"
-                className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary-hover rounded-none px-10 py-4 text-xs font-medium tracking-[0.22em] uppercase transition-colors"
+                className="group relative w-full sm:w-auto overflow-hidden bg-primary text-white px-10 py-4 text-[11px] font-medium tracking-[0.28em] uppercase transition-all duration-300 hover:bg-primary/90"
               >
-                Ver colección
+                <span className="relative z-10">Ver colección</span>
+                <span className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               </Link>
+
               <Link
                 href="/productos"
-                className="group flex items-center gap-3 text-xs font-medium tracking-[0.22em] uppercase text-background/55 hover:text-background transition-colors"
+                className="group flex items-center gap-3 text-[11px] font-medium tracking-[0.28em] uppercase text-white/45 hover:text-white/90 transition-colors duration-300"
               >
-                <span className="h-px w-6 bg-current block transition-all duration-300 group-hover:w-10" />
+                <span className="h-px w-6 bg-current block transition-all duration-500 group-hover:w-12" />
                 Novedades
               </Link>
             </div>
+
           </div>
         </Container>
+      </div>
+
+      {/* Indicador scroll sutil */}
+      <div className="absolute bottom-8 right-8 hidden lg:flex flex-col items-center gap-2 opacity-30">
+        <span className="text-[9px] tracking-[0.4em] uppercase text-white rotate-90 translate-y-4">
+          Scroll
+        </span>
+        <span className="w-px h-10 bg-white/50" />
       </div>
     </section>
   );
 }
+
