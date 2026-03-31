@@ -51,8 +51,8 @@ export function Navbar({ categories }: { categories: string[] }) {
               </Link>
 
               {productsOpen && (
-                <div className="absolute top-full left-0 pt-3 z-50 min-w-[160px]">
-                  <ul className="bg-background border border-border shadow-sm py-1">
+                <div className="absolute top-full left-0 pt-2 z-50 min-w-[180px]">
+                  <ul className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden">
                     {CATEGORIES.map((cat) => (
                       <li key={cat.href}>
                         <Link

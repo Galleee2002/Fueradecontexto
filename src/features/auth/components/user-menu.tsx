@@ -48,8 +48,8 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full pt-3 z-50 min-w-[160px]">
-          <ul className="bg-background border border-border shadow-sm py-1">
+        <div className="absolute right-0 top-full pt-2 z-50 min-w-[160px]">
+          <ul className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden">
             <li>
               <Link
                 href="/cuenta"
