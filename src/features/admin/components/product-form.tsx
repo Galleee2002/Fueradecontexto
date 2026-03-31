@@ -4,17 +4,20 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ImageOff, Loader2 } from 'lucide-react'
+import { IKUpload } from 'imagekitio-next'
+import { ArrowLeft, ImageOff, Loader2, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
+import { createStampLocation } from '../actions/stamp-location-actions'
 import type { AdminProduct } from '../types'
-const COLOR_PALETTE = ['Negro', 'Blanco', 'Camel', 'Fucsia', 'Marengo', 'Rojo', 'Verde', 'Azul', 'Gris']
+import type { ProductColor } from '@/features/products/types'
+
 const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
-const STAMP_SIZE_OPTIONS = ['Pequeña', 'Mediana', 'Grande']
-const STAMP_LOCATION_OPTIONS = ['Pecho izquierdo', 'Pecho derecho', 'Espalda', 'Manga izquierda', 'Manga derecha']
+const STAMP_SIZE_OPTIONS = ['20x30', '30x40', '40x50']
 
 interface ProductFormProps {
   product?: AdminProduct
   categories: string[]
+  stampLocations: string[]
 }
 
 function slugify(str: string): string {
@@ -47,9 +50,7 @@ function FormField({
         {required && <span className="text-primary ml-1">*</span>}
       </label>
       {children}
-      {error && (
-        <p className="text-xs text-primary">{error}</p>
-      )}
+      {error && <p className="text-xs text-primary">{error}</p>}
     </div>
   )
 }
@@ -59,17 +60,21 @@ function CheckboxGroup({
   options,
   selected,
   onChange,
+  noteItem,
+  note,
 }: {
   label: string
   options: string[]
   selected: string[]
   onChange: (v: string[]) => void
+  noteItem?: string
+  note?: string
 }) {
   function toggle(option: string) {
     onChange(
       selected.includes(option)
         ? selected.filter((s) => s !== option)
-        : [...selected, option]
+        : [...selected, option],
     )
   }
   return (
@@ -79,10 +84,7 @@ function CheckboxGroup({
       </p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => (
-          <label
-            key={option}
-            className="flex items-center gap-1.5 cursor-pointer"
-          >
+          <label key={option} className="flex items-center gap-1.5 cursor-pointer">
             <input
               type="checkbox"
               checked={selected.includes(option)}
@@ -90,14 +92,18 @@ function CheckboxGroup({
               className="h-3.5 w-3.5 accent-primary"
             />
             <span className="text-xs text-foreground">{option}</span>
+            {noteItem && option === noteItem && (
+              <span className="text-2xs text-muted-foreground italic">(no frente)</span>
+            )}
           </label>
         ))}
       </div>
+      {note && <p className="text-xs text-muted-foreground">{note}</p>}
     </div>
   )
 }
 
-export function ProductForm({ product, categories }: ProductFormProps) {
+export function ProductForm({ product, categories, stampLocations: stampLocationsProp }: ProductFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [errors, setErrors] = useState<Record<string, string[]>>({})
@@ -116,21 +122,38 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     !!product?.category && !categories.includes(product.category),
   )
   const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? '')
-  const [imagePreview, setImagePreview] = useState(product?.imageUrl ?? '')
+  const [uploadError, setUploadError] = useState('')
   const [active, setActive] = useState(product?.active ?? true)
-  const [availableColors, setAvailableColors] = useState<string[]>(product?.availableColors ?? [])
+
+  // Colors
+  const [availableColors, setAvailableColors] = useState<ProductColor[]>(
+    product?.availableColors ?? [],
+  )
+  const [newColorName, setNewColorName] = useState('')
+  const [newColorHex, setNewColorHex] = useState('#000000')
+
+  // Sizes
   const [availableSizes, setAvailableSizes] = useState<string[]>(product?.availableSizes ?? [])
+
+  // Stamp sizes
   const [stampSizes, setStampSizes] = useState<string[]>(product?.stampSizes ?? [])
-  const [stampLocations, setStampLocations] = useState<string[]>(product?.stampLocations ?? [])
+
+  // Stamp locations
+  const [allStampLocations, setAllStampLocations] = useState<string[]>(stampLocationsProp)
+  const [selectedStampLocations, setSelectedStampLocations] = useState<string[]>(
+    product?.stampLocations ?? [],
+  )
+  const [addingLocation, setAddingLocation] = useState(false)
+  const [newLocationInput, setNewLocationInput] = useState('')
+  const [locationError, setLocationError] = useState('')
+  const [isAddingLocation, startLocationTransition] = useTransition()
 
   const allCategories = categories
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value
     setName(val)
-    if (!slugLocked) {
-      setSlug(slugify(val))
-    }
+    if (!slugLocked) setSlug(slugify(val))
   }
 
   function handleSlugChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -138,8 +161,29 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     setSlugLocked(true)
   }
 
-  function handleImageUrlBlur() {
-    setImagePreview(imageUrl)
+  function handleAddColor() {
+    const name = newColorName.trim()
+    if (!name) return
+    if (availableColors.some((c) => c.name.toLowerCase() === name.toLowerCase())) return
+    setAvailableColors((prev) => [...prev, { name, hex: newColorHex }])
+    setNewColorName('')
+    setNewColorHex('#000000')
+  }
+
+  function handleAddLocation(e: React.FormEvent) {
+    e.preventDefault()
+    setLocationError('')
+    startLocationTransition(async () => {
+      const result = await createStampLocation(newLocationInput)
+      if ('error' in result) {
+        setLocationError(result.error)
+        return
+      }
+      setAllStampLocations((prev) => [...prev, result.name])
+      setSelectedStampLocations((prev) => [...prev, result.name])
+      setNewLocationInput('')
+      setAddingLocation(false)
+    })
   }
 
   const effectiveCategory = useCustomCategory ? customCategory : category
@@ -160,7 +204,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       availableColors,
       availableSizes,
       stampSizes,
-      stampLocations,
+      stampLocations: selectedStampLocations,
     }
 
     startTransition(async () => {
@@ -228,11 +272,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
               />
             </FormField>
 
-            <FormField
-              label="Slug (URL)"
-              error={errors.slug?.[0]}
-              required
-            >
+            <FormField label="Slug (URL)" error={errors.slug?.[0]} required>
               <div className="flex gap-2 items-center">
                 <input
                   type="text"
@@ -267,9 +307,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                 placeholder="Describe el producto: materiales, talle, fit, cuidados..."
                 className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground resize-none"
               />
-              <p className="text-xs text-muted-foreground text-right">
-                {description.length}/2000
-              </p>
+              <p className="text-xs text-muted-foreground text-right">{description.length}/2000</p>
             </FormField>
           </div>
 
@@ -345,36 +383,61 @@ export function ProductForm({ product, categories }: ProductFormProps) {
             </div>
           </div>
 
+          {/* Image upload */}
           <div className="bg-background border border-border p-6 space-y-4">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Imagen del producto
             </p>
 
-            <FormField label="URL de imagen" error={errors.imageUrl?.[0]} required>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                onBlur={handleImageUrlBlur}
-                placeholder="https://ejemplo.com/imagen.webp"
-                className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
-              />
-              <p className="text-xs text-muted-foreground">
-                Pegá la URL de la imagen (Cloudinary, Uploadthing, etc.)
-              </p>
+            <FormField label="Subir imagen" error={errors.imageUrl?.[0]} required>
+              <div className="space-y-2">
+                <div className="relative">
+                  <IKUpload
+                    fileName="product-image"
+                    useUniqueFileName
+                    folder="/productos"
+                    authenticator={async () => {
+                      const res = await fetch('/api/imagekit')
+                      if (!res.ok) throw new Error('Error al obtener credenciales de ImageKit')
+                      return res.json()
+                    }}
+                    onSuccess={(res) => {
+                      setImageUrl(res.url)
+                      setUploadError('')
+                    }}
+                    onError={() => {
+                      setUploadError('Error al subir la imagen. Intentá de nuevo.')
+                    }}
+                    accept="image/*"
+                    className="w-full px-3 py-2.5 border border-border bg-background text-sm text-muted-foreground focus:outline-none focus:border-primary file:mr-3 file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-medium file:tracking-widest file:uppercase file:px-3 file:py-1 file:cursor-pointer cursor-pointer"
+                  />
+                </div>
+                {uploadError && <p className="text-xs text-primary">{uploadError}</p>}
+                <p className="text-xs text-muted-foreground">
+                  Formatos aceptados: JPG, PNG, WebP
+                </p>
+              </div>
             </FormField>
 
-            {/* Preview */}
-            {imagePreview ? (
-              <div className="relative aspect-[3/4] w-40 bg-surface border border-border overflow-hidden">
-                <Image
-                  src={imagePreview}
-                  alt="Preview"
-                  fill
-                  sizes="160px"
-                  className="object-cover"
-                  onError={() => setImagePreview('')}
-                />
+            {imageUrl ? (
+              <div className="space-y-2">
+                <div className="relative aspect-[3/4] w-40 bg-surface border border-border overflow-hidden">
+                  <Image
+                    src={imageUrl}
+                    alt="Preview"
+                    fill
+                    sizes="160px"
+                    className="object-cover"
+                    onError={() => setImageUrl('')}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setImageUrl('')}
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
+                >
+                  Eliminar imagen
+                </button>
               </div>
             ) : (
               <div className="flex items-center justify-center w-40 aspect-[3/4] bg-surface border border-border border-dashed text-muted-foreground">
@@ -383,35 +446,176 @@ export function ProductForm({ product, categories }: ProductFormProps) {
             )}
           </div>
 
+          {/* Customization options */}
           <div className="bg-background border border-border p-6 space-y-6">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Opciones de personalización
             </p>
 
-            <CheckboxGroup
-              label="Colores disponibles"
-              options={COLOR_PALETTE}
-              selected={availableColors}
-              onChange={setAvailableColors}
-            />
+            {/* Dynamic colors */}
+            <div className="space-y-3">
+              <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+                Colores disponibles
+              </p>
+
+              {availableColors.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {availableColors.map((color) => (
+                    <div
+                      key={color.name}
+                      className="flex items-center gap-1.5 border border-border px-2 py-1"
+                    >
+                      <span
+                        className="w-4 h-4 rounded-full border border-border/50 flex-shrink-0"
+                        style={{ backgroundColor: color.hex }}
+                      />
+                      <span className="text-xs text-foreground">{color.name}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setAvailableColors((prev) => prev.filter((c) => c.name !== color.name))
+                        }
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                        aria-label={`Eliminar color ${color.name}`}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2 items-end">
+                <div className="space-y-1">
+                  <p className="text-2xs text-muted-foreground uppercase tracking-widest">
+                    Nombre
+                  </p>
+                  <input
+                    type="text"
+                    value={newColorName}
+                    onChange={(e) => setNewColorName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleAddColor()
+                      }
+                    }}
+                    placeholder="Ej: Terracota"
+                    className="px-2 py-2 border border-border bg-background text-sm w-36 focus:outline-none focus:border-primary rounded-none placeholder:text-muted-foreground"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-2xs text-muted-foreground uppercase tracking-widest">Color</p>
+                  <input
+                    type="color"
+                    value={newColorHex}
+                    onChange={(e) => setNewColorHex(e.target.value)}
+                    className="h-[38px] w-10 border border-border cursor-pointer p-0.5 bg-background rounded-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddColor}
+                  disabled={!newColorName.trim()}
+                  className="flex items-center gap-1 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Agregar
+                </button>
+              </div>
+            </div>
+
             <CheckboxGroup
               label="Talles disponibles"
               options={SIZE_OPTIONS}
               selected={availableSizes}
               onChange={setAvailableSizes}
             />
+
             <CheckboxGroup
               label="Tamaños de estampa"
               options={STAMP_SIZE_OPTIONS}
               selected={stampSizes}
               onChange={setStampSizes}
+              noteItem="40x50"
+              note="El tamaño 40×50 no puede ubicarse en el frente de la prenda."
             />
-            <CheckboxGroup
-              label="Ubicaciones de estampa"
-              options={STAMP_LOCATION_OPTIONS}
-              selected={stampLocations}
-              onChange={setStampLocations}
-            />
+
+            {/* Stamp locations */}
+            <div className="space-y-2">
+              <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+                Ubicaciones de estampa
+              </p>
+
+              {allStampLocations.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {allStampLocations.map((loc) => (
+                    <label key={loc} className="flex items-center gap-1.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedStampLocations.includes(loc)}
+                        onChange={() =>
+                          setSelectedStampLocations((prev) =>
+                            prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc],
+                          )
+                        }
+                        className="h-3.5 w-3.5 accent-primary"
+                      />
+                      <span className="text-xs text-foreground">{loc}</span>
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  No hay ubicaciones creadas todavía.
+                </p>
+              )}
+
+              {addingLocation ? (
+                <form onSubmit={handleAddLocation} className="flex gap-2 items-center mt-2">
+                  <input
+                    type="text"
+                    value={newLocationInput}
+                    onChange={(e) => setNewLocationInput(e.target.value)}
+                    placeholder="Ej: Pecho izquierdo"
+                    autoFocus
+                    className="px-2 py-2 border border-border bg-background text-sm w-48 focus:outline-none focus:border-primary rounded-none placeholder:text-muted-foreground"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isAddingLocation || !newLocationInput.trim()}
+                    className="flex items-center gap-1 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {isAddingLocation ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      'Guardar'
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAddingLocation(false)
+                      setNewLocationInput('')
+                      setLocationError('')
+                    }}
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </form>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setAddingLocation(true)}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2 mt-1"
+                >
+                  <Plus className="h-3 w-3" />
+                  Agregar ubicación
+                </button>
+              )}
+              {locationError && <p className="text-xs text-primary">{locationError}</p>}
+            </div>
           </div>
         </div>
 

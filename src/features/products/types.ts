@@ -1,3 +1,8 @@
+export interface ProductColor {
+  name: string
+  hex: string
+}
+
 export interface ProductCard {
   id: string
   slug: string
@@ -12,7 +17,7 @@ export interface ProductFull extends ProductCard {
   active: boolean
   createdAt: Date
   updatedAt: Date
-  availableColors: string[]
+  availableColors: ProductColor[]
   availableSizes: string[]
   stampSizes: string[]
   stampLocations: string[]

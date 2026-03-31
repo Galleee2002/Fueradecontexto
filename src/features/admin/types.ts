@@ -1,3 +1,5 @@
+import type { ProductColor } from '@/features/products/types'
+
 export interface AdminProduct {
   id: string
   slug: string
@@ -9,7 +11,7 @@ export interface AdminProduct {
   active: boolean
   createdAt: Date
   updatedAt: Date
-  availableColors: string[]
+  availableColors: ProductColor[]
   availableSizes: string[]
   stampSizes: string[]
   stampLocations: string[]

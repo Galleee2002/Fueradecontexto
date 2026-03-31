@@ -91,6 +91,13 @@ export async function fetchAdminCategories(): Promise<string[]> {
   return rows.map((r) => (r as { name: string }).name)
 }
 
+export async function fetchAdminStampLocations(): Promise<string[]> {
+  const rows = await sql`
+    SELECT name FROM "StampLocation" ORDER BY "createdAt" ASC
+  `
+  return rows.map((r) => (r as { name: string }).name)
+}
+
 export async function fetchAdminOrders(
   page = 1,
 ): Promise<{ orders: AdminOrder[]; total: number; totalPages: number }> {

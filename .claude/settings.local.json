@@ -15,7 +15,8 @@
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:neon.com)",
       "Bash(docker --version)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node -e \":*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\gaelg\\OneDrive\\Desktop\\Fueradecontexto\\src\\app\\api\\auth"

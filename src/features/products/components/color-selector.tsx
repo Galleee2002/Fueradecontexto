@@ -1,19 +1,9 @@
 'use client'
 
-const COLOR_HEX: Record<string, string> = {
-  Negro: '#1A1A1A',
-  Blanco: '#F5F5F5',
-  Camel: '#C19A6B',
-  Fucsia: '#E91E8C',
-  Marengo: '#4A4E54',
-  Rojo: '#D32F2F',
-  Verde: '#388E3C',
-  Azul: '#1565C0',
-  Gris: '#757575',
-}
+import type { ProductColor } from '../types'
 
 interface ColorSelectorProps {
-  colors: string[]
+  colors: ProductColor[]
   selected: string | null
   onChange: (color: string) => void
 }
@@ -27,7 +17,7 @@ export function ColorSelector({ colors, selected, onChange }: ColorSelectorProps
         Color{selected ? <> — <span className="text-foreground">{selected}</span></> : null}
       </p>
       <div className="flex items-center gap-3">
-        {colors.map((name) => (
+        {colors.map(({ name, hex }) => (
           <button
             key={name}
             onClick={() => onChange(name)}
@@ -37,7 +27,7 @@ export function ColorSelector({ colors, selected, onChange }: ColorSelectorProps
                 ? 'ring-2 ring-offset-2 ring-foreground'
                 : 'ring-1 ring-transparent hover:ring-border'
             }`}
-            style={{ backgroundColor: COLOR_HEX[name] ?? '#ccc' }}
+            style={{ backgroundColor: hex }}
           />
         ))}
       </div>

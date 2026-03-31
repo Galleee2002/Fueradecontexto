@@ -8,7 +8,12 @@ export const productSchema = z.object({
   imageUrl: z.string().url('URL de imagen inválida'),
   category: z.string().min(1, 'La categoría es requerida'),
   active: z.boolean().default(true),
-  availableColors: z.array(z.string()).default([]),
+  availableColors: z.array(
+    z.object({
+      name: z.string().min(1),
+      hex: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Formato de color inválido'),
+    })
+  ).default([]),
   availableSizes: z.array(z.string()).default([]),
   stampSizes: z.array(z.string()).default([]),
   stampLocations: z.array(z.string()).default([]),
