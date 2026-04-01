@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model StampLocation
+ * 
+ */
+export type StampLocation = Prisma.StampLocationModel
+/**
  * Model Product
  * 
  */

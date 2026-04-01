@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Category: 'Category',
+  StampLocation: 'StampLocation',
   Product: 'Product',
   SizeGuide: 'SizeGuide',
   CartItem: 'CartItem',
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "product" | "sizeGuide" | "cartItem" | "order" | "orderItem" | "user"
+    modelProps: "category" | "stampLocation" | "product" | "sizeGuide" | "cartItem" | "order" | "orderItem" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -481,6 +482,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    StampLocation: {
+      payload: Prisma.$StampLocationPayload<ExtArgs>
+      fields: Prisma.StampLocationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StampLocationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StampLocationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>
+        }
+        findFirst: {
+          args: Prisma.StampLocationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StampLocationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>
+        }
+        findMany: {
+          args: Prisma.StampLocationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>[]
+        }
+        create: {
+          args: Prisma.StampLocationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>
+        }
+        createMany: {
+          args: Prisma.StampLocationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StampLocationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>[]
+        }
+        delete: {
+          args: Prisma.StampLocationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>
+        }
+        update: {
+          args: Prisma.StampLocationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>
+        }
+        deleteMany: {
+          args: Prisma.StampLocationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StampLocationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StampLocationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>[]
+        }
+        upsert: {
+          args: Prisma.StampLocationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StampLocationPayload>
+        }
+        aggregate: {
+          args: Prisma.StampLocationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStampLocation>
+        }
+        groupBy: {
+          args: Prisma.StampLocationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StampLocationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StampLocationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StampLocationCountAggregateOutputType> | number
         }
       }
     }
@@ -976,6 +1051,15 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const StampLocationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type StampLocationScalarFieldEnum = (typeof StampLocationScalarFieldEnum)[keyof typeof StampLocationScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
@@ -1292,6 +1376,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   category?: Prisma.CategoryOmit
+  stampLocation?: Prisma.StampLocationOmit
   product?: Prisma.ProductOmit
   sizeGuide?: Prisma.SizeGuideOmit
   cartItem?: Prisma.CartItemOmit

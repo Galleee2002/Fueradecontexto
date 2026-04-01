@@ -16,7 +16,13 @@
       "WebFetch(domain:neon.com)",
       "Bash(docker --version)",
       "mcp__Claude_Preview__preview_start",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)",
+      "Bash(pnpm install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(grep -r \"imagekit\\\\|ImageKit\" . --include=*.ts --include=*.tsx --include=*.js --include=*.json --include=.env*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\gaelg\\OneDrive\\Desktop\\Fueradecontexto\\src\\app\\api\\auth"

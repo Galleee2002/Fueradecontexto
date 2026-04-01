@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Category'
+export type * from './models/StampLocation'
 export type * from './models/Product'
 export type * from './models/SizeGuide'
 export type * from './models/CartItem'
