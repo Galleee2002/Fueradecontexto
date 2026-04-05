@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ImageOff, Loader2, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
@@ -170,8 +169,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
     setNewColorHex('#000000')
   }
 
-  function handleAddLocation(e: React.FormEvent) {
-    e.preventDefault()
+  function handleAddLocation() {
     setLocationError('')
     startLocationTransition(async () => {
       const result = await createStampLocation(newLocationInput)
@@ -210,13 +208,26 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
         body: formData,
       })
 
-      const data = (await response.json()) as {
+      const rawBody = await response.text()
+      let data: {
         secure_url?: string
         error?: { message?: string }
+      } = {}
+
+      try {
+        data = JSON.parse(rawBody) as {
+          secure_url?: string
+          error?: { message?: string }
+        }
+      } catch {
+        // Cloudinary can return non-JSON payloads for some failures.
       }
 
       if (!response.ok || !data.secure_url) {
-        setUploadError(data.error?.message ?? 'Error al subir la imagen. Intentá de nuevo.')
+        setUploadError(
+          data.error?.message ??
+            'Cloudinary rechazó la imagen o devolvió una respuesta inválida. Revisá preset/carpeta.',
+        )
         return
       }
 
@@ -445,7 +456,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                   <input
                     type="file"
                     accept="image/*"
-                    className="sr-only"
+                    className="hidden"
                     disabled={isUploadingImage}
                     onChange={(e) => {
                       const file = e.target.files?.[0]
@@ -454,29 +465,18 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                     }}
                   />
                 </label>
-                <input
-                  type="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
-                />
                 {uploadError && <p className="text-xs text-primary">{uploadError}</p>}
-                <p className="text-xs text-muted-foreground">
-                  Podés subir desde tu dispositivo o pegar una URL manual.
-                </p>
               </div>
             </FormField>
 
             {imageUrl ? (
               <div className="space-y-2">
                 <div className="relative aspect-[3/4] w-40 bg-surface border border-border overflow-hidden">
-                  <Image
+                  <img
                     src={imageUrl}
                     alt="Preview"
-                    fill
-                    sizes="160px"
-                    className="object-cover"
+                    className="h-full w-full object-cover"
+                    loading="lazy"
                     onError={() => setImageUrl('')}
                   />
                 </div>
@@ -621,18 +621,27 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
               )}
 
               {addingLocation ? (
-                <form onSubmit={handleAddLocation} className="flex gap-2 items-center mt-2">
+                <div className="flex gap-2 items-center mt-2">
                   <input
                     type="text"
                     value={newLocationInput}
                     onChange={(e) => setNewLocationInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        if (!isAddingLocation && newLocationInput.trim()) {
+                          handleAddLocation()
+                        }
+                      }
+                    }}
                     placeholder="Ej: Pecho izquierdo"
                     autoFocus
                     className="px-2 py-2 border border-border bg-background text-sm w-48 focus:outline-none focus:border-primary rounded-none placeholder:text-muted-foreground"
                   />
                   <button
-                    type="submit"
+                    type="button"
                     disabled={isAddingLocation || !newLocationInput.trim()}
+                    onClick={handleAddLocation}
                     className="flex items-center gap-1 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {isAddingLocation ? (
@@ -652,7 +661,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                   >
                     Cancelar
                   </button>
-                </form>
+                </div>
               ) : (
                 <button
                   type="button"
@@ -669,7 +678,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
         </div>
 
         {/* Right column — status + actions */}
-        <div className="space-y-4">
+        <div className="space-y-4 lg:sticky lg:top-8 lg:self-start">
           <div className="bg-background border border-border p-6 space-y-4">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Visibilidad
