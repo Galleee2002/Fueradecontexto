@@ -223,7 +223,7 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
         <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3 mb-5">
           Nueva categoría
         </p>
-        <form onSubmit={handleAdd} className="flex gap-3 items-center">
+        <form onSubmit={handleAdd} className="flex gap-3 items-end">
           <div className="flex-1 space-y-1.5">
             <label
               htmlFor="category-name"
