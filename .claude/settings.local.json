@@ -21,8 +21,7 @@
       "Bash(pnpm install:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(grep -r \"imagekit\\\\|ImageKit\" . --include=*.ts --include=*.tsx --include=*.js --include=*.json --include=.env*)"
+      "Bash(git push:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\gaelg\\OneDrive\\Desktop\\Fueradecontexto\\src\\app\\api\\auth"

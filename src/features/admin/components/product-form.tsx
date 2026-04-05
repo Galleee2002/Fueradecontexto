@@ -4,7 +4,6 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { IKUpload } from 'imagekitio-next'
 import { ArrowLeft, ImageOff, Loader2, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
 import { createStampLocation } from '../actions/stamp-location-actions'
@@ -123,6 +122,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
   )
   const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? '')
   const [uploadError, setUploadError] = useState('')
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
   const [active, setActive] = useState(product?.active ?? true)
 
   // Colors
@@ -184,6 +184,48 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
       setNewLocationInput('')
       setAddingLocation(false)
     })
+  }
+
+  async function handleImageUpload(file: File) {
+    setUploadError('')
+
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    const uploadFolder = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER
+
+    if (!cloudName || !uploadPreset) {
+      setUploadError('Falta configurar Cloudinary en variables de entorno.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', uploadPreset)
+    if (uploadFolder) formData.append('folder', uploadFolder)
+
+    setIsUploadingImage(true)
+    try {
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = (await response.json()) as {
+        secure_url?: string
+        error?: { message?: string }
+      }
+
+      if (!response.ok || !data.secure_url) {
+        setUploadError(data.error?.message ?? 'Error al subir la imagen. Intentá de nuevo.')
+        return
+      }
+
+      setImageUrl(data.secure_url)
+    } catch {
+      setUploadError('Error de red al subir la imagen. Intentá de nuevo.')
+    } finally {
+      setIsUploadingImage(false)
+    }
   }
 
   const effectiveCategory = useCustomCategory ? customCategory : category
@@ -391,30 +433,37 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
 
             <FormField label="Subir imagen" error={errors.imageUrl?.[0]} required>
               <div className="space-y-2">
-                <div className="relative">
-                  <IKUpload
-                    fileName="product-image"
-                    useUniqueFileName
-                    folder="/productos"
-                    authenticator={async () => {
-                      const res = await fetch('/api/imagekit')
-                      if (!res.ok) throw new Error('Error al obtener credenciales de ImageKit')
-                      return res.json()
-                    }}
-                    onSuccess={(res) => {
-                      setImageUrl(res.url)
-                      setUploadError('')
-                    }}
-                    onError={() => {
-                      setUploadError('Error al subir la imagen. Intentá de nuevo.')
-                    }}
+                <label className="inline-flex items-center gap-2 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors cursor-pointer w-fit">
+                  {isUploadingImage ? (
+                    <>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Subiendo imagen...
+                    </>
+                  ) : (
+                    <>Seleccionar archivo</>
+                  )}
+                  <input
+                    type="file"
                     accept="image/*"
-                    className="w-full px-3 py-2.5 border border-border bg-background text-sm text-muted-foreground focus:outline-none focus:border-primary file:mr-3 file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-medium file:tracking-widest file:uppercase file:px-3 file:py-1 file:cursor-pointer cursor-pointer"
+                    className="sr-only"
+                    disabled={isUploadingImage}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) void handleImageUpload(file)
+                      e.currentTarget.value = ''
+                    }}
                   />
-                </div>
+                </label>
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
+                />
                 {uploadError && <p className="text-xs text-primary">{uploadError}</p>}
                 <p className="text-xs text-muted-foreground">
-                  Formatos aceptados: JPG, PNG, WebP
+                  Podés subir desde tu dispositivo o pegar una URL manual.
                 </p>
               </div>
             </FormField>
