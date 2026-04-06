@@ -35,7 +35,7 @@ export function UserMenu() {
   const isAdmin = session.user.role === 'ADMIN'
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative z-[60]" ref={ref}>
       <button
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-1 text-foreground hover:text-primary transition-colors"
@@ -48,7 +48,7 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full pt-2 z-50 min-w-[160px]">
+        <div className="absolute right-0 top-full pt-2 z-[70] min-w-[160px]">
           <ul className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden">
             <li>
               <Link

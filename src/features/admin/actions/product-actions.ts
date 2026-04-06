@@ -18,16 +18,16 @@ export async function createAdminProduct(input: ProductInput) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, previewImages, category, active,
+  const { slug, name, description, price, imageUrl, previewImages, category, subcategory, active,
           availableColors, availableSizes, stampSizes, stampLocations } = parsed.data
 
   const id = crypto.randomUUID()
 
   await sql`
-    INSERT INTO "Product" (id, slug, name, description, price, "imageUrl", "previewImages", category, active,
+    INSERT INTO "Product" (id, slug, name, description, price, "imageUrl", "previewImages", category, subcategory, active,
                            "availableColors", "availableSizes", "stampSizes", "stampLocations",
                            "createdAt", "updatedAt")
-    VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${active},
+    VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${subcategory}, ${active},
             ${JSON.stringify(availableColors)}::jsonb, ${JSON.stringify(availableSizes)}::jsonb,
             ${JSON.stringify(stampSizes)}::jsonb, ${JSON.stringify(stampLocations)}::jsonb,
             NOW(), NOW())
@@ -45,7 +45,7 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, previewImages, category, active,
+  const { slug, name, description, price, imageUrl, previewImages, category, subcategory, active,
           availableColors, availableSizes, stampSizes, stampLocations } = parsed.data
 
   await sql`
@@ -58,6 +58,7 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
       "imageUrl" = ${imageUrl},
       "previewImages" = ${JSON.stringify(previewImages)}::jsonb,
       category = ${category},
+      subcategory = ${subcategory},
       active = ${active},
       "availableColors" = ${JSON.stringify(availableColors)}::jsonb,
       "availableSizes" = ${JSON.stringify(availableSizes)}::jsonb,

@@ -22,7 +22,7 @@ export async function fetchAdminProducts(
   const rows = await sql`
       SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
         COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
-        p.category, p.active, p."createdAt", p."updatedAt",
+        p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
         p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
       FROM "Product" p
       WHERE p."deletedAt" IS NULL
@@ -52,7 +52,7 @@ export async function fetchAdminProductById(id: string): Promise<AdminProduct | 
   const rows = await sql`
     SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
-           p.category, p.active, p."createdAt", p."updatedAt",
+           p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
            p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
     FROM "Product" p
     WHERE p.id = ${id} AND p."deletedAt" IS NULL
@@ -89,11 +89,14 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   }
 }
 
-export async function fetchAdminCategories(): Promise<string[]> {
+export async function fetchAdminCategories(): Promise<{ name: string; subcategories: string[] }[]> {
   const rows = await sql`
-    SELECT name FROM "Category" ORDER BY name
+    SELECT name, subcategories FROM "Category" ORDER BY name
   `
-  return rows.map((r) => (r as { name: string }).name)
+  return rows.map((r) => ({
+    name: (r as { name: string; subcategories: string[] }).name,
+    subcategories: ((r as { name: string; subcategories: string[] }).subcategories) ?? [],
+  }))
 }
 
 export async function fetchAdminStampLocations(): Promise<string[]> {

@@ -19,7 +19,7 @@ export function Navbar({ categories }: { categories: string[] }) {
   const NAV_LINKS = [
     { label: 'Explorar', href: '/productos', children: CATEGORIES },
     { label: 'Talles', href: '/talles' },
-    { label: 'Ayuda', href: '/ayuda' },
+    { label: 'Colecciones', href: '/productos' },
   ]
 
   return (

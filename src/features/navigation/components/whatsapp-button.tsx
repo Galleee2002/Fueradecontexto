@@ -1,6 +1,6 @@
 'use client'
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''
+import { WHATSAPP_NUMBER } from '@/features/navigation/constants/external-links'
 
 export function WhatsAppButton() {
   if (!WHATSAPP_NUMBER) return null

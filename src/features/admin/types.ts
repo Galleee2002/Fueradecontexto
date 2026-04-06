@@ -1,5 +1,10 @@
 import type { ProductColor } from '@/features/products/types'
 
+export interface CategoryWithSubs {
+  name: string
+  subcategories: string[]
+}
+
 export interface AdminProduct {
   id: string
   slug: string
@@ -9,6 +14,7 @@ export interface AdminProduct {
   imageUrl: string
   previewImages: string[]
   category: string
+  subcategory: string
   active: boolean
   createdAt: Date
   updatedAt: Date

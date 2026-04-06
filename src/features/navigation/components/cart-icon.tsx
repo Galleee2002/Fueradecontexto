@@ -18,6 +18,7 @@ export function CartIcon() {
   return (
     <Link
       href="/carrito"
+      data-cart-icon-target="true"
       className="relative text-foreground hover:text-primary transition-colors"
       aria-label={`Carrito (${count} productos)`}
     >

@@ -11,9 +11,10 @@ datasource db {
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  name          String   @unique
+  subcategories Json     @default("[]")
+  createdAt     DateTime @default(now())
 }
 
 model StampLocation {
@@ -38,6 +39,7 @@ model Product {
   imageUrl         String
   previewImages    Json        @default("[]")
   category         String
+  subcategory      String      @default("")
   active           Boolean     @default(true)
   stock            Int         @default(0)
   availableColors  Json        @default("[]")

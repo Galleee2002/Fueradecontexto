@@ -8,6 +8,7 @@ export const productSchema = z.object({
   imageUrl: z.string().trim().url('URL de imagen inválida'),
   previewImages: z.array(z.string().trim().url('URL de preview inválida')).max(3, 'Máximo 3 imágenes preview').default([]),
   category: z.string().min(1, 'La categoría es requerida'),
+  subcategory: z.string().max(60).default(''),
   active: z.boolean().default(true),
   availableColors: z.array(
     z.object({

@@ -17,7 +17,7 @@ const STAMP_SIZE_OPTIONS = ['20x30', '30x40', '40x50']
 
 interface ProductFormProps {
   product?: AdminProduct
-  categories: string[]
+  categories: { name: string; subcategories: string[] }[]
   stampLocations: string[]
   globalColors?: { id: string; name: string; hex: string }[]
   maxPreviewImages?: number
@@ -77,11 +77,12 @@ export function ProductForm({
   const [price, setPrice] = useState(product?.price?.toString() ?? '')
   const [category, setCategory] = useState(product?.category ?? '')
   const [customCategory, setCustomCategory] = useState(
-    product?.category && !categories.includes(product.category) ? product.category : '',
+    product?.category && !categories.some(c => c.name === product.category) ? product.category : '',
   )
   const [useCustomCategory, setUseCustomCategory] = useState(
-    !!product?.category && !categories.includes(product.category),
+    !!product?.category && !categories.some(c => c.name === product.category),
   )
+  const [subcategory, setSubcategory] = useState(product?.subcategory ?? '')
   const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? '')
   const [previewImages, setPreviewImages] = useState<string[]>(() =>
     (product?.previewImages ?? []).slice(0, maxPreviewImages),
@@ -111,7 +112,7 @@ export function ProductForm({
   const [locationError, setLocationError] = useState('')
   const [isAddingLocation, startLocationTransition] = useTransition()
 
-  const allCategories = categories
+  const allCategories = categories.map(c => c.name)
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value
@@ -213,6 +214,7 @@ export function ProductForm({
   }
 
   const effectiveCategory = useCustomCategory ? customCategory : category
+  const selectedCategorySubs = categories.find(c => c.name === effectiveCategory)?.subcategories ?? []
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -238,6 +240,7 @@ export function ProductForm({
       imageUrl: normalizedImageUrl,
       previewImages: normalizedPreviewImages,
       category: effectiveCategory,
+      subcategory: selectedCategorySubs.length > 0 ? subcategory : '',
       active,
       availableColors,
       availableSizes,
@@ -377,7 +380,7 @@ export function ProductForm({
                   <div className="space-y-2">
                     <select
                       value={category}
-                      onChange={(e) => setCategory(e.target.value)}
+                      onChange={(e) => { setCategory(e.target.value); setSubcategory('') }}
                       className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none"
                     >
                       <option value="">Seleccionar...</option>
@@ -418,6 +421,21 @@ export function ProductForm({
                   </div>
                 )}
               </FormField>
+
+              {selectedCategorySubs.length > 0 && (
+                <FormField label="Subcategoría">
+                  <select
+                    value={subcategory}
+                    onChange={(e) => setSubcategory(e.target.value)}
+                    className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none"
+                  >
+                    <option value="">Sin subcategoría</option>
+                    {selectedCategorySubs.map((sub) => (
+                      <option key={sub} value={sub}>{sub}</option>
+                    ))}
+                  </select>
+                </FormField>
+              )}
             </div>
           </div>
 

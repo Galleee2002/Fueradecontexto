@@ -15,7 +15,7 @@ export default async function AdminGuiaTallesPage() {
           Creá y editá tablas de talles por categoría. Aparecerán en el detalle de producto.
         </p>
       </div>
-      <SizeGuideManager guides={guides} categories={categories} />
+      <SizeGuideManager guides={guides} categories={categories.map(c => c.name)} />
     </div>
   )
 }

@@ -142,7 +142,7 @@ export default async function AdminProductosPage({
 
         <div className="flex flex-col gap-3 pt-1 border-t border-border">
           <StatusFilter current={statusFilter} />
-          <CategoryFilter categories={categories} current={category} />
+          <CategoryFilter categories={categories.map(c => c.name)} current={category} />
         </div>
       </div>
 

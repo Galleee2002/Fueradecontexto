@@ -4,13 +4,13 @@ import { Container } from '@/components/shared/layout/container'
 
 async function fetchCategoriesWithCount() {
   const rows = await sql`
-    SELECT c.name, COUNT(p.id)::int AS count
+    SELECT c.name, c.subcategories, COUNT(p.id)::int AS count
     FROM "Category" c
     LEFT JOIN "Product" p ON p.category = c.name
-    GROUP BY c.name
+    GROUP BY c.name, c.subcategories
     ORDER BY c.name ASC
   `
-  return rows as { name: string; count: number }[]
+  return rows as { name: string; subcategories: string[]; count: number }[]
 }
 
 export default async function AdminCategoriasPage() {

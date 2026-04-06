@@ -12,13 +12,14 @@ import type { ProductFilters as ProductFiltersType } from '@/features/products/t
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; sort?: string; page?: string }>
+  searchParams: Promise<{ category?: string; sort?: string; page?: string; search?: string }>
 }) {
-  const { category, sort, page } = await searchParams
+  const { category, sort, page, search } = await searchParams
   const currentPage = Math.max(1, Number(page ?? 1))
 
   const filters: ProductFiltersType = {
     ...(category ? { category } : {}),
+    ...(search?.trim() ? { search: search.trim() } : {}),
     ...(sort === 'price-asc' || sort === 'price-desc' || sort === 'newest' ? { sort } : {}),
   }
 

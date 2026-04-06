@@ -9,7 +9,7 @@ import { mpClient } from '@/lib/mercadopago/client'
 import type { ContactData, ShippingData, CartItemInput } from '../types'
 
 const cartItemSchema = z.object({
-  productId: z.string().cuid(),
+  productId: z.string().min(1),
   quantity: z.number().int().min(1).max(10),
 })
 
@@ -152,7 +152,14 @@ export async function createOrderAndPreference(
     }
 
     return { initPoint }
-  } catch {
-    return { error: 'No se pudo procesar el pago. Intente nuevamente.' }
+  } catch (err) {
+    console.error('[checkout] createOrderAndPreference error:', err)
+    const message = err instanceof Error ? err.message : String(err)
+    return {
+      error:
+        process.env.NODE_ENV === 'development'
+          ? `Error: ${message}`
+          : 'No se pudo procesar el pago. Intente nuevamente.',
+    }
   }
 }

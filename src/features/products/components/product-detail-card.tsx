@@ -88,6 +88,20 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
     gsap.to(cardRef.current, { scale: 1, duration: 0.16, ease: 'power2.out', overwrite: 'auto' })
   }, [])
 
+  const animateAddToCartFeedback = useCallback(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+
+    const tl = gsap.timeline({ defaults: { overwrite: 'auto' } })
+    tl.to(buttonRef.current, { scale: 0.95, duration: 0.08, ease: 'power2.out' })
+      .to(buttonRef.current, { scale: 1.04, duration: 0.15, ease: 'back.out(2)' })
+      .to(buttonRef.current, { scale: 1, duration: 0.17, ease: 'power2.out' })
+
+    tl.to(cardRef.current, { y: -3, duration: 0.12, ease: 'power2.out' }, 0)
+      .to(cardRef.current, { y: 0, duration: 0.18, ease: 'power2.out' })
+  }, [])
+
   const goToPreviousSlide = useCallback(() => {
     setActiveSlide((current) => (current - 1 + slides.length) % slides.length)
   }, [slides.length])
@@ -105,13 +119,14 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
       productSlug: slug,
       quantity: 1,
     })
+    animateAddToCartFeedback()
     openCart()
-  }, [addItem, id, imageUrl, name, openCart, price, slug])
+  }, [addItem, animateAddToCartFeedback, id, imageUrl, name, openCart, price, slug])
 
   return (
     <article
       ref={cardRef}
-      className="group cursor-pointer rounded-[1.65rem] border border-border/80 bg-background p-3.5 shadow-[0_16px_40px_rgba(26,26,26,0.08)]"
+      className="group cursor-pointer rounded-2xl border border-border/80 bg-background p-3 shadow-[0_10px_26px_rgba(26,26,26,0.08)]"
       onMouseEnter={animateIn}
       onMouseLeave={animateOut}
       onFocus={animateIn}
@@ -119,7 +134,7 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
       onMouseDown={animatePress}
       onMouseUp={releasePress}
     >
-      <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-surface">
+      <div className="relative overflow-hidden rounded-xl border border-border/70 bg-surface">
         <Link href={`/productos/${slug}`} className="block">
           <div ref={sliderTrackRef} className="flex">
             {slides.map((slide, index) => (
@@ -142,17 +157,17 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
           type="button"
           onClick={goToPreviousSlide}
           aria-label="Imagen anterior"
-          className="absolute left-2.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
+          className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
         >
-          {'<'}
+          {'‹'}
         </button>
         <button
           type="button"
           onClick={goToNextSlide}
           aria-label="Imagen siguiente"
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
         >
-          {'>'}
+          {'›'}
         </button>
 
         <div className="absolute inset-x-0 bottom-3 flex justify-center gap-2">
@@ -172,28 +187,31 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
         </div>
       </div>
 
-      <div className="pt-4 space-y-2">
+      <div className="space-y-3 px-1 pb-1 pt-4">
         <Link href={`/productos/${slug}`} className="block">
-          <h3 className="text-[2.05rem] font-normal font-serif leading-[1.02] text-foreground line-clamp-2">
+          <div className="mb-2.5 flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="rounded-full border border-primary/25 bg-primary/10 px-2 py-1 font-medium text-primary">{category}</span>
+            <span className="h-3.5 w-px bg-border" />
+            <span>Nuevo</span>
+          </div>
+          <h3 className="text-[1.35rem] font-medium font-serif leading-[1.1] text-foreground line-clamp-2">
             {name}
           </h3>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="font-medium tracking-[0.18em] uppercase text-primary">{category}</span>
-            <span className="h-4 w-px bg-border" />
-            <span className="line-clamp-1">Nuevo</span>
-          </div>
-          <p className="text-base leading-relaxed text-muted-foreground line-clamp-2">
+          <p className="mt-2 text-[0.92rem] leading-relaxed text-muted-foreground line-clamp-2">
             {miniDescription}
           </p>
         </Link>
-        <p className="text-[1.65rem] font-semibold text-foreground">{formatPrice(price)}</p>
+
+        <div className="border-t border-border/70 pt-3">
+          <p className="text-[1.5rem] font-semibold tracking-tight text-foreground">{formatPrice(price)}</p>
+        </div>
       </div>
 
       <button
         ref={buttonRef}
         type="button"
         onClick={handleAddToCart}
-        className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold tracking-[0.08em] uppercase text-primary-foreground transition-colors hover:bg-primary-hover"
+        className="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-[0.78rem] font-semibold tracking-[0.08em] uppercase text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         <span aria-hidden="true">+</span>
         Anadir al carrito

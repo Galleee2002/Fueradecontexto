@@ -3,6 +3,12 @@ import { Container } from '@/components/shared/layout/container'
 import { PageHeader } from '@/components/shared/layout/page-header'
 import { fetchProductCategories, fetchSizeGuides } from '@/features/products/queries/product-queries'
 
+const PREFERRED_COLUMNS = [
+  { label: 'Talle', aliases: ['talle', 'talla'] },
+  { label: 'Ancho', aliases: ['ancho', 'pecho'] },
+  { label: 'Largo', aliases: ['largo'] },
+] as const
+
 export default async function TallesPage() {
   const [categories, guides] = await Promise.all([fetchProductCategories(), fetchSizeGuides()])
 
@@ -36,7 +42,15 @@ export default async function TallesPage() {
               const guide = guideByCategory.get(category)
               const previewRows = Array.isArray(guide?.rows) ? guide.rows.slice(0, 3) : []
               const firstRow = previewRows[0]
-              const columns = firstRow ? Object.keys(firstRow) : []
+              const columns = firstRow
+                ? PREFERRED_COLUMNS.flatMap((column) => {
+                    const key = Object.keys(firstRow).find((candidate) =>
+                      (column.aliases as readonly string[]).includes(candidate.toLowerCase()),
+                    )
+
+                    return key ? [{ key, label: column.label }] : []
+                  })
+                : []
 
               return (
                 <article key={category} className="rounded-xl border border-border bg-background p-5">
@@ -56,8 +70,8 @@ export default async function TallesPage() {
                         <thead>
                           <tr className="border-b border-border">
                             {columns.map((column) => (
-                              <th key={column} className="py-2 pr-4 font-medium text-muted-foreground uppercase text-xs tracking-wide">
-                                {column}
+                              <th key={column.key} className="py-2 pr-4 font-medium text-muted-foreground uppercase text-xs tracking-wide">
+                                {column.label}
                               </th>
                             ))}
                           </tr>
@@ -66,8 +80,8 @@ export default async function TallesPage() {
                           {previewRows.map((row, index) => (
                             <tr key={`${category}-${index}`} className="border-b border-border/60 last:border-b-0">
                               {columns.map((column) => (
-                                <td key={column} className="py-2 pr-4 text-foreground/90">
-                                  {String(row[column] ?? '-')}
+                                <td key={column.key} className="py-2 pr-4 text-foreground/90">
+                                  {String(row[column.key] ?? '-')}
                                 </td>
                               ))}
                             </tr>
