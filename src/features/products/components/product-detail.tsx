@@ -50,7 +50,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
   )
 
   useEffect(() => {
-    if (selectedStampSize && !filteredStampSizes.includes(selectedStampSize)) {
+    if (selectedStampSize && !(filteredStampSizes as string[]).includes(selectedStampSize)) {
       setSelectedStampSize(null)
     }
   }, [filteredStampSizes, selectedStampSize])

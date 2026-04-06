@@ -27,17 +27,17 @@ export function ServicesStrip() {
           {SERVICES.map((service) => (
             <div
               key={service.title}
-              className="flex flex-col gap-4 py-8 sm:py-10 px-0 sm:px-10 sm:first:pl-0 sm:last:pr-0"
+              className="flex flex-col gap-3 sm:gap-4 py-6 sm:py-10 px-0 sm:px-10 sm:first:pl-0 sm:last:pr-0"
             >
               <service.icon
                 className="h-5 w-5 text-background/50 stroke-[1.5]"
                 aria-hidden="true"
               />
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium tracking-wide text-background">
+              <div className="space-y-1 sm:space-y-2">
+                <h3 className="text-xs sm:text-sm font-medium tracking-wide text-background">
                   {service.title}
                 </h3>
-                <p className="text-sm text-background/50 leading-relaxed">
+                <p className="text-xs sm:text-sm text-background/50 leading-relaxed">
                   {service.description}
                 </p>
               </div>

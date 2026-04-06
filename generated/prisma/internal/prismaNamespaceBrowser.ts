@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Category: 'Category',
   StampLocation: 'StampLocation',
+  Color: 'Color',
   Product: 'Product',
   SizeGuide: 'SizeGuide',
   CartItem: 'CartItem',
@@ -93,6 +94,16 @@ export const StampLocationScalarFieldEnum = {
 } as const
 
 export type StampLocationScalarFieldEnum = (typeof StampLocationScalarFieldEnum)[keyof typeof StampLocationScalarFieldEnum]
+
+
+export const ColorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  hex: 'hex',
+  createdAt: 'createdAt'
+} as const
+
+export type ColorScalarFieldEnum = (typeof ColorScalarFieldEnum)[keyof typeof ColorScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {

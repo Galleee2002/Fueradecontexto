@@ -12,16 +12,16 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
   }))
 
   return (
-    <section className="py-16 lg:py-20 bg-background border-t border-border">
+    <section className="py-12 sm:py-16 lg:py-20 bg-background border-t border-border">
       <Container>
 
         {/* Header de sección */}
-        <div className="flex items-end justify-between mb-10">
+        <div className="flex items-end justify-between mb-6 sm:mb-10">
           <div className="space-y-2">
             <p className="text-2xs font-medium tracking-[0.25em] uppercase text-muted-foreground">
               Explorar
             </p>
-            <h2 className="text-3xl lg:text-4xl font-normal font-serif">Por categoría</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal font-serif">Por categoría</h2>
           </div>
           <Link
             href="/productos"
@@ -31,8 +31,38 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
           </Link>
         </div>
 
-        {/* Grid de categorías — 2 col mobile, 4 col desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
+        {/* Lista mobile */}
+        <div className="sm:hidden border-y border-border/60">
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/productos?category=${cat.slug}`}
+              className="group flex items-center justify-between gap-4 py-4 border-b border-border last:border-b-0"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="text-2xs font-medium tracking-[0.25em] uppercase text-muted-foreground">
+                  {String(cat.index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="text-lg font-medium font-serif leading-none text-foreground truncate">
+                  {cat.name}
+                </h3>
+              </div>
+              <span className="text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground group-hover:text-foreground transition-colors">
+                Ver →
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Grid desktop/tablet */}
+        <div
+          className={cn(
+            'hidden sm:grid lg:grid-cols-4 gap-3',
+            CATEGORIES.length === 1
+              ? 'sm:grid-cols-2 max-w-[32rem] mx-auto lg:max-w-none lg:mx-0'
+              : 'sm:grid-cols-2',
+          )}
+        >
           {CATEGORIES.map((cat) => {
             const isDark = cat.index % 2 !== 0
             return (
@@ -81,7 +111,7 @@ export function CategoriesGrid({ categories }: { categories: string[] }) {
                   />
                   <h3
                     className={cn(
-                      'text-2xl lg:text-3xl font-medium font-serif leading-tight',
+                      'text-xl sm:text-2xl lg:text-3xl font-medium font-serif leading-tight',
                       isDark ? 'text-background' : 'text-foreground',
                     )}
                   >

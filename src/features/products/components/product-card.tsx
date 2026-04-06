@@ -90,7 +90,7 @@ export function ProductCard({ slug, name, price, imageUrl, category }: ProductCa
         onMouseDown={animatePress}
         onMouseUp={releasePress}
       >
-        <div className="relative aspect-[3/4] overflow-hidden bg-surface">
+        <div className="relative h-56 sm:h-auto sm:aspect-[3/4] overflow-hidden bg-surface">
           <Image
             ref={imageRef}
             src={imageUrl}

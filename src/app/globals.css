@@ -58,8 +58,12 @@
   * {
     @apply border-border;
   }
+  html {
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
   }
 }
 
@@ -94,6 +98,15 @@
 
   .about-reveal-delay-4 {
     animation-delay: 420ms;
+  }
+
+  .product-detail-card-gradient {
+    background: linear-gradient(
+      to top,
+      rgba(26, 26, 26, 0.68) 0%,
+      rgba(26, 26, 26, 0.28) 48%,
+      rgba(26, 26, 26, 0) 100%
+    );
   }
 
   .about-hero-overlay {

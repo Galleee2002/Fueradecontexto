@@ -25,10 +25,10 @@ export function Navbar({ categories }: { categories: string[] }) {
   return (
     <header className="border-b border-border bg-background sticky top-0 z-50">
       <Container>
-        <nav className="flex items-center justify-between h-16">
+        <nav className="flex items-center justify-between h-14 sm:h-16">
           <Link
             href="/"
-            className="text-xl font-medium tracking-widest uppercase text-foreground"
+            className="text-base sm:text-xl font-medium tracking-[0.12em] sm:tracking-widest uppercase text-foreground"
           >
             {SITE_NAME}
           </Link>
@@ -86,7 +86,7 @@ export function Navbar({ categories }: { categories: string[] }) {
             </li>
           </ul>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3 sm:gap-5">
             <UserMenu />
             <CartIcon />
             <MobileMenuTrigger links={NAV_LINKS} />

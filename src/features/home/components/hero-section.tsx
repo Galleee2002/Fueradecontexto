@@ -21,7 +21,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-transparent to-foreground/20" />
 
       {/* Contenido */}
-      <div className="relative z-10 pb-16 sm:pb-24 lg:pb-36 pt-24 sm:pt-32">
+      <div className="relative z-10 pb-8 sm:pb-20 lg:pb-36 pt-16 sm:pt-32">
         <Container>
           <div className="max-w-2xl lg:max-w-[56rem] space-y-6 lg:space-y-8">
 
@@ -49,12 +49,12 @@ export function HeroSection() {
             <div className="w-12 h-px bg-white/25" />
 
             {/* Descripción */}
-            <p className="text-base sm:text-lg text-white/70 max-w-xs sm:max-w-sm leading-relaxed font-light tracking-wide">
+            <p className="text-sm sm:text-base lg:text-lg text-white/70 max-w-xs sm:max-w-sm leading-relaxed font-light tracking-wide">
               Piezas diseñadas para quienes marcan tendencia.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-8 pt-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 lg:gap-8 pt-2">
               <Link
                 href="/productos"
                 className="group relative w-full sm:w-auto overflow-hidden bg-primary text-white px-10 py-4 text-[11px] font-medium tracking-[0.28em] uppercase transition-all duration-300 hover:bg-primary/90"
