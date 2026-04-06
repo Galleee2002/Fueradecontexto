@@ -17,9 +17,11 @@ export async function fetchProducts(
         : sql`ORDER BY "createdAt" DESC`
 
   const rows = await sql`
-    SELECT id, slug, name, price::float, "imageUrl", category
-    FROM "Product"
-    WHERE active = true AND "deletedAt" IS NULL
+    SELECT p.id, p.slug, p.name, p.price::float, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
+           p.category
+    FROM "Product" p
+    WHERE p.active = true AND p."deletedAt" IS NULL
     ${filters?.category ? sql`AND category = ${filters.category}` : sql``}
     ${filters?.search ? sql`AND name ILIKE ${'%' + filters.search + '%'}` : sql``}
     ${filters?.minPrice !== undefined ? sql`AND price >= ${filters.minPrice}` : sql``}
@@ -46,10 +48,12 @@ export async function fetchProducts(
 
 export async function fetchProductBySlug(slug: string): Promise<ProductFull | null> {
   const rows = await sql`
-    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
-           "availableColors", "availableSizes", "stampSizes", "stampLocations"
-    FROM "Product"
-    WHERE slug = ${slug} AND active = true AND "deletedAt" IS NULL
+    SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
+           p.category, p.active, p."createdAt", p."updatedAt",
+           p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
+    FROM "Product" p
+    WHERE p.slug = ${slug} AND p.active = true AND p."deletedAt" IS NULL
     LIMIT 1
   `
   return (rows[0] as ProductFull) ?? null
@@ -92,13 +96,15 @@ export async function fetchRelatedProducts(
   limit = 4
 ): Promise<ProductCard[]> {
   const rows = await sql`
-    SELECT id, slug, name, price::float, "imageUrl", category
-    FROM "Product"
-    WHERE active = true
-      AND category = ${category}
-      AND slug != ${excludeSlug}
-      AND "deletedAt" IS NULL
-    ORDER BY "createdAt" DESC
+    SELECT p.id, p.slug, p.name, p.price::float, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
+           p.category
+    FROM "Product" p
+    WHERE p.active = true
+      AND p.category = ${category}
+      AND p.slug != ${excludeSlug}
+      AND p."deletedAt" IS NULL
+    ORDER BY p."createdAt" DESC
     LIMIT ${limit}
   `
   return rows as ProductCard[]

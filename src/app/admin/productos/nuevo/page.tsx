@@ -14,7 +14,12 @@ export default async function NuevoProductoPage() {
 
   return (
     <div className="p-6 lg:p-8">
-      <ProductForm categories={categories} stampLocations={stampLocations} globalColors={globalColors} />
+      <ProductForm
+        categories={categories}
+        stampLocations={stampLocations}
+        globalColors={globalColors}
+        maxPreviewImages={3}
+      />
     </div>
   )
 }

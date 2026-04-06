@@ -20,14 +20,16 @@ export async function fetchAdminProducts(
         : sql``
 
   const rows = await sql`
-    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
-           "availableColors", "availableSizes", "stampSizes", "stampLocations"
-    FROM "Product"
-    WHERE "deletedAt" IS NULL
+      SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
+        COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
+        p.category, p.active, p."createdAt", p."updatedAt",
+        p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
+      FROM "Product" p
+      WHERE p."deletedAt" IS NULL
     ${search ? sql`AND name ILIKE ${'%' + search + '%'}` : sql``}
     ${category ? sql`AND category = ${category}` : sql``}
     ${statusFilter}
-    ORDER BY "createdAt" DESC
+      ORDER BY p."createdAt" DESC
     LIMIT ${ADMIN_PAGE_SIZE} OFFSET ${offset}
   `
 
@@ -48,10 +50,12 @@ export async function fetchAdminProducts(
 
 export async function fetchAdminProductById(id: string): Promise<AdminProduct | null> {
   const rows = await sql`
-    SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
-           "availableColors", "availableSizes", "stampSizes", "stampLocations"
-    FROM "Product"
-    WHERE id = ${id} AND "deletedAt" IS NULL
+    SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
+           p.category, p.active, p."createdAt", p."updatedAt",
+           p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
+    FROM "Product" p
+    WHERE p.id = ${id} AND p."deletedAt" IS NULL
     LIMIT 1
   `
   return (rows[0] as AdminProduct) ?? null

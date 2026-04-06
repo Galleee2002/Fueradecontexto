@@ -9,6 +9,7 @@ export interface ProductCard {
   name: string
   price: number
   imageUrl: string
+  previewImages: string[]
   category: string
 }
 

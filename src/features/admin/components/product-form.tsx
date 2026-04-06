@@ -20,6 +20,7 @@ interface ProductFormProps {
   categories: string[]
   stampLocations: string[]
   globalColors?: { id: string; name: string; hex: string }[]
+  maxPreviewImages?: number
 }
 
 function slugify(str: string): string {
@@ -57,7 +58,13 @@ function FormField({
   )
 }
 
-export function ProductForm({ product, categories, stampLocations: stampLocationsProp, globalColors = [] }: ProductFormProps) {
+export function ProductForm({
+  product,
+  categories,
+  stampLocations: stampLocationsProp,
+  globalColors = [],
+  maxPreviewImages = 3,
+}: ProductFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [errors, setErrors] = useState<Record<string, string[]>>({})
@@ -76,6 +83,9 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
     !!product?.category && !categories.includes(product.category),
   )
   const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? '')
+  const [previewImages, setPreviewImages] = useState<string[]>(() =>
+    (product?.previewImages ?? []).slice(0, maxPreviewImages),
+  )
   const [uploadError, setUploadError] = useState('')
   const [isUploadingImage, setIsUploadingImage] = useState(false)
   const [active, setActive] = useState(product?.active ?? true)
@@ -129,7 +139,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
     })
   }
 
-  async function handleImageUpload(file: File) {
+  async function uploadToCloudinary(file: File): Promise<string | null> {
     setUploadError('')
 
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
@@ -138,7 +148,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
 
     if (!cloudName || !uploadPreset) {
       setUploadError('Falta configurar Cloudinary en variables de entorno.')
-      return
+      return null
     }
 
     const formData = new FormData()
@@ -173,15 +183,33 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
           data.error?.message ??
             'Cloudinary rechazó la imagen o devolvió una respuesta inválida. Revisá preset/carpeta.',
         )
-        return
+        return null
       }
 
-      setImageUrl(data.secure_url)
+      return data.secure_url
     } catch {
       setUploadError('Error de red al subir la imagen. Intentá de nuevo.')
+      return null
     } finally {
       setIsUploadingImage(false)
     }
+  }
+
+  async function handleImageUpload(file: File) {
+    const uploaded = await uploadToCloudinary(file)
+    if (!uploaded) return
+    setImageUrl(uploaded)
+  }
+
+  async function handlePreviewImageUpload(file: File, index: number) {
+    const uploaded = await uploadToCloudinary(file)
+    if (!uploaded) return
+
+    setPreviewImages((prev) => {
+      const next = [...prev]
+      next[index] = uploaded
+      return next.slice(0, maxPreviewImages)
+    })
   }
 
   const effectiveCategory = useCustomCategory ? customCategory : category
@@ -197,6 +225,10 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
     }
 
     const normalizedImageUrl = imageUrl.trim()
+    const normalizedPreviewImages = previewImages
+      .map((url) => url.trim())
+      .filter((url) => url.length > 0 && url !== normalizedImageUrl)
+      .slice(0, maxPreviewImages)
 
     const input = {
       slug,
@@ -204,6 +236,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
       description: description.trim() || undefined,
       price: Number(price),
       imageUrl: normalizedImageUrl,
+      previewImages: normalizedPreviewImages,
       category: effectiveCategory,
       active,
       availableColors,
@@ -391,7 +424,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
           {/* Image upload */}
           <div className="bg-background border border-border p-6 space-y-4">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
-              Imagen del producto
+              Imagenes del producto
             </p>
 
             <FormField label="Subir imagen" error={errors.imageUrl?.[0]} required>
@@ -426,7 +459,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                 <div className="relative aspect-[3/4] w-40 bg-surface border border-border overflow-hidden">
                   <img
                     src={imageUrl}
-                    alt="Preview"
+                    alt="Imagen principal"
                     className="h-full w-full object-cover"
                     loading="lazy"
                     onError={() => setUploadError('No se pudo previsualizar la imagen subida.')}
@@ -445,6 +478,65 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                 <ImageOff className="h-8 w-8 opacity-40" strokeWidth={1} />
               </div>
             )}
+
+            <FormField label={`Imagenes preview (max ${maxPreviewImages})`} error={errors.previewImages?.[0]}>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {Array.from({ length: maxPreviewImages }).map((_, index) => {
+                  const previewUrl = previewImages[index] ?? ''
+
+                  return (
+                    <div key={index} className="space-y-2">
+                      <div className="relative aspect-square bg-surface border border-border overflow-hidden">
+                        {previewUrl ? (
+                          <img
+                            src={previewUrl}
+                            alt={`Preview ${index + 1}`}
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                            onError={() => setUploadError('No se pudo previsualizar una imagen preview.')}
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                            <ImageOff className="h-6 w-6 opacity-40" strokeWidth={1} />
+                          </div>
+                        )}
+                      </div>
+
+                      <label className="inline-flex items-center justify-center w-full px-2.5 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors cursor-pointer">
+                        {previewUrl ? 'Reemplazar' : 'Subir preview'}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={isUploadingImage}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) void handlePreviewImageUpload(file, index)
+                            e.currentTarget.value = ''
+                          }}
+                        />
+                      </label>
+
+                      {previewUrl && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPreviewImages((prev) => {
+                              const next = [...prev]
+                              next[index] = ''
+                              return next
+                            })
+                          }}
+                          className="w-full text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
+                        >
+                          Eliminar
+                        </button>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </FormField>
           </div>
 
           {/* Customization options */}

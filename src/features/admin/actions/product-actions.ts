@@ -18,16 +18,16 @@ export async function createAdminProduct(input: ProductInput) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, category, active,
+  const { slug, name, description, price, imageUrl, previewImages, category, active,
           availableColors, availableSizes, stampSizes, stampLocations } = parsed.data
 
   const id = crypto.randomUUID()
 
   await sql`
-    INSERT INTO "Product" (id, slug, name, description, price, "imageUrl", category, active,
+    INSERT INTO "Product" (id, slug, name, description, price, "imageUrl", "previewImages", category, active,
                            "availableColors", "availableSizes", "stampSizes", "stampLocations",
                            "createdAt", "updatedAt")
-    VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${category}, ${active},
+    VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${active},
             ${JSON.stringify(availableColors)}::jsonb, ${JSON.stringify(availableSizes)}::jsonb,
             ${JSON.stringify(stampSizes)}::jsonb, ${JSON.stringify(stampLocations)}::jsonb,
             NOW(), NOW())
@@ -45,7 +45,7 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, category, active,
+  const { slug, name, description, price, imageUrl, previewImages, category, active,
           availableColors, availableSizes, stampSizes, stampLocations } = parsed.data
 
   await sql`
@@ -56,6 +56,7 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
       description = ${description ?? null},
       price = ${price},
       "imageUrl" = ${imageUrl},
+      "previewImages" = ${JSON.stringify(previewImages)}::jsonb,
       category = ${category},
       active = ${active},
       "availableColors" = ${JSON.stringify(availableColors)}::jsonb,

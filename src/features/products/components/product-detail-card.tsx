@@ -19,7 +19,7 @@ function buildMiniDescription(name: string, category: string): string {
   return `${cleanName.slice(0, 45)}... ${base}`
 }
 
-export function ProductDetailCard({ id, slug, name, price, imageUrl, category }: ProductCardProps) {
+export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImages, category }: ProductCardProps) {
   const { addItem, openCart } = useCart()
 
   const [activeSlide, setActiveSlide] = useState(0)
@@ -28,7 +28,10 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, category }:
   const sliderTrackRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  const slides = useMemo(() => [imageUrl, imageUrl, imageUrl], [imageUrl])
+  const slides = useMemo(() => {
+    const unique = [imageUrl, ...previewImages].filter((url, index, array) => url && array.indexOf(url) === index)
+    return unique.slice(0, 4)
+  }, [imageUrl, previewImages])
   const miniDescription = useMemo(() => buildMiniDescription(name, category), [name, category])
 
   useEffect(() => {

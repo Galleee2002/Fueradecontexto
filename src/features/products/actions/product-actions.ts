@@ -11,11 +11,11 @@ export async function createProduct(input: ProductInput) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, category, active } = parsed.data
+  const { slug, name, description, price, imageUrl, previewImages, category, active } = parsed.data
 
   await sql`
-    INSERT INTO "Product" (slug, name, description, price, "imageUrl", category, active)
-    VALUES (${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${category}, ${active})
+    INSERT INTO "Product" (slug, name, description, price, "imageUrl", "previewImages", category, active)
+    VALUES (${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${active})
   `
 
   revalidatePath('/productos')

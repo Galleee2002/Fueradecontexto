@@ -7,6 +7,7 @@ export interface AdminProduct {
   description: string | null
   price: number
   imageUrl: string
+  previewImages: string[]
   category: string
   active: boolean
   createdAt: Date

@@ -57,7 +57,11 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 py-8 lg:py-12">
-      <ProductImageGallery imageUrl={product.imageUrl} productName={product.name} />
+      <ProductImageGallery
+        imageUrl={product.imageUrl}
+        previewImages={product.previewImages}
+        productName={product.name}
+      />
 
       <div className="space-y-6">
         <div className="space-y-3">
