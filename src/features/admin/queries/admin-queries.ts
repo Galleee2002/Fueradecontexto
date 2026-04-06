@@ -23,7 +23,7 @@ export async function fetchAdminProducts(
     SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
            "availableColors", "availableSizes", "stampSizes", "stampLocations"
     FROM "Product"
-    WHERE 1=1
+    WHERE "deletedAt" IS NULL
     ${search ? sql`AND name ILIKE ${'%' + search + '%'}` : sql``}
     ${category ? sql`AND category = ${category}` : sql``}
     ${statusFilter}
@@ -34,7 +34,7 @@ export async function fetchAdminProducts(
   const countRows = await sql`
     SELECT COUNT(*)::int AS total
     FROM "Product"
-    WHERE 1=1
+    WHERE "deletedAt" IS NULL
     ${search ? sql`AND name ILIKE ${'%' + search + '%'}` : sql``}
     ${category ? sql`AND category = ${category}` : sql``}
     ${statusFilter}
@@ -51,7 +51,7 @@ export async function fetchAdminProductById(id: string): Promise<AdminProduct | 
     SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
            "availableColors", "availableSizes", "stampSizes", "stampLocations"
     FROM "Product"
-    WHERE id = ${id}
+    WHERE id = ${id} AND "deletedAt" IS NULL
     LIMIT 1
   `
   return (rows[0] as AdminProduct) ?? null
@@ -74,6 +74,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
       SUM(CASE WHEN active = false THEN 1 ELSE 0 END)::int AS inactive,
       COUNT(DISTINCT category)::int AS categories
     FROM "Product"
+    WHERE "deletedAt" IS NULL
   `
   const r = rows[0] as { total: number; active: number; inactive: number; categories: number }
   return {
@@ -96,6 +97,13 @@ export async function fetchAdminStampLocations(): Promise<string[]> {
     SELECT name FROM "StampLocation" ORDER BY "createdAt" ASC
   `
   return rows.map((r) => (r as { name: string }).name)
+}
+
+export async function fetchAdminColors(): Promise<{ id: string; name: string; hex: string }[]> {
+  const rows = await sql`
+    SELECT id, name, hex FROM "Color" ORDER BY name ASC
+  `
+  return rows as { id: string; name: string; hex: string }[]
 }
 
 export async function fetchAdminOrders(

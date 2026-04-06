@@ -75,10 +75,15 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
 export async function deleteAdminProduct(id: string) {
   await requireAdmin()
   await sql`DELETE FROM "CartItem" WHERE "productId" = ${id}`
-  await sql`DELETE FROM "Product" WHERE id = ${id}`
+  await sql`
+    UPDATE "Product"
+    SET "deletedAt" = NOW(), "updatedAt" = NOW()
+    WHERE id = ${id}
+  `
 
   revalidatePath('/admin/productos')
   revalidatePath('/productos')
+  revalidatePath('/')
   return { success: true }
 }
 
@@ -92,4 +97,5 @@ export async function toggleAdminProductActive(id: string, active: boolean) {
 
   revalidatePath('/admin/productos')
   revalidatePath('/productos')
+  revalidatePath('/')
 }

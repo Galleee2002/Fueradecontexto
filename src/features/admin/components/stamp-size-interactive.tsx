@@ -63,11 +63,6 @@ export function StampSizeInteractive({
               >
                 {option}
               </button>
-              {option === '40x50' && (
-                <span className="absolute -top-2 -right-2 inline-flex items-center bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap shadow-sm">
-                  Solo espalda
-                </span>
-              )}
             </div>
           ))}
         </div>
@@ -92,11 +87,6 @@ export function StampSizeInteractive({
                     <Plus className="h-3 w-3 mr-1 flex-shrink-0" strokeWidth={2} />
                     {option}
                   </button>
-                  {option === '40x50' && (
-                    <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 inline-flex items-center bg-primary text-primary-foreground px-1.5 sm:px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap shadow-sm">
-                      Solo espalda
-                    </span>
-                  )}
                 </div>
               ))}
           </div>
@@ -128,11 +118,6 @@ export function StampSizeInteractive({
                 >
                   {option}
                 </button>
-                {option === '40x50' && (
-                  <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 inline-flex items-center bg-primary text-primary-foreground px-1.5 sm:px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap shadow-sm">
-                    Solo espalda
-                  </span>
-                )}
               </div>
             ))}
           </div>

@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Package, ShoppingBag, Users, LayoutGrid, ArrowLeft, Layers, Ruler } from 'lucide-react'
+import { Package, ShoppingBag, Users, LayoutGrid, ArrowLeft, Layers, Ruler, Palette } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 
 const NAV_LINKS = [
   { label: 'Productos', href: '/admin/productos', icon: Package },
   { label: 'Categorías', href: '/admin/categorias', icon: Layers },
+  { label: 'Colores', href: '/admin/colores', icon: Palette },
   { label: 'Guía de talles', href: '/admin/guia-talles', icon: Ruler },
   { label: 'Órdenes', href: '/admin/ordenes', icon: ShoppingBag },
   { label: 'Clientes', href: '/admin/clientes', icon: Users },

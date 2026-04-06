@@ -37,11 +37,6 @@ export function StampSizeToggleGroup({
           >
             {option}
           </button>
-          {option === '40x50' && (
-            <span className="absolute -top-2 -right-2 inline-flex items-center bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap shadow-sm">
-              Solo espalda
-            </span>
-          )}
         </div>
       ))}
     </div>

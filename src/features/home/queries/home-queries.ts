@@ -5,7 +5,7 @@ export async function fetchFeaturedProducts(): Promise<ProductCard[]> {
   const rows = await sql`
     SELECT id, slug, name, price::float, "imageUrl", category
     FROM "Product"
-    WHERE active = true
+    WHERE active = true AND "deletedAt" IS NULL
     ORDER BY "createdAt" DESC
     LIMIT 8
   `

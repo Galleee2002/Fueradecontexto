@@ -19,7 +19,7 @@ export async function fetchProducts(
   const rows = await sql`
     SELECT id, slug, name, price::float, "imageUrl", category
     FROM "Product"
-    WHERE active = true
+    WHERE active = true AND "deletedAt" IS NULL
     ${filters?.category ? sql`AND category = ${filters.category}` : sql``}
     ${filters?.search ? sql`AND name ILIKE ${'%' + filters.search + '%'}` : sql``}
     ${filters?.minPrice !== undefined ? sql`AND price >= ${filters.minPrice}` : sql``}
@@ -31,7 +31,7 @@ export async function fetchProducts(
   const countRows = await sql`
     SELECT COUNT(*)::int AS total
     FROM "Product"
-    WHERE active = true
+    WHERE active = true AND "deletedAt" IS NULL
     ${filters?.category ? sql`AND category = ${filters.category}` : sql``}
     ${filters?.search ? sql`AND name ILIKE ${'%' + filters.search + '%'}` : sql``}
     ${filters?.minPrice !== undefined ? sql`AND price >= ${filters.minPrice}` : sql``}
@@ -49,7 +49,7 @@ export async function fetchProductBySlug(slug: string): Promise<ProductFull | nu
     SELECT id, slug, name, description, price::float, "imageUrl", category, active, "createdAt", "updatedAt",
            "availableColors", "availableSizes", "stampSizes", "stampLocations"
     FROM "Product"
-    WHERE slug = ${slug} AND active = true
+    WHERE slug = ${slug} AND active = true AND "deletedAt" IS NULL
     LIMIT 1
   `
   return (rows[0] as ProductFull) ?? null
@@ -79,7 +79,7 @@ export async function fetchProductCategories(): Promise<string[]> {
     SELECT c.name
     FROM "Category" c
     WHERE EXISTS (
-      SELECT 1 FROM "Product" p WHERE p.category = c.name AND p.active = true
+      SELECT 1 FROM "Product" p WHERE p.category = c.name AND p.active = true AND p."deletedAt" IS NULL
     )
     ORDER BY c.name
   `
@@ -97,6 +97,7 @@ export async function fetchRelatedProducts(
     WHERE active = true
       AND category = ${category}
       AND slug != ${excludeSlug}
+      AND "deletedAt" IS NULL
     ORDER BY "createdAt" DESC
     LIMIT ${limit}
   `

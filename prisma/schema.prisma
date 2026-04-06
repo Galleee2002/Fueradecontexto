@@ -22,6 +22,13 @@ model StampLocation {
   createdAt DateTime @default(now())
 }
 
+model Color {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  hex       String
+  createdAt DateTime @default(now())
+}
+
 model Product {
   id               String      @id @default(cuid())
   slug             String      @unique
@@ -56,6 +63,8 @@ model CartItem {
   quantity  Int     @default(1)
   sessionId String
   product   Product @relation(fields: [productId], references: [id])
+
+  @@unique([productId, sessionId])
 }
 
 model Order {

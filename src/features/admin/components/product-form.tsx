@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ImageOff, Loader2, MapPin, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
+import { cn } from '@/lib/utils/cn'
 import { createStampLocation } from '../actions/stamp-location-actions'
 import { ToggleGroupInteractive } from './toggle-group-interactive'
 import { StampSizeInteractive } from './stamp-size-interactive'
@@ -18,6 +19,7 @@ interface ProductFormProps {
   product?: AdminProduct
   categories: string[]
   stampLocations: string[]
+  globalColors?: { id: string; name: string; hex: string }[]
 }
 
 function slugify(str: string): string {
@@ -55,7 +57,7 @@ function FormField({
   )
 }
 
-export function ProductForm({ product, categories, stampLocations: stampLocationsProp }: ProductFormProps) {
+export function ProductForm({ product, categories, stampLocations: stampLocationsProp, globalColors = [] }: ProductFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [errors, setErrors] = useState<Record<string, string[]>>({})
@@ -82,8 +84,6 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
   const [availableColors, setAvailableColors] = useState<ProductColor[]>(
     product?.availableColors ?? [],
   )
-  const [newColorName, setNewColorName] = useState('')
-  const [newColorHex, setNewColorHex] = useState('#000000')
 
   // Sizes
   const [availableSizes, setAvailableSizes] = useState<string[]>(product?.availableSizes ?? [])
@@ -112,15 +112,6 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
   function handleSlugChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSlug(slugify(e.target.value))
     setSlugLocked(true)
-  }
-
-  function handleAddColor() {
-    const name = newColorName.trim()
-    if (!name) return
-    if (availableColors.some((c) => c.name.toLowerCase() === name.toLowerCase())) return
-    setAvailableColors((prev) => [...prev, { name, hex: newColorHex }])
-    setNewColorName('')
-    setNewColorHex('#000000')
   }
 
   function handleAddLocation() {
@@ -200,12 +191,19 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
     setErrors({})
     setServerError('')
 
+    if (isUploadingImage) {
+      setServerError('Esperá a que termine la subida de la imagen antes de guardar.')
+      return
+    }
+
+    const normalizedImageUrl = imageUrl.trim()
+
     const input = {
       slug,
       name,
       description: description.trim() || undefined,
       price: Number(price),
-      imageUrl,
+      imageUrl: normalizedImageUrl,
       category: effectiveCategory,
       active,
       availableColors,
@@ -431,7 +429,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                     alt="Preview"
                     className="h-full w-full object-cover"
                     loading="lazy"
-                    onError={() => setImageUrl('')}
+                    onError={() => setUploadError('No se pudo previsualizar la imagen subida.')}
                   />
                 </div>
                 <button
@@ -455,77 +453,58 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
               Opciones de personalización
             </p>
 
-            {/* Dynamic colors */}
+            {/* Global colors palette */}
             <div className="space-y-3">
               <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Colores disponibles
               </p>
 
-              {availableColors.length > 0 && (
+              {globalColors.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  No hay colores globales configurados.{' '}
+                  <a href="/admin/colores" className="underline underline-offset-2 hover:text-primary transition-colors">
+                    Agregar en Colores
+                  </a>
+                </p>
+              ) : (
                 <div className="flex flex-wrap gap-2">
-                  {availableColors.map((color) => (
-                    <div
-                      key={color.name}
-                      className="flex items-center gap-1.5 border border-border px-2 py-1"
-                    >
-                      <span
-                        className="w-4 h-4 rounded-full border border-border/50 flex-shrink-0"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      <span className="text-xs text-foreground">{color.name}</span>
+                  {globalColors.map((gc) => {
+                    const isSelected = availableColors.some(
+                      (c) => c.name.toLowerCase() === gc.name.toLowerCase(),
+                    )
+                    return (
                       <button
+                        key={gc.id}
                         type="button"
-                        onClick={() =>
-                          setAvailableColors((prev) => prev.filter((c) => c.name !== color.name))
-                        }
-                        className="text-muted-foreground hover:text-primary transition-colors"
-                        aria-label={`Eliminar color ${color.name}`}
+                        onClick={() => {
+                          setAvailableColors((prev) =>
+                            isSelected
+                              ? prev.filter((c) => c.name.toLowerCase() !== gc.name.toLowerCase())
+                              : [...prev, { name: gc.name, hex: gc.hex }],
+                          )
+                        }}
+                        aria-pressed={isSelected}
+                        aria-label={`${isSelected ? 'Quitar' : 'Agregar'} color ${gc.name}`}
+                        title={gc.name}
+                        className={cn(
+                          'flex items-center gap-1.5 border px-2 py-1 text-xs transition-colors',
+                          isSelected
+                            ? 'border-primary text-foreground bg-primary/5'
+                            : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground',
+                        )}
                       >
-                        <X className="h-3 w-3" />
+                        <span
+                          className="w-3.5 h-3.5 shrink-0 border border-border/50"
+                          style={{ backgroundColor: gc.hex }}
+                          aria-hidden="true"
+                        />
+                        {gc.name}
+                        {isSelected && <X className="h-3 w-3 shrink-0 text-primary" />}
                       </button>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
-
-              <div className="flex flex-wrap gap-2 items-end">
-                <div className="space-y-1">
-                  <p className="text-2xs text-muted-foreground uppercase tracking-widest">
-                    Nombre
-                  </p>
-                  <input
-                    type="text"
-                    value={newColorName}
-                    onChange={(e) => setNewColorName(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        handleAddColor()
-                      }
-                    }}
-                    placeholder="Ej: Terracota"
-                    className="px-2 py-2 border border-border bg-background text-sm w-36 focus:outline-none focus:border-primary rounded-none placeholder:text-muted-foreground"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-2xs text-muted-foreground uppercase tracking-widest">Color</p>
-                  <input
-                    type="color"
-                    value={newColorHex}
-                    onChange={(e) => setNewColorHex(e.target.value)}
-                    className="h-[38px] w-10 border border-border cursor-pointer p-0.5 bg-background rounded-none"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAddColor}
-                  disabled={!newColorName.trim()}
-                  className="flex items-center gap-1 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Agregar
-                </button>
-              </div>
             </div>
 
             <div className="space-y-3">
@@ -702,7 +681,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
           {/* Submit */}
           <button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || isUploadingImage}
             className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isPending ? (

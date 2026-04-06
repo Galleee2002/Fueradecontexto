@@ -33,10 +33,10 @@ function CategoryFilter({
       <div className="flex gap-1 flex-wrap">
         <Link
           href="/admin/productos"
-          className={`px-3 py-1.5 text-xs border transition-colors focus:outline-none ${
+          className={`px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 rounded-none ${
             !current
-              ? 'bg-primary-subtle text-foreground border-primary hover:bg-primary-subtle hover:text-primary focus:bg-primary focus:text-primary-foreground'
-              : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
+              ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover focus:ring-primary'
+              : 'border-border text-foreground hover:bg-surface hover:border-border focus:border-primary focus:ring-primary'
           }`}
         >
           Todas
@@ -45,10 +45,10 @@ function CategoryFilter({
           <Link
             key={cat}
             href={`/admin/productos?category=${encodeURIComponent(cat)}`}
-            className={`px-3 py-1.5 text-xs border transition-colors focus:outline-none ${
+            className={`px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 rounded-none ${
               current === cat
-                ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover'
-                : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
+                ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover focus:ring-primary'
+                : 'border-border text-foreground hover:bg-surface hover:border-border focus:border-primary focus:ring-primary'
             }`}
           >
             {cat}
@@ -76,10 +76,10 @@ function StatusFilter({ current }: { current: AdminProductStatus }) {
           <Link
             key={value}
             href={`/admin/productos?status=${value}`}
-            className={`px-3 py-1.5 text-xs border-y border-r first:border-l transition-colors focus:outline-none ${
+            className={`px-3 py-2.5 text-xs border-y border-r first:border-l transition-colors focus:outline-none focus:ring-1 focus:z-10 relative rounded-none ${
               current === value
-                ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover'
-                : 'border-border text-foreground hover:bg-primary-subtle hover:border-primary hover:text-primary focus:bg-primary focus:text-primary-foreground'
+                ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover focus:ring-primary'
+                : 'border-border text-foreground hover:bg-surface hover:border-border focus:border-primary focus:ring-primary'
             }`}
           >
             {label}
