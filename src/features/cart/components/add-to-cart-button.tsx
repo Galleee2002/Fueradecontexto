@@ -14,7 +14,7 @@ interface AddToCartButtonProps {
   selectedColor?: string
   selectedSize?: string
   selectedStampSize?: string
-  selectedStampLocation?: string
+    selectedStampLocations?: string[]
 }
 
 export function AddToCartButton({
@@ -27,7 +27,7 @@ export function AddToCartButton({
   selectedColor,
   selectedSize,
   selectedStampSize,
-  selectedStampLocation,
+    selectedStampLocations,
 }: AddToCartButtonProps) {
   const [loading, setLoading] = useState(false)
   const { addItem, openCart } = useCart()
@@ -44,7 +44,7 @@ export function AddToCartButton({
       ...(selectedColor !== undefined ? { selectedColor } : {}),
       ...(selectedSize !== undefined ? { selectedSize } : {}),
       ...(selectedStampSize !== undefined ? { selectedStampSize } : {}),
-      ...(selectedStampLocation !== undefined ? { selectedStampLocation } : {}),
+        ...(selectedStampLocations !== undefined && selectedStampLocations.length > 0 ? { selectedStampLocations } : {}),
     })
     openCart()
     setLoading(false)

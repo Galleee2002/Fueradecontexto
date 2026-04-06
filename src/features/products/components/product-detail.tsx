@@ -7,6 +7,7 @@ import { ProductImageGallery } from './product-image-gallery'
 import { ColorSelector } from './color-selector'
 import { SizeSelector } from './size-selector'
 import { StampSelector } from './stamp-selector'
+import { MultiStampSelector } from './multi-stamp-selector'
 import { QuantitySelector } from './quantity-selector'
 import { SizeGuideModal } from './size-guide-modal'
 import { ServiceStripe } from './service-stripe'
@@ -22,7 +23,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [selectedStampSize, setSelectedStampSize] = useState<string | null>(null)
-  const [selectedStampLocation, setSelectedStampLocation] = useState<string | null>(null)
+  const [selectedStampLocations, setSelectedStampLocations] = useState<string[]>([])
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
 
   return (
@@ -45,7 +46,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
         />
 
         <SizeSelector
-          sizes={product.availableSizes}
+          sizes={product.availableSizes.filter((size) => size !== 'XS')}
           selected={selectedSize}
           onChange={setSelectedSize}
           onGuideClick={() => setSizeGuideOpen(true)}
@@ -58,11 +59,11 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
           onChange={setSelectedStampSize}
         />
 
-        <StampSelector
+        <MultiStampSelector
           label="Ubicación de estampa"
           options={product.stampLocations}
-          selected={selectedStampLocation}
-          onChange={setSelectedStampLocation}
+          selected={selectedStampLocations}
+          onChange={setSelectedStampLocations}
         />
 
         {product.description && (
@@ -81,7 +82,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
           {...(selectedColor !== null ? { selectedColor } : {})}
           {...(selectedSize !== null ? { selectedSize } : {})}
           {...(selectedStampSize !== null ? { selectedStampSize } : {})}
-          {...(selectedStampLocation !== null ? { selectedStampLocation } : {})}
+          {...(selectedStampLocations.length > 0 ? { selectedStampLocations } : {})}
         />
 
         <ServiceStripe />

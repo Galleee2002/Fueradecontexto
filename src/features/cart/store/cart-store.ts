@@ -30,7 +30,7 @@ export const useCartStore = create<CartStore>()(
           item.selectedColor ?? '',
           item.selectedSize ?? '',
           item.selectedStampSize ?? '',
-          item.selectedStampLocation ?? '',
+           (item.selectedStampLocations ?? []).join(';'),
         ].join('|')
         set((state) => {
           const existing = state.items.find((i) => i.variantKey === variantKey)

@@ -3,9 +3,9 @@ import { Container } from '@/components/shared/layout/container'
 import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/constants/site'
 
 const NAV_LINKS = [
-  { label: 'Productos', href: '/productos' },
-  { label: 'Novedades', href: '/productos?sort=newest' },
-  { label: 'Quiénes somos', href: '/quienes-somos' },
+  { label: 'Explorar', href: '/productos' },
+  { label: 'Talles', href: '/talles' },
+  { label: 'Ayuda', href: '/ayuda' },
 ]
 
 const LEGAL_LINKS = [

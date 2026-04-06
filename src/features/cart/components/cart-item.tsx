@@ -39,13 +39,13 @@ export function CartItem({ item }: CartItemProps) {
 
         <p className="text-sm font-semibold">{formatPrice(item.productPrice)}</p>
 
-        {(item.selectedColor || item.selectedSize || item.selectedStampSize || item.selectedStampLocation) && (
+        {(item.selectedColor || item.selectedSize || item.selectedStampSize || (item.selectedStampLocations && item.selectedStampLocations.length > 0)) && (
           <p className="text-xs text-muted-foreground leading-snug">
             {[
               item.selectedColor && `Color: ${item.selectedColor}`,
               item.selectedSize && `Talle: ${item.selectedSize}`,
               item.selectedStampSize && `Estampa: ${item.selectedStampSize}`,
-              item.selectedStampLocation && item.selectedStampLocation,
+              item.selectedStampLocations && item.selectedStampLocations.length > 0 && `Ubicación: ${item.selectedStampLocations.join(', ')}`,
             ].filter(Boolean).join(' · ')}
           </p>
         )}

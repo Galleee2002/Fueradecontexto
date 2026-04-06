@@ -10,7 +10,7 @@ export interface CartItemUI {
   selectedColor?: string
   selectedSize?: string
   selectedStampSize?: string
-  selectedStampLocation?: string
+    selectedStampLocations?: string[]
 }
 
 export interface CartState {

@@ -59,16 +59,16 @@ export function HeroSection() {
                 href="/productos"
                 className="group relative w-full sm:w-auto overflow-hidden bg-primary text-white px-10 py-4 text-[11px] font-medium tracking-[0.28em] uppercase transition-all duration-300 hover:bg-primary/90"
               >
-                <span className="relative z-10">Ver colección</span>
+                <span className="relative z-10">Productos</span>
                 <span className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               </Link>
 
               <Link
-                href="/productos"
+                href="/talles"
                 className="group flex items-center gap-3 text-[11px] font-medium tracking-[0.28em] uppercase text-white/45 hover:text-white/90 transition-colors duration-300"
               >
                 <span className="h-px w-6 bg-current block transition-all duration-500 group-hover:w-12" />
-                Novedades
+                Talles
               </Link>
             </div>
 

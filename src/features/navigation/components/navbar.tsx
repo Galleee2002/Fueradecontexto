@@ -17,9 +17,9 @@ export function Navbar({ categories }: { categories: string[] }) {
   }))
 
   const NAV_LINKS = [
-    { label: 'Productos', href: '/productos', children: CATEGORIES },
-    { label: 'Novedades', href: '/productos?sort=newest' },
-    { label: 'Quiénes somos', href: '/quienes-somos' },
+    { label: 'Explorar', href: '/productos', children: CATEGORIES },
+    { label: 'Talles', href: '/talles' },
+    { label: 'Ayuda', href: '/ayuda' },
   ]
 
   return (
@@ -44,7 +44,7 @@ export function Navbar({ categories }: { categories: string[] }) {
                 href="/productos"
                 className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
               >
-                Productos
+                Explorar
                 <ChevronDown
                   className={`h-3 w-3 transition-transform duration-200${productsOpen ? ' rotate-180' : ''}`}
                 />
@@ -70,18 +70,18 @@ export function Navbar({ categories }: { categories: string[] }) {
 
             <li>
               <Link
-                href="/productos?sort=newest"
+                href="/talles"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
               >
-                Novedades
+                Talles
               </Link>
             </li>
             <li>
               <Link
-                href="/quienes-somos"
+                href="/ayuda"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
               >
-                Quiénes somos
+                Ayuda
               </Link>
             </li>
           </ul>

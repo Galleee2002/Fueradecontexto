@@ -65,6 +65,15 @@ export async function fetchSizeGuideByCategory(category: string): Promise<SizeGu
   return (rows[0] as SizeGuide) ?? null
 }
 
+export async function fetchSizeGuides(): Promise<SizeGuide[]> {
+  const rows = await sql`
+    SELECT id, category, rows, "createdAt", "updatedAt"
+    FROM "SizeGuide"
+    ORDER BY category
+  `
+  return rows as SizeGuide[]
+}
+
 export async function fetchProductCategories(): Promise<string[]> {
   const rows = await sql`
     SELECT c.name

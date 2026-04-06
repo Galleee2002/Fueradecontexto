@@ -3,13 +3,15 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ImageOff, Loader2, Plus, X } from 'lucide-react'
+import { ArrowLeft, ImageOff, Loader2, MapPin, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
 import { createStampLocation } from '../actions/stamp-location-actions'
+import { ToggleGroupInteractive } from './toggle-group-interactive'
+import { StampSizeInteractive } from './stamp-size-interactive'
 import type { AdminProduct } from '../types'
 import type { ProductColor } from '@/features/products/types'
 
-const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
 const STAMP_SIZE_OPTIONS = ['20x30', '30x40', '40x50']
 
 interface ProductFormProps {
@@ -49,54 +51,6 @@ function FormField({
       </label>
       {children}
       {error && <p className="text-xs text-primary">{error}</p>}
-    </div>
-  )
-}
-
-function CheckboxGroup({
-  label,
-  options,
-  selected,
-  onChange,
-  noteItem,
-  note,
-}: {
-  label: string
-  options: string[]
-  selected: string[]
-  onChange: (v: string[]) => void
-  noteItem?: string
-  note?: string
-}) {
-  function toggle(option: string) {
-    onChange(
-      selected.includes(option)
-        ? selected.filter((s) => s !== option)
-        : [...selected, option],
-    )
-  }
-  return (
-    <div className="space-y-2">
-      <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
-        {label}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {options.map((option) => (
-          <label key={option} className="flex items-center gap-1.5 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={selected.includes(option)}
-              onChange={() => toggle(option)}
-              className="h-3.5 w-3.5 accent-primary"
-            />
-            <span className="text-xs text-foreground">{option}</span>
-            {noteItem && option === noteItem && (
-              <span className="text-2xs text-muted-foreground italic">(no frente)</span>
-            )}
-          </label>
-        ))}
-      </div>
-      {note && <p className="text-xs text-muted-foreground">{note}</p>}
     </div>
   )
 }
@@ -574,21 +528,28 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
               </div>
             </div>
 
-            <CheckboxGroup
-              label="Talles disponibles"
-              options={SIZE_OPTIONS}
-              selected={availableSizes}
-              onChange={setAvailableSizes}
-            />
+            <div className="space-y-3">
+              <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+                Talles disponibles
+              </p>
+              <ToggleGroupInteractive
+                options={SIZE_OPTIONS}
+                selected={availableSizes}
+                onChange={setAvailableSizes}
+                label="talles"
+              />
+            </div>
 
-            <CheckboxGroup
-              label="Tamaños de estampa"
-              options={STAMP_SIZE_OPTIONS}
-              selected={stampSizes}
-              onChange={setStampSizes}
-              noteItem="40x50"
-              note="El tamaño 40×50 no puede ubicarse en el frente de la prenda."
-            />
+            <div className="space-y-3">
+              <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+                Tamaños de estampa
+              </p>
+              <StampSizeInteractive
+                options={STAMP_SIZE_OPTIONS}
+                selected={stampSizes}
+                onChange={setStampSizes}
+              />
+            </div>
 
             {/* Stamp locations */}
             <div className="space-y-2">
@@ -615,13 +576,14 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground">
-                  No hay ubicaciones creadas todavía.
-                </p>
+                <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border py-5 px-4 text-center">
+                  <MapPin className="h-5 w-5 text-muted-foreground/50" />
+                  <p className="text-xs text-muted-foreground">No hay ubicaciones creadas todavía.</p>
+                </div>
               )}
 
               {addingLocation ? (
-                <div className="flex gap-2 items-center mt-2">
+                <div className="flex flex-wrap gap-2 items-center mt-2">
                   <input
                     type="text"
                     value={newLocationInput}
@@ -636,7 +598,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                     }}
                     placeholder="Ej: Pecho izquierdo"
                     autoFocus
-                    className="px-2 py-2 border border-border bg-background text-sm w-48 focus:outline-none focus:border-primary rounded-none placeholder:text-muted-foreground"
+                    className="px-2 py-2 border border-border bg-background text-sm w-full sm:w-48 focus:outline-none focus:border-primary rounded-none placeholder:text-muted-foreground"
                   />
                   <button
                     type="button"
@@ -666,7 +628,7 @@ export function ProductForm({ product, categories, stampLocations: stampLocation
                 <button
                   type="button"
                   onClick={() => setAddingLocation(true)}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2 mt-1"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors mt-1"
                 >
                   <Plus className="h-3 w-3" />
                   Agregar ubicación
