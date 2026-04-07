@@ -5,8 +5,10 @@ import { Preference } from 'mercadopago'
 import { prisma } from '@/lib/db/prisma'
 import { sql } from '@/lib/db/client'
 import { auth } from '@/auth'
+import { SITE_URL } from '@/lib/constants/site'
 import { mpClient } from '@/lib/mercadopago/client'
 import type { ContactData, ShippingData, CartItemInput } from '../types'
+import type { OrderStatus } from '@/lib/constants/orders'
 
 const cartItemSchema = z.object({
   productId: z.string().min(1),
@@ -29,6 +31,7 @@ interface ProductRow {
   id: string
   price: number
   name: string
+  stock: number
 }
 
 export async function createOrderAndPreference(
@@ -43,13 +46,18 @@ export async function createOrderAndPreference(
   }
 
   const validatedCart = cartParsed.data
-  const productIds = validatedCart.map((i) => i.productId)
+  const quantityByProductId = new Map<string, number>()
+  for (const item of validatedCart) {
+    quantityByProductId.set(item.productId, (quantityByProductId.get(item.productId) ?? 0) + item.quantity)
+  }
+
+  const productIds = [...quantityByProductId.keys()]
 
   // Re-fetch prices from DB (never trust client-side prices)
   const priceRows = await sql`
-    SELECT id, price::float AS price, name
+    SELECT id, price::float AS price, name, stock
     FROM "Product"
-    WHERE id = ANY(${productIds}::text[]) AND active = true
+    WHERE id = ANY(${productIds}::text[]) AND active = true AND "deletedAt" IS NULL
   `
 
   if (priceRows.length !== productIds.length) {
@@ -57,71 +65,76 @@ export async function createOrderAndPreference(
   }
 
   const productMap = new Map(
-    (priceRows as ProductRow[]).map((r) => [r.id, { price: r.price, name: r.name }]),
+    (priceRows as ProductRow[]).map((r) => [r.id, { price: r.price, name: r.name, stock: r.stock }]),
   )
 
   // Calculate total server-side
   let total = 0
-  for (const item of validatedCart) {
-    const { price } = productMap.get(item.productId)!
-    total += price * item.quantity
+  for (const [productId, quantity] of quantityByProductId.entries()) {
+    const product = productMap.get(productId)!
+    if (product.stock < quantity) {
+      return {
+        error:
+          product.stock <= 0
+            ? `${product.name} no tiene stock disponible.`
+            : `${product.name} solo tiene ${product.stock} unidad${product.stock === 1 ? '' : 'es'} disponible${product.stock === 1 ? '' : 's'}.`,
+      }
+    }
+
+    total += product.price * quantity
   }
 
   // Get optional userId from session
   const session = await auth()
   const userId = session?.user?.id ?? null
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  let orderId: string | null = null
+  let preferenceId: string | null = null
 
   try {
     // Create order in DB
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const order = await prisma.$transaction(async (tx: any) => {
-      const created = await tx.order.create({
-        data: {
-          customerEmail: contact.email,
-          customerName: `${contact.nombre} ${contact.apellido}`,
-          customerPhone: contact.telefono,
-          userId,
-          total,
-          status: 'pending',
-          shippingAddress: {
-            calle: shipping.calle,
-            numero: shipping.numero,
-            pisoDpto: shipping.pisoDpto,
-            ciudad: shipping.ciudad,
-            provincia: shipping.provincia,
-            codigoPostal: shipping.codigoPostal,
-          },
-          items: {
-            create: validatedCart.map((item) => ({
-              productId: item.productId,
-              quantity: item.quantity,
-              unitPrice: productMap.get(item.productId)!.price,
-            })),
-          },
+    const order = await prisma.order.create({
+      data: {
+        customerEmail: contact.email,
+        customerName: `${contact.nombre} ${contact.apellido}`,
+        customerPhone: contact.telefono,
+        userId,
+        total,
+        status: 'pending' satisfies OrderStatus,
+        shippingAddress: {
+          calle: shipping.calle,
+          numero: shipping.numero,
+          pisoDpto: shipping.pisoDpto,
+          ciudad: shipping.ciudad,
+          provincia: shipping.provincia,
+          codigoPostal: shipping.codigoPostal,
         },
-      })
-      return created
+        items: {
+          create: validatedCart.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            unitPrice: productMap.get(item.productId)!.price,
+          })),
+        },
+      },
     })
 
-    // Build MP preference items
-    const mpItems = validatedCart.map((item) => {
-      const { price, name } = productMap.get(item.productId)!
-      return {
-        id: item.productId,
-        title: name,
-        quantity: item.quantity,
-        unit_price: price,
-        currency_id: 'ARS',
-      }
-    })
+    orderId = order.id
 
     // Create Mercado Pago preference
     const preference = new Preference(mpClient)
     const mpResponse = await preference.create({
       body: {
-        items: mpItems,
+        items: validatedCart.map((item) => {
+          const { price, name } = productMap.get(item.productId)!
+          return {
+            id: item.productId,
+            title: name,
+            quantity: item.quantity,
+            unit_price: price,
+            currency_id: 'ARS',
+          }
+        }),
         payer: {
           name: contact.nombre,
           surname: contact.apellido,
@@ -129,37 +142,51 @@ export async function createOrderAndPreference(
           phone: { number: contact.telefono },
         },
         back_urls: {
-          success: `${siteUrl}/checkout/confirmacion`,
-          failure: `${siteUrl}/checkout/error`,
-          pending: `${siteUrl}/checkout/pendiente`,
+          success: `${SITE_URL}/checkout/confirmacion`,
+          failure: `${SITE_URL}/checkout/error`,
+          pending: `${SITE_URL}/checkout/pendiente`,
         },
         auto_return: 'approved',
-        notification_url: `${siteUrl}/api/mercadopago/webhook`,
+        notification_url: `${SITE_URL}/api/mercadopago/webhook`,
         external_reference: order.id,
         statement_descriptor: 'FUERADECONTEXTO',
       },
     })
 
-    // Save preferenceId to order
-    await prisma.order.update({
-      where: { id: order.id },
-      data: { mpPreferenceId: mpResponse.id ?? null },
-    })
-
+    preferenceId = mpResponse.id ?? null
     const initPoint = mpResponse.init_point
-    if (!initPoint) {
+
+    if (!initPoint || !preferenceId) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          status: 'cancelled',
+          mpPreferenceId: preferenceId,
+        },
+      })
+
       return { error: 'No se pudo iniciar el pago. Intente nuevamente.' }
     }
 
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { mpPreferenceId: preferenceId },
+    })
+
     return { initPoint }
   } catch (err) {
+    if (orderId) {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          status: 'cancelled',
+          mpPreferenceId: preferenceId,
+        },
+      }).catch(() => null)
+    }
     console.error('[checkout] createOrderAndPreference error:', err)
-    const message = err instanceof Error ? err.message : String(err)
     return {
-      error:
-        process.env.NODE_ENV === 'development'
-          ? `Error: ${message}`
-          : 'No se pudo procesar el pago. Intente nuevamente.',
+      error: 'No se pudo procesar el pago. Intente nuevamente.',
     }
   }
 }

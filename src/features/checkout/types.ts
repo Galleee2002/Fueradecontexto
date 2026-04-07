@@ -1,3 +1,5 @@
+import type { OrderStatus } from '@/lib/constants/orders'
+
 export type StepId = 1 | 2 | 3
 
 export interface ContactData {
@@ -41,8 +43,6 @@ export type CheckoutAction =
   | { type: 'SET_SHIPPING'; data: ShippingData }
   | { type: 'PREV_STEP' }
   | { type: 'SET_ORDER_ID'; orderId: string }
-
-export type OrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled'
 
 export interface CartItemInput {
   productId: string

@@ -1,33 +1,42 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/auth'
 import { sql } from '@/lib/db/client'
+import { assertAdminSession } from '@/lib/auth/require-admin'
 import { productSchema } from '@/features/products/schemas/product-schema'
 import type { ProductInput } from '@/features/products/schemas/product-schema'
 
-async function requireAdmin() {
-  const session = await auth()
-  if (!session?.user) throw new Error('Unauthorized')
-}
-
 export async function createAdminProduct(input: ProductInput) {
-  await requireAdmin()
+  await assertAdminSession()
   const parsed = productSchema.safeParse(input)
   if (!parsed.success) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, previewImages, category, subcategory, active,
-          availableColors, availableSizes, stampSizes, stampLocations } = parsed.data
+  const {
+    slug,
+    name,
+    description,
+    price,
+    stock,
+    imageUrl,
+    previewImages,
+    category,
+    subcategory,
+    active,
+    availableColors,
+    availableSizes,
+    stampSizes,
+    stampLocations,
+  } = parsed.data
 
   const id = crypto.randomUUID()
 
   await sql`
-    INSERT INTO "Product" (id, slug, name, description, price, "imageUrl", "previewImages", category, subcategory, active,
+    INSERT INTO "Product" (id, slug, name, description, price, stock, "imageUrl", "previewImages", category, subcategory, active,
                            "availableColors", "availableSizes", "stampSizes", "stampLocations",
                            "createdAt", "updatedAt")
-    VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${subcategory}, ${active},
+    VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${subcategory}, ${active},
             ${JSON.stringify(availableColors)}::jsonb, ${JSON.stringify(availableSizes)}::jsonb,
             ${JSON.stringify(stampSizes)}::jsonb, ${JSON.stringify(stampLocations)}::jsonb,
             NOW(), NOW())
@@ -39,14 +48,28 @@ export async function createAdminProduct(input: ProductInput) {
 }
 
 export async function updateAdminProduct(id: string, input: ProductInput) {
-  await requireAdmin()
+  await assertAdminSession()
   const parsed = productSchema.safeParse(input)
   if (!parsed.success) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, previewImages, category, subcategory, active,
-          availableColors, availableSizes, stampSizes, stampLocations } = parsed.data
+  const {
+    slug,
+    name,
+    description,
+    price,
+    stock,
+    imageUrl,
+    previewImages,
+    category,
+    subcategory,
+    active,
+    availableColors,
+    availableSizes,
+    stampSizes,
+    stampLocations,
+  } = parsed.data
 
   await sql`
     UPDATE "Product"
@@ -55,6 +78,7 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
       name = ${name},
       description = ${description ?? null},
       price = ${price},
+      stock = ${stock},
       "imageUrl" = ${imageUrl},
       "previewImages" = ${JSON.stringify(previewImages)}::jsonb,
       category = ${category},
@@ -75,7 +99,7 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
 }
 
 export async function deleteAdminProduct(id: string) {
-  await requireAdmin()
+  await assertAdminSession()
   await sql`DELETE FROM "CartItem" WHERE "productId" = ${id}`
   await sql`
     UPDATE "Product"
@@ -90,7 +114,7 @@ export async function deleteAdminProduct(id: string) {
 }
 
 export async function toggleAdminProductActive(id: string, active: boolean) {
-  await requireAdmin()
+  await assertAdminSession()
   await sql`
     UPDATE "Product"
     SET active = ${active}, "updatedAt" = NOW()

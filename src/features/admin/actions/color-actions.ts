@@ -1,13 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/auth'
 import { sql } from '@/lib/db/client'
-
-async function requireAdmin() {
-  const session = await auth()
-  if (!session?.user) throw new Error('Unauthorized')
-}
+import { assertAdminSession } from '@/lib/auth/require-admin'
 
 function revalidateAll() {
   revalidatePath('/admin/colores')
@@ -15,7 +10,7 @@ function revalidateAll() {
 }
 
 export async function createColor(name: string, hex: string) {
-  await requireAdmin()
+  await assertAdminSession()
   const trimmed = name.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -30,7 +25,7 @@ export async function createColor(name: string, hex: string) {
 }
 
 export async function updateColor(id: string, name: string, hex: string) {
-  await requireAdmin()
+  await assertAdminSession()
   const trimmed = name.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -45,7 +40,7 @@ export async function updateColor(id: string, name: string, hex: string) {
 }
 
 export async function deleteColor(id: string) {
-  await requireAdmin()
+  await assertAdminSession()
   await sql`DELETE FROM "Color" WHERE id = ${id}`
   revalidateAll()
   return { success: true }

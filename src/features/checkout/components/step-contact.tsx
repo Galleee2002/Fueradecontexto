@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import Link from 'next/link'
+import { useRef, useState } from 'react'
 import { z } from 'zod'
-import { ArrowLeft } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import type { ContactData } from '../types'
 
@@ -26,6 +26,7 @@ const inputBase =
 const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
 
 export function StepContact({ defaultValues, onNext }: StepContactProps) {
+  const formRef = useRef<HTMLFormElement>(null)
   const [values, setValues] = useState<ContactData>({
     email: defaultValues?.email ?? '',
     nombre: defaultValues?.nombre ?? '',
@@ -50,6 +51,9 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
         if (!fieldErrors[key]) fieldErrors[key] = issue.message
       }
       setErrors(fieldErrors)
+      requestAnimationFrame(() => {
+        formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+      })
       return
     }
 
@@ -57,7 +61,7 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form ref={formRef} onSubmit={handleSubmit} noValidate>
       <h2 className="font-serif text-2xl mb-8">Datos de contacto</h2>
 
       <div className="space-y-6">
@@ -68,14 +72,18 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
             autoComplete="email"
+            spellCheck={false}
             value={values.email}
             onChange={(e) => handleChange('email', e.target.value)}
-            placeholder="tu@email.com"
+            placeholder="tu@email.com…"
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? 'contact-email-error' : undefined}
             className={cn(inputBase, errors.email && 'border-error focus-visible:ring-error')}
           />
-          {errors.email && <p className="mt-1.5 text-xs text-error">{errors.email}</p>}
+          {errors.email && <p id="contact-email-error" className="mt-1.5 text-xs text-error" role="alert">{errors.email}</p>}
         </div>
 
         {/* Nombre + Apellido */}
@@ -86,14 +94,17 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
             </label>
             <input
               id="nombre"
+              name="nombre"
               type="text"
               autoComplete="given-name"
               value={values.nombre}
               onChange={(e) => handleChange('nombre', e.target.value)}
               placeholder="Juan"
+              aria-invalid={Boolean(errors.nombre)}
+              aria-describedby={errors.nombre ? 'contact-nombre-error' : undefined}
               className={cn(inputBase, errors.nombre && 'border-error focus-visible:ring-error')}
             />
-            {errors.nombre && <p className="mt-1.5 text-xs text-error">{errors.nombre}</p>}
+            {errors.nombre && <p id="contact-nombre-error" className="mt-1.5 text-xs text-error" role="alert">{errors.nombre}</p>}
           </div>
 
           <div>
@@ -102,14 +113,17 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
             </label>
             <input
               id="apellido"
+              name="apellido"
               type="text"
               autoComplete="family-name"
               value={values.apellido}
               onChange={(e) => handleChange('apellido', e.target.value)}
               placeholder="García"
+              aria-invalid={Boolean(errors.apellido)}
+              aria-describedby={errors.apellido ? 'contact-apellido-error' : undefined}
               className={cn(inputBase, errors.apellido && 'border-error focus-visible:ring-error')}
             />
-            {errors.apellido && <p className="mt-1.5 text-xs text-error">{errors.apellido}</p>}
+            {errors.apellido && <p id="contact-apellido-error" className="mt-1.5 text-xs text-error" role="alert">{errors.apellido}</p>}
           </div>
         </div>
 
@@ -120,14 +134,17 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
           </label>
           <input
             id="telefono"
+            name="telefono"
             type="tel"
             autoComplete="tel"
             value={values.telefono}
             onChange={(e) => handleChange('telefono', e.target.value)}
-            placeholder="+54 9 11 1234-5678"
+            placeholder="+54 9 11 1234-5678…"
+            aria-invalid={Boolean(errors.telefono)}
+            aria-describedby={errors.telefono ? 'contact-telefono-error' : undefined}
             className={cn(inputBase, errors.telefono && 'border-error focus-visible:ring-error')}
           />
-          {errors.telefono && <p className="mt-1.5 text-xs text-error">{errors.telefono}</p>}
+          {errors.telefono && <p id="contact-telefono-error" className="mt-1.5 text-xs text-error" role="alert">{errors.telefono}</p>}
         </div>
       </div>
 
@@ -142,7 +159,9 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
 
       <p className="mt-6 text-xs text-muted-foreground text-center">
         Al continuar aceptás nuestros{' '}
-        <span className="underline underline-offset-2 cursor-pointer">Términos y condiciones</span>
+        <Link href="/legal/terminos" className="underline underline-offset-2 hover:text-foreground transition-colors">
+          Términos y condiciones
+        </Link>
       </p>
     </form>
   )

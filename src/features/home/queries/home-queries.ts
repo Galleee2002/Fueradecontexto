@@ -3,7 +3,7 @@ import type { ProductCard } from '@/features/products/types'
 
 export async function fetchFeaturedProducts(): Promise<ProductCard[]> {
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.price::float, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category
     FROM "Product" p

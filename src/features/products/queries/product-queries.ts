@@ -17,7 +17,7 @@ export async function fetchProducts(
         : sql`ORDER BY "createdAt" DESC`
 
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.price::float, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category
     FROM "Product" p
@@ -48,9 +48,9 @@ export async function fetchProducts(
 
 export async function fetchProductBySlug(slug: string): Promise<ProductFull | null> {
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
-           p.category, p.active, p."createdAt", p."updatedAt",
+           p.category, p.active, p."createdAt", p."updatedAt", p."deletedAt",
            p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
     FROM "Product" p
     WHERE p.slug = ${slug} AND p.active = true AND p."deletedAt" IS NULL
@@ -96,7 +96,7 @@ export async function fetchRelatedProducts(
   limit = 4
 ): Promise<ProductCard[]> {
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.price::float, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category
     FROM "Product" p

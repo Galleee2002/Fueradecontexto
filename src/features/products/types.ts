@@ -8,6 +8,7 @@ export interface ProductCard {
   slug: string
   name: string
   price: number
+  stock: number
   imageUrl: string
   previewImages: string[]
   category: string
@@ -18,6 +19,7 @@ export interface ProductFull extends ProductCard {
   active: boolean
   createdAt: Date
   updatedAt: Date
+  deletedAt?: Date | null
   availableColors: ProductColor[]
   availableSizes: string[]
   stampSizes: string[]

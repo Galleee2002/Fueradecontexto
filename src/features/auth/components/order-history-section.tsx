@@ -1,21 +1,6 @@
 import { LogoutButton } from './logout-button'
+import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/lib/constants/orders'
 import type { UserOrder } from '@/features/auth/queries/user-queries'
-
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
-  paid: 'Pagado',
-  shipped: 'Enviado',
-  delivered: 'Entregado',
-  cancelled: 'Cancelado',
-}
-
-const STATUS_STYLES: Record<string, string> = {
-  pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  paid: 'bg-green-50 text-green-700 border-green-200',
-  shipped: 'bg-blue-50 text-blue-700 border-blue-200',
-  delivered: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  cancelled: 'bg-red-50 text-red-700 border-red-200',
-}
 
 interface OrderHistorySectionProps {
   user: { name?: string | null; email?: string | null }
@@ -48,8 +33,8 @@ export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) 
           <div className="divide-y divide-border border border-border">
             {orders.map((order) => {
               const statusClass =
-                STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
-              const statusLabel = STATUS_LABELS[order.status] ?? order.status
+                ORDER_STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
+              const statusLabel = ORDER_STATUS_LABELS[order.status] ?? order.status
 
               return (
                 <div key={order.id} className="flex items-center justify-between gap-4 px-5 py-4">

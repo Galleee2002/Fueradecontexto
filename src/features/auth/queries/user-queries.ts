@@ -1,9 +1,10 @@
 import { sql } from '@/lib/db/client'
+import type { OrderStatus } from '@/lib/constants/orders'
 
 export interface UserOrder {
   id: string
   total: number
-  status: string
+  status: OrderStatus
   createdAt: Date
   itemCount: number
 }

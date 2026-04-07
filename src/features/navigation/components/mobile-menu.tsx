@@ -41,10 +41,6 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
   }
 
   useEffect(() => {
-    closeMenu()
-  }, [pathname])
-
-  useEffect(() => {
     if (!open) return
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -87,7 +83,11 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
               <div className="flex items-center justify-between gap-4">
                 <Link
                   href="/"
-                  onClick={closeMenu}
+                  onClick={() => {
+                    if (pathname !== '/') {
+                      closeMenu()
+                    }
+                  }}
                   className="text-sm font-semibold uppercase tracking-[0.16em] text-foreground"
                 >
                   {SITE_NAME}
@@ -110,11 +110,12 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                   <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
                   <input
                     id="mobile-menu-search"
+                    name="search"
                     type="search"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Buscar productos o categorias"
-                    className="h-12 w-full bg-transparent pl-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                    placeholder="Buscar productos o categorías…"
+                    className="h-12 w-full bg-transparent pl-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none"
                   />
                 </div>
               </form>
@@ -122,7 +123,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
 
             <div className="flex-1 overflow-y-auto px-4 py-5">
               <p className="mb-3 text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
-                Navegacion
+                Navegación
               </p>
               <ul>
                 {links.map((link) => {
@@ -152,7 +153,11 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                             <li key={child.href}>
                               <Link
                                 href={child.href}
-                                onClick={closeMenu}
+                                onClick={() => {
+                                  if (pathname !== child.href) {
+                                    closeMenu()
+                                  }
+                                }}
                                 className="flex min-h-12 items-center bg-surface px-4 text-base font-medium text-foreground/80 transition-colors hover:text-foreground"
                               >
                                 {child.label}
@@ -166,7 +171,11 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                     <li key={link.href} className="border-b border-border">
                       <Link
                         href={link.href}
-                        onClick={closeMenu}
+                        onClick={() => {
+                          if (pathname !== link.href) {
+                            closeMenu()
+                          }
+                        }}
                         className="flex min-h-14 items-center py-3 font-serif text-[1.7rem] font-semibold text-foreground transition-colors hover:text-primary"
                       >
                         {link.label}
@@ -181,7 +190,11 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
               <div className="space-y-1">
                 <Link
                   href="/ayuda"
-                  onClick={closeMenu}
+                  onClick={() => {
+                    if (pathname !== '/ayuda') {
+                      closeMenu()
+                    }
+                  }}
                   className="flex min-h-12 items-center text-sm font-medium tracking-wide text-foreground transition-colors hover:text-primary"
                 >
                   Ayuda

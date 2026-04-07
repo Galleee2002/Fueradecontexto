@@ -18,7 +18,7 @@ function buildMiniDescription(name: string, category: string): string {
   return `${cleanName.slice(0, 45)}... ${base}`
 }
 
-export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImages, category }: ProductCardProps) {
+export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, previewImages, category }: ProductCardProps) {
   const [activeSlide, setActiveSlide] = useState(0)
   const cardRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -162,7 +162,7 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
           <div className="mb-2.5 flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
             <span className="rounded-full border border-primary/25 bg-primary/10 px-2 py-1 font-medium text-primary">{category}</span>
             <span className="h-3.5 w-px bg-border" />
-            <span>Nuevo</span>
+            <span>{stock > 0 ? 'Disponible' : 'Sin stock'}</span>
           </div>
           <h3 className="text-[1.35rem] font-medium font-serif leading-[1.1] text-foreground line-clamp-2">
             {name}

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
 import { AdminShell } from '@/features/admin/components/admin-shell'
+import { requireAdminSession } from '@/lib/auth/require-admin'
 
 export const metadata: Metadata = {
   title: 'Admin — Fueradecontexto',
@@ -13,8 +12,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
-  if (!session?.user) redirect('/login')
+  await requireAdminSession()
   return (
     <AdminShell>
       {children}

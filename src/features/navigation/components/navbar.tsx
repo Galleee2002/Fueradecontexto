@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { gsap } from 'gsap'
@@ -11,11 +11,13 @@ import { SITE_NAME } from '@/lib/constants/site'
 
 export function Navbar({ categories }: { categories: string[] }) {
   const [productsOpen, setProductsOpen] = useState(false)
+  const menuRef = useRef<HTMLLIElement>(null)
   const cartAreaRef = useRef<HTMLDivElement>(null)
+  const dropdownId = useId()
 
   const CATEGORIES = categories.map((label) => ({
     label,
-    href: `/productos?category=${encodeURIComponent(label.toLowerCase())}`,
+    href: `/productos?category=${encodeURIComponent(label)}`,
   }))
 
   const NAV_LINKS = [
@@ -72,6 +74,21 @@ export function Navbar({ categories }: { categories: string[] }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (!productsOpen) {
+      return
+    }
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setProductsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handlePointerDown)
+    return () => document.removeEventListener('mousedown', handlePointerDown)
+  }, [productsOpen])
+
   return (
     <header className="border-b border-border bg-background sticky top-0 z-50">
       <Container>
@@ -86,27 +103,57 @@ export function Navbar({ categories }: { categories: string[] }) {
           <ul className="hidden md:flex items-center gap-8">
             {/* Productos con dropdown de categorías */}
             <li
+              ref={menuRef}
               className="relative"
               onMouseEnter={() => setProductsOpen(true)}
               onMouseLeave={() => setProductsOpen(false)}
             >
-              <Link
-                href="/productos"
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
-              >
-                Explorar
-                <ChevronDown
-                  className={`h-3 w-3 transition-transform duration-200${productsOpen ? ' rotate-180' : ''}`}
-                />
-              </Link>
+              <div className="flex items-center">
+                <Link
+                  href="/productos"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
+                >
+                  Explorar
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Mostrar categorías"
+                  aria-haspopup="menu"
+                  aria-expanded={productsOpen}
+                  aria-controls={dropdownId}
+                  onClick={() => setProductsOpen((current) => !current)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      setProductsOpen(true)
+                    }
+
+                    if (event.key === 'Escape') {
+                      setProductsOpen(false)
+                    }
+                  }}
+                  className="ml-1 inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                >
+                  <ChevronDown
+                    aria-hidden="true"
+                    className={`h-3 w-3 transition-transform duration-200${productsOpen ? ' rotate-180' : ''}`}
+                  />
+                </button>
+              </div>
 
               {productsOpen && (
                 <div className="absolute top-full left-0 pt-2 z-50 min-w-[180px]">
-                  <ul className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden">
+                  <ul
+                    id={dropdownId}
+                    role="menu"
+                    className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden"
+                  >
                     {CATEGORIES.map((cat) => (
                       <li key={cat.href}>
                         <Link
                           href={cat.href}
+                          role="menuitem"
+                          onClick={() => setProductsOpen(false)}
                           className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-surface transition-colors tracking-wide"
                         >
                           {cat.label}

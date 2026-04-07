@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { AddToCartButton } from '@/features/cart/components/add-to-cart-button'
 import { formatPrice } from '@/lib/utils/format-price'
 import { ProductImageGallery } from './product-image-gallery'
@@ -49,11 +49,12 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
     [product.stampSizes, selectedStampSide],
   )
 
-  useEffect(() => {
-    if (selectedStampSize && !(filteredStampSizes as string[]).includes(selectedStampSize)) {
-      setSelectedStampSize(null)
-    }
-  }, [filteredStampSizes, selectedStampSize])
+  const isPurchasable = product.active && product.stock > 0
+  const effectiveSelectedStampSize =
+    selectedStampSize &&
+    filteredStampSizes.includes(selectedStampSize as (typeof STAMP_SIZE_ORDER)[number])
+      ? selectedStampSize
+      : null
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 py-8 lg:py-12">
@@ -111,7 +112,7 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
         <StampSelector
           label="Tamaño de estampa"
           options={filteredStampSizes}
-          selected={selectedStampSize}
+          selected={effectiveSelectedStampSize}
           onChange={setSelectedStampSize}
         />
 
@@ -126,7 +127,16 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
           <p className="text-base text-muted-foreground leading-relaxed">{product.description}</p>
         )}
 
-        <QuantitySelector value={quantity} onChange={setQuantity} max={10} />
+        <div className="flex items-center justify-between gap-3 border-y border-border py-3 text-sm">
+          <span className="text-muted-foreground">Disponibilidad</span>
+          <span className={isPurchasable ? 'font-medium text-foreground' : 'font-medium text-error-foreground'}>
+            {isPurchasable
+              ? `${product.stock} unidad${product.stock === 1 ? '' : 'es'} disponible${product.stock === 1 ? '' : 's'}`
+              : 'Sin stock disponible'}
+          </span>
+        </div>
+
+        <QuantitySelector value={quantity} onChange={setQuantity} max={Math.max(1, Math.min(10, product.stock))} />
 
         <AddToCartButton
           productId={product.id}
@@ -137,8 +147,10 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
           quantity={quantity}
           {...(selectedColor !== null ? { selectedColor } : {})}
           {...(selectedSize !== null ? { selectedSize } : {})}
-          {...(selectedStampSize !== null ? { selectedStampSize } : {})}
+          {...(effectiveSelectedStampSize !== null ? { selectedStampSize: effectiveSelectedStampSize } : {})}
           {...(selectedStampLocations.length > 0 ? { selectedStampLocations } : {})}
+          disabled={!isPurchasable}
+          disabledLabel="Sin stock"
         />
 
         <ServiceStripe />

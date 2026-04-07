@@ -16,6 +16,8 @@ interface AddToCartButtonProps {
   selectedSize?: string
   selectedStampSize?: string
   selectedStampLocations?: string[]
+  disabled?: boolean
+  disabledLabel?: string
 }
 
 export function AddToCartButton({
@@ -29,6 +31,8 @@ export function AddToCartButton({
   selectedSize,
   selectedStampSize,
   selectedStampLocations,
+  disabled = false,
+  disabledLabel = 'Sin stock',
 }: AddToCartButtonProps) {
   const [loading, setLoading] = useState(false)
   const { addItem, openCart } = useCart()
@@ -163,6 +167,10 @@ export function AddToCartButton({
   }, [])
 
   async function handleAddToCart() {
+    if (disabled) {
+      return
+    }
+
     setLoading(true)
     addItem({
       productId,
@@ -188,8 +196,8 @@ export function AddToCartButton({
     <button
       ref={buttonRef}
       onClick={handleAddToCart}
-      disabled={loading}
-      className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-none bg-primary px-8 py-4 text-sm font-medium tracking-widest uppercase text-primary-foreground transition-[background-color,transform] hover:bg-primary-hover disabled:opacity-50"
+      disabled={loading || disabled}
+      className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-none bg-primary px-8 py-4 text-sm font-medium tracking-widest uppercase text-primary-foreground transition-[background-color,transform] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
     >
       <span
         ref={pulseRef}
@@ -199,7 +207,7 @@ export function AddToCartButton({
       <span ref={iconRef} className="relative z-10 inline-flex">
         <ShoppingBag className="h-4 w-4 stroke-[1.5]" />
       </span>
-      {loading ? 'Agregando...' : 'Agregar al carrito'}
+      {loading ? 'Agregando…' : disabled ? disabledLabel : 'Agregar al carrito'}
     </button>
   )
 }

@@ -1,21 +1,6 @@
 import { AdminPagination } from './admin-pagination'
+import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/lib/constants/orders'
 import type { AdminOrder } from '../types'
-
-const STATUS_STYLES: Record<string, string> = {
-  pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  paid: 'bg-green-50 text-green-700 border-green-200',
-  shipped: 'bg-blue-50 text-blue-700 border-blue-200',
-  delivered: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  cancelled: 'bg-red-50 text-red-700 border-red-200',
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
-  paid: 'Pagado',
-  shipped: 'Enviado',
-  delivered: 'Entregado',
-  cancelled: 'Cancelado',
-}
 
 interface OrdersTableProps {
   orders: AdminOrder[]
@@ -62,8 +47,8 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
           <tbody className="divide-y divide-border">
             {orders.map((order) => {
               const statusClass =
-                STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
-              const statusLabel = STATUS_LABELS[order.status] ?? order.status
+                ORDER_STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
+              const statusLabel = ORDER_STATUS_LABELS[order.status] ?? order.status
 
               return (
                 <tr key={order.id} className="hover:bg-surface/60 transition-colors">

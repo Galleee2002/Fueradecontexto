@@ -5,6 +5,7 @@ export const productSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(200),
   description: z.string().max(2000).optional(),
   price: z.number().positive('El precio debe ser mayor a 0'),
+  stock: z.number().int('El stock debe ser un entero').nonnegative('El stock no puede ser negativo'),
   imageUrl: z.string().trim().url('URL de imagen inválida'),
   previewImages: z.array(z.string().trim().url('URL de preview inválida')).max(3, 'Máximo 3 imágenes preview').default([]),
   category: z.string().min(1, 'La categoría es requerida'),

@@ -3,17 +3,17 @@
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 import { useCart } from '@/features/cart/hooks/use-cart'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+import { useCartStore } from '@/features/cart/store/cart-store'
 
 export function CartIcon() {
   const { totalItems } = useCart()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const count = mounted ? totalItems : 0
+  const hydrated = useSyncExternalStore(
+    (callback) => useCartStore.persist.onFinishHydration(() => callback()),
+    () => useCartStore.persist.hasHydrated(),
+    () => false,
+  )
+  const count = hydrated ? totalItems : 0
 
   return (
     <Link

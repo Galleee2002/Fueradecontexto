@@ -57,7 +57,11 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12">
           <div>
             {error && (
-              <div className="mb-6 border border-error-border bg-error-subtle text-error-foreground px-4 py-3 text-sm">
+              <div
+                className="mb-6 border border-error-border bg-error-subtle text-error-foreground px-4 py-3 text-sm"
+                role="alert"
+                aria-live="polite"
+              >
                 {error}
               </div>
             )}

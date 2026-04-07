@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -75,6 +76,7 @@ export function ProductForm({
   const [slugLocked, setSlugLocked] = useState(!!product)
   const [description, setDescription] = useState(product?.description ?? '')
   const [price, setPrice] = useState(product?.price?.toString() ?? '')
+  const [stock, setStock] = useState(product?.stock?.toString() ?? '0')
   const [category, setCategory] = useState(product?.category ?? '')
   const [customCategory, setCustomCategory] = useState(
     product?.category && !categories.some(c => c.name === product.category) ? product.category : '',
@@ -237,6 +239,7 @@ export function ProductForm({
       name,
       description: description.trim() || undefined,
       price: Number(price),
+      stock: Number(stock),
       imageUrl: normalizedImageUrl,
       previewImages: normalizedPreviewImages,
       category: effectiveCategory,
@@ -357,7 +360,7 @@ export function ProductForm({
               Precio y categoría
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <FormField label="Precio (ARS)" error={errors.price?.[0]} required>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
@@ -373,6 +376,19 @@ export function ProductForm({
                     className="w-full pl-7 pr-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
                   />
                 </div>
+              </FormField>
+
+              <FormField label="Stock" error={errors.stock?.[0]} required>
+                <input
+                  type="number"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  min="0"
+                  step="1"
+                  inputMode="numeric"
+                  placeholder="0"
+                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
+                />
               </FormField>
 
               <FormField label="Categoría" error={errors.category?.[0]} required>
@@ -475,11 +491,12 @@ export function ProductForm({
             {imageUrl ? (
               <div className="space-y-2">
                 <div className="relative aspect-[3/4] w-40 bg-surface border border-border overflow-hidden">
-                  <img
+                  <Image
                     src={imageUrl}
                     alt="Imagen principal"
-                    className="h-full w-full object-cover"
-                    loading="lazy"
+                    fill
+                    sizes="160px"
+                    className="object-cover"
                     onError={() => setUploadError('No se pudo previsualizar la imagen subida.')}
                   />
                 </div>
@@ -506,11 +523,12 @@ export function ProductForm({
                     <div key={index} className="space-y-2">
                       <div className="relative aspect-square bg-surface border border-border overflow-hidden">
                         {previewUrl ? (
-                          <img
+                          <Image
                             src={previewUrl}
                             alt={`Preview ${index + 1}`}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
+                            fill
+                            sizes="(max-width: 640px) 100vw, 180px"
+                            className="object-cover"
                             onError={() => setUploadError('No se pudo previsualizar una imagen preview.')}
                           />
                         ) : (
@@ -778,6 +796,10 @@ export function ProductForm({
                 <span className="text-foreground font-semibold">
                   {price ? `$${Number(price).toLocaleString('es-AR')}` : '—'}
                 </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Stock</span>
+                <span className="text-foreground font-medium">{stock || '0'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Estado</span>

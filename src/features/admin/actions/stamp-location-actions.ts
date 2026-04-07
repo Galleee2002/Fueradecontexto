@@ -1,18 +1,13 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/auth'
 import { sql } from '@/lib/db/client'
-
-async function requireAdmin() {
-  const session = await auth()
-  if (!session?.user) throw new Error('Unauthorized')
-}
+import { assertAdminSession } from '@/lib/auth/require-admin'
 
 export async function createStampLocation(
   name: string,
 ): Promise<{ success: true; name: string } | { error: string }> {
-  await requireAdmin()
+  await assertAdminSession()
 
   const trimmed = name.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }

@@ -20,7 +20,7 @@ export async function fetchAdminProducts(
         : sql``
 
   const rows = await sql`
-      SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
+      SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
         COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
         p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
         p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
@@ -50,7 +50,7 @@ export async function fetchAdminProducts(
 
 export async function fetchAdminProductById(id: string): Promise<AdminProduct | null> {
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.description, p.price::float, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
            p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"

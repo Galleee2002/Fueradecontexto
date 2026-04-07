@@ -1,4 +1,5 @@
 import type { ProductColor } from '@/features/products/types'
+import type { OrderStatus } from '@/lib/constants/orders'
 
 export interface CategoryWithSubs {
   name: string
@@ -11,6 +12,7 @@ export interface AdminProduct {
   name: string
   description: string | null
   price: number
+  stock: number
   imageUrl: string
   previewImages: string[]
   category: string
@@ -38,7 +40,7 @@ export interface AdminOrder {
   customerEmail: string
   customerName: string
   total: number
-  status: string
+  status: OrderStatus
   createdAt: Date
   itemCount: number
 }

@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { loginAction } from '../actions/auth-actions'
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -19,11 +20,12 @@ export function LoginForm() {
     if (result && 'error' in result) {
       setError(result.error)
       setLoading(false)
+      formRef.current?.querySelector<HTMLInputElement>('input')?.focus()
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
       <div className="space-y-1">
         <h2 className="text-4xl font-normal font-serif">Iniciar sesión</h2>
         <p className="text-sm text-muted-foreground">
@@ -32,7 +34,11 @@ export function LoginForm() {
       </div>
 
       {error && (
-        <p className="text-sm text-destructive border border-destructive px-4 py-3">
+        <p
+          className="text-sm text-error-foreground border border-error-border bg-error-subtle px-4 py-3"
+          role="alert"
+          aria-live="polite"
+        >
           {error}
         </p>
       )}
@@ -48,8 +54,9 @@ export function LoginForm() {
             type="email"
             autoComplete="email"
             required
-            className="w-full border border-border px-4 py-3 text-sm rounded-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
-            placeholder="tu@email.com"
+            spellCheck={false}
+            className="w-full border border-border px-4 py-3 text-sm rounded-none focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary placeholder:text-muted-foreground"
+            placeholder="tu@email.com…"
           />
         </div>
 
@@ -63,7 +70,7 @@ export function LoginForm() {
             type="password"
             autoComplete="current-password"
             required
-            className="w-full border border-border px-4 py-3 text-sm rounded-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+            className="w-full border border-border px-4 py-3 text-sm rounded-none focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary placeholder:text-muted-foreground"
             placeholder="••••••••"
           />
         </div>

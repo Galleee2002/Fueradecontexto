@@ -7,7 +7,7 @@ import { gsap } from 'gsap'
 import { formatPrice } from '@/lib/utils/format-price'
 import type { ProductCard as ProductCardProps } from '../types'
 
-export function ProductCard({ slug, name, price, imageUrl, category }: ProductCardProps) {
+export function ProductCard({ slug, name, price, stock, imageUrl, category }: ProductCardProps) {
   const cardRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
 
@@ -101,9 +101,16 @@ export function ProductCard({ slug, name, price, imageUrl, category }: ProductCa
           />
         </div>
         <div className="pt-4 space-y-1">
-          <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
-            {category}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
+              {category}
+            </p>
+            {stock <= 0 && (
+              <span className="border border-error-border bg-error-subtle px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-error-foreground">
+                Sin stock
+              </span>
+            )}
+          </div>
           <h3 className="text-base font-medium text-foreground leading-snug">
             {name}
           </h3>

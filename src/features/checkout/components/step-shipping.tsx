@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { z } from 'zod'
 import { ArrowLeft } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
@@ -56,6 +56,7 @@ const inputBase =
 const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
 
 export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProps) {
+  const formRef = useRef<HTMLFormElement>(null)
   const [values, setValues] = useState<ShippingData>({
     calle: defaultValues?.calle ?? '',
     numero: defaultValues?.numero ?? '',
@@ -82,6 +83,9 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
         if (!fieldErrors[key]) fieldErrors[key] = issue.message
       }
       setErrors(fieldErrors)
+      requestAnimationFrame(() => {
+        formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+      })
       return
     }
 
@@ -89,7 +93,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form ref={formRef} onSubmit={handleSubmit} noValidate>
       <h2 className="font-serif text-2xl mb-8">Dirección de envío</h2>
 
       <div className="space-y-6">
@@ -101,14 +105,17 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
             </label>
             <input
               id="calle"
+              name="calle"
               type="text"
               autoComplete="address-line1"
               value={values.calle}
               onChange={(e) => handleChange('calle', e.target.value)}
-              placeholder="Av. Corrientes"
+              placeholder="Av. Corrientes…"
+              aria-invalid={Boolean(errors.calle)}
+              aria-describedby={errors.calle ? 'shipping-calle-error' : undefined}
               className={cn(inputBase, errors.calle && 'border-error focus-visible:ring-error')}
             />
-            {errors.calle && <p className="mt-1.5 text-xs text-error">{errors.calle}</p>}
+            {errors.calle && <p id="shipping-calle-error" className="mt-1.5 text-xs text-error" role="alert">{errors.calle}</p>}
           </div>
 
           <div>
@@ -117,13 +124,16 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
             </label>
             <input
               id="numero"
+              name="numero"
               type="text"
               value={values.numero}
               onChange={(e) => handleChange('numero', e.target.value)}
-              placeholder="1234"
+              placeholder="1234…"
+              aria-invalid={Boolean(errors.numero)}
+              aria-describedby={errors.numero ? 'shipping-numero-error' : undefined}
               className={cn(inputBase, errors.numero && 'border-error focus-visible:ring-error')}
             />
-            {errors.numero && <p className="mt-1.5 text-xs text-error">{errors.numero}</p>}
+            {errors.numero && <p id="shipping-numero-error" className="mt-1.5 text-xs text-error" role="alert">{errors.numero}</p>}
           </div>
         </div>
 
@@ -135,11 +145,12 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
           </label>
           <input
             id="pisoDpto"
+            name="pisoDpto"
             type="text"
             autoComplete="address-line2"
             value={values.pisoDpto}
             onChange={(e) => handleChange('pisoDpto', e.target.value)}
-            placeholder="3° B"
+            placeholder="3° B…"
             className={inputBase}
           />
         </div>
@@ -152,14 +163,17 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
             </label>
             <input
               id="ciudad"
+              name="ciudad"
               type="text"
               autoComplete="address-level2"
               value={values.ciudad}
               onChange={(e) => handleChange('ciudad', e.target.value)}
-              placeholder="Buenos Aires"
+              placeholder="Buenos Aires…"
+              aria-invalid={Boolean(errors.ciudad)}
+              aria-describedby={errors.ciudad ? 'shipping-ciudad-error' : undefined}
               className={cn(inputBase, errors.ciudad && 'border-error focus-visible:ring-error')}
             />
-            {errors.ciudad && <p className="mt-1.5 text-xs text-error">{errors.ciudad}</p>}
+            {errors.ciudad && <p id="shipping-ciudad-error" className="mt-1.5 text-xs text-error" role="alert">{errors.ciudad}</p>}
           </div>
 
           <div>
@@ -168,15 +182,18 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
             </label>
             <input
               id="codigoPostal"
+              name="codigoPostal"
               type="text"
               autoComplete="postal-code"
               value={values.codigoPostal}
               onChange={(e) => handleChange('codigoPostal', e.target.value)}
-              placeholder="C1043"
+              placeholder="C1043…"
+              aria-invalid={Boolean(errors.codigoPostal)}
+              aria-describedby={errors.codigoPostal ? 'shipping-cp-error' : undefined}
               className={cn(inputBase, errors.codigoPostal && 'border-error focus-visible:ring-error')}
             />
             {errors.codigoPostal && (
-              <p className="mt-1.5 text-xs text-error">{errors.codigoPostal}</p>
+              <p id="shipping-cp-error" className="mt-1.5 text-xs text-error" role="alert">{errors.codigoPostal}</p>
             )}
           </div>
         </div>
@@ -188,8 +205,11 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
           </label>
           <select
             id="provincia"
+            name="provincia"
             value={values.provincia}
             onChange={(e) => handleChange('provincia', e.target.value)}
+            aria-invalid={Boolean(errors.provincia)}
+            aria-describedby={errors.provincia ? 'shipping-provincia-error' : undefined}
             className={cn(
               inputBase,
               'cursor-pointer appearance-none',
@@ -198,7 +218,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
             )}
           >
             <option value="" disabled>
-              Seleccioná tu provincia
+              Seleccioná tu provincia…
             </option>
             {PROVINCIAS.map((prov) => (
               <option key={prov} value={prov}>
@@ -206,7 +226,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               </option>
             ))}
           </select>
-          {errors.provincia && <p className="mt-1.5 text-xs text-error">{errors.provincia}</p>}
+          {errors.provincia && <p id="shipping-provincia-error" className="mt-1.5 text-xs text-error" role="alert">{errors.provincia}</p>}
         </div>
       </div>
 

@@ -9,7 +9,15 @@ export const authConfig = {
     authorized({ auth, request }) {
       const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
       if (isAdminRoute) {
-        return !!auth?.user
+        if (!auth?.user) {
+          return false
+        }
+
+        if (auth.user.role !== 'ADMIN') {
+          return Response.redirect(new URL('/cuenta', request.nextUrl))
+        }
+
+        return true
       }
       return true
     },

@@ -1,13 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/auth'
 import { sql } from '@/lib/db/client'
-
-async function requireAdmin() {
-  const session = await auth()
-  if (!session?.user) throw new Error('Unauthorized')
-}
+import { assertAdminSession } from '@/lib/auth/require-admin'
 
 function revalidateAll() {
   revalidatePath('/admin/categorias')
@@ -17,7 +12,7 @@ function revalidateAll() {
 }
 
 export async function createCategory(name: string) {
-  await requireAdmin()
+  await assertAdminSession()
   const trimmed = name.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -32,7 +27,7 @@ export async function createCategory(name: string) {
 }
 
 export async function renameCategory(oldName: string, newName: string) {
-  await requireAdmin()
+  await assertAdminSession()
   const trimmed = newName.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -51,7 +46,7 @@ export async function renameCategory(oldName: string, newName: string) {
 }
 
 export async function deleteCategory(name: string) {
-  await requireAdmin()
+  await assertAdminSession()
   // Products lose their category (set to empty string) — admin can reassign later
   await sql`UPDATE "Product" SET category = '', subcategory = '', "updatedAt" = NOW() WHERE category = ${name}`
   await sql`DELETE FROM "Category" WHERE name = ${name}`
@@ -61,7 +56,7 @@ export async function deleteCategory(name: string) {
 }
 
 export async function addSubcategory(categoryName: string, subcategoryName: string) {
-  await requireAdmin()
+  await assertAdminSession()
   const trimmed = subcategoryName.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -79,7 +74,7 @@ export async function addSubcategory(categoryName: string, subcategoryName: stri
 }
 
 export async function renameSubcategory(categoryName: string, oldName: string, newName: string) {
-  await requireAdmin()
+  await assertAdminSession()
   const trimmed = newName.trim()
   if (!trimmed) return { error: 'El nombre no puede estar vacío.' }
   if (trimmed.length > 60) return { error: 'Máximo 60 caracteres.' }
@@ -101,7 +96,7 @@ export async function renameSubcategory(categoryName: string, oldName: string, n
 }
 
 export async function deleteSubcategory(categoryName: string, subcategoryName: string) {
-  await requireAdmin()
+  await assertAdminSession()
 
   const row = await sql`SELECT subcategories FROM "Category" WHERE name = ${categoryName} LIMIT 1`
   if (row.length === 0) return { error: 'Categoría no encontrada.' }
