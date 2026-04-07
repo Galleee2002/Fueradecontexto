@@ -15,7 +15,7 @@ interface AddToCartButtonProps {
   selectedColor?: string
   selectedSize?: string
   selectedStampSize?: string
-    selectedStampLocations?: string[]
+  selectedStampLocations?: string[]
 }
 
 export function AddToCartButton({
@@ -28,7 +28,7 @@ export function AddToCartButton({
   selectedColor,
   selectedSize,
   selectedStampSize,
-    selectedStampLocations,
+  selectedStampLocations,
 }: AddToCartButtonProps) {
   const [loading, setLoading] = useState(false)
   const { addItem, openCart } = useCart()
@@ -89,29 +89,32 @@ export function AddToCartButton({
 
     const sourceRect = source.getBoundingClientRect()
     const targetRect = cartTarget.getBoundingClientRect()
+    const deltaX = targetRect.left + targetRect.width / 2 - (sourceRect.left + sourceRect.width / 2)
+    const deltaY = targetRect.top + targetRect.height / 2 - (sourceRect.top + sourceRect.height / 2)
+    const drift = deltaX >= 0 ? 18 : -18
 
     const ghost = document.createElement('span')
     ghost.setAttribute('aria-hidden', 'true')
     ghost.style.position = 'fixed'
-    ghost.style.left = `${sourceRect.left + sourceRect.width / 2 - 8}px`
-    ghost.style.top = `${sourceRect.top + sourceRect.height / 2 - 8}px`
-    ghost.style.width = '16px'
-    ghost.style.height = '16px'
+    ghost.style.left = `${sourceRect.left + sourceRect.width / 2 - 9}px`
+    ghost.style.top = `${sourceRect.top + sourceRect.height / 2 - 9}px`
+    ghost.style.width = '20px'
+    ghost.style.height = '20px'
     ghost.style.borderRadius = '9999px'
-    ghost.style.background = 'currentColor'
-    ghost.style.color = 'hsl(var(--primary))'
+    ghost.style.backgroundColor = 'var(--color-primary)'
+    ghost.style.opacity = '1'
     ghost.style.pointerEvents = 'none'
-    ghost.style.zIndex = '9999'
-    ghost.style.boxShadow = '0 6px 14px rgba(0, 0, 0, 0.18)'
+    ghost.style.zIndex = '2147483646'
+    ghost.style.boxShadow = '0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent), 0 10px 22px color-mix(in srgb, var(--color-primary) 45%, transparent)'
+    ghost.style.border = '1px solid rgba(255, 255, 255, 0.4)'
+    ghost.style.willChange = 'transform, opacity'
 
     document.body.appendChild(ghost)
-
-    const deltaX = targetRect.left + targetRect.width / 2 - (sourceRect.left + sourceRect.width / 2)
-    const deltaY = targetRect.top + targetRect.height / 2 - (sourceRect.top + sourceRect.height / 2)
 
     const tl = gsap.timeline({
       defaults: { overwrite: 'auto' },
       onComplete: () => {
+        window.dispatchEvent(new CustomEvent('cart:item-added'))
         ghost.remove()
       },
     })
@@ -119,30 +122,44 @@ export function AddToCartButton({
     tl.to(ghost, {
       keyframes: [
         {
-          x: deltaX * 0.35,
-          y: deltaY - 36,
-          scale: 0.9,
+          x: deltaX * 0.16 + drift,
+          y: deltaY * 0.12 - 72,
+          scale: 1.08,
+          rotate: drift > 0 ? -12 : 12,
           opacity: 1,
-          duration: 0.24,
-          ease: 'power2.out',
+          duration: 0.28,
+          ease: 'sine.out',
+        },
+        {
+          x: deltaX * 0.5 - drift * 0.42,
+          y: deltaY * 0.48 - 52,
+          scale: 0.94,
+          rotate: drift > 0 ? 8 : -8,
+          opacity: 0.95,
+          duration: 0.32,
+          ease: 'power1.inOut',
+        },
+        {
+          x: deltaX * 0.82 + drift * 0.24,
+          y: deltaY * 0.82 - 18,
+          scale: 0.8,
+          rotate: drift > 0 ? -5 : 5,
+          opacity: 0.72,
+          duration: 0.3,
+          ease: 'sine.inOut',
         },
         {
           x: deltaX,
           y: deltaY,
-          scale: 0.35,
-          opacity: 0.25,
-          duration: 0.36,
-          ease: 'power2.in',
+          scale: 0.46,
+          rotate: 0,
+          opacity: 0.18,
+          duration: 0.34,
+          ease: 'power3.in',
         },
       ],
     })
 
-    tl.fromTo(
-      cartTarget,
-      { scale: 1 },
-      { scale: 1.16, duration: 0.14, ease: 'back.out(2.2)', transformOrigin: 'center center' },
-      0.46,
-    ).to(cartTarget, { scale: 1, duration: 0.16, ease: 'power2.out' })
   }, [])
 
   async function handleAddToCart() {
@@ -157,7 +174,9 @@ export function AddToCartButton({
       ...(selectedColor !== undefined ? { selectedColor } : {}),
       ...(selectedSize !== undefined ? { selectedSize } : {}),
       ...(selectedStampSize !== undefined ? { selectedStampSize } : {}),
-        ...(selectedStampLocations !== undefined && selectedStampLocations.length > 0 ? { selectedStampLocations } : {}),
+      ...(selectedStampLocations !== undefined && selectedStampLocations.length > 0
+        ? { selectedStampLocations }
+        : {}),
     })
     animateAddFeedback()
     animateFlyToCart()

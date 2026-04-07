@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
+import { gsap } from 'gsap'
 import { Container } from '@/components/shared/layout/container'
 import { UserMenu } from '@/features/auth/components/user-menu'
 import { CartIcon } from './cart-icon'
@@ -10,6 +11,7 @@ import { SITE_NAME } from '@/lib/constants/site'
 
 export function Navbar({ categories }: { categories: string[] }) {
   const [productsOpen, setProductsOpen] = useState(false)
+  const cartAreaRef = useRef<HTMLDivElement>(null)
 
   const CATEGORIES = categories.map((label) => ({
     label,
@@ -21,6 +23,54 @@ export function Navbar({ categories }: { categories: string[] }) {
     { label: 'Talles', href: '/talles' },
     { label: 'Colecciones', href: '/productos' },
   ]
+
+  useEffect(() => {
+    const handleItemAdded = () => {
+      if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return
+      }
+
+      const cartArea = cartAreaRef.current
+      if (!cartArea) {
+        return
+      }
+
+      gsap.killTweensOf(cartArea)
+      const tl = gsap.timeline({ defaults: { overwrite: 'auto' } })
+      tl.fromTo(
+        cartArea,
+        { scale: 1, y: 0, rotate: 0 },
+        {
+          scale: 1.15,
+          y: -2,
+          rotate: -4,
+          duration: 0.2,
+          ease: 'back.out(2.2)',
+          transformOrigin: 'center center',
+        },
+      )
+        .to(cartArea, {
+          scale: 1.04,
+          y: 0,
+          rotate: 2,
+          duration: 0.18,
+          ease: 'sine.out',
+        })
+        .to(cartArea, {
+          scale: 1,
+          y: 0,
+          rotate: 0,
+          duration: 0.22,
+          ease: 'power2.out',
+        })
+    }
+
+    window.addEventListener('cart:item-added', handleItemAdded)
+
+    return () => {
+      window.removeEventListener('cart:item-added', handleItemAdded)
+    }
+  }, [])
 
   return (
     <header className="border-b border-border bg-background sticky top-0 z-50">
@@ -88,7 +138,9 @@ export function Navbar({ categories }: { categories: string[] }) {
 
           <div className="flex items-center gap-3 sm:gap-5">
             <UserMenu />
-            <CartIcon />
+            <div ref={cartAreaRef} data-cart-icon-target="true" className="will-change-transform">
+              <CartIcon />
+            </div>
             <MobileMenuTrigger links={NAV_LINKS} />
           </div>
         </nav>

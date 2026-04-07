@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { gsap } from 'gsap'
-import { useCart } from '@/features/cart/hooks/use-cart'
 import { formatPrice } from '@/lib/utils/format-price'
 import type { ProductCard as ProductCardProps } from '../types'
 
@@ -20,13 +19,11 @@ function buildMiniDescription(name: string, category: string): string {
 }
 
 export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImages, category }: ProductCardProps) {
-  const { addItem, openCart } = useCart()
-
   const [activeSlide, setActiveSlide] = useState(0)
   const cardRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const sliderTrackRef = useRef<HTMLDivElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLAnchorElement>(null)
 
   const slides = useMemo(() => {
     const unique = [imageUrl, ...previewImages].filter((url, index, array) => url && array.indexOf(url) === index)
@@ -88,20 +85,6 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
     gsap.to(cardRef.current, { scale: 1, duration: 0.16, ease: 'power2.out', overwrite: 'auto' })
   }, [])
 
-  const animateAddToCartFeedback = useCallback(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return
-    }
-
-    const tl = gsap.timeline({ defaults: { overwrite: 'auto' } })
-    tl.to(buttonRef.current, { scale: 0.95, duration: 0.08, ease: 'power2.out' })
-      .to(buttonRef.current, { scale: 1.04, duration: 0.15, ease: 'back.out(2)' })
-      .to(buttonRef.current, { scale: 1, duration: 0.17, ease: 'power2.out' })
-
-    tl.to(cardRef.current, { y: -3, duration: 0.12, ease: 'power2.out' }, 0)
-      .to(cardRef.current, { y: 0, duration: 0.18, ease: 'power2.out' })
-  }, [])
-
   const goToPreviousSlide = useCallback(() => {
     setActiveSlide((current) => (current - 1 + slides.length) % slides.length)
   }, [slides.length])
@@ -109,19 +92,6 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
   const goToNextSlide = useCallback(() => {
     setActiveSlide((current) => (current + 1) % slides.length)
   }, [slides.length])
-
-  const handleAddToCart = useCallback(() => {
-    addItem({
-      productId: id,
-      productName: name,
-      productPrice: price,
-      productImageUrl: imageUrl,
-      productSlug: slug,
-      quantity: 1,
-    })
-    animateAddToCartFeedback()
-    openCart()
-  }, [addItem, animateAddToCartFeedback, id, imageUrl, name, openCart, price, slug])
 
   return (
     <article
@@ -207,15 +177,13 @@ export function ProductDetailCard({ id, slug, name, price, imageUrl, previewImag
         </div>
       </div>
 
-      <button
+      <Link
         ref={buttonRef}
-        type="button"
-        onClick={handleAddToCart}
+        href={`/productos/${slug}`}
         className="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-[0.78rem] font-semibold tracking-[0.08em] uppercase text-primary-foreground transition-colors hover:bg-primary-hover"
       >
-        <span aria-hidden="true">+</span>
-        Anadir al carrito
-      </button>
+        Ver producto
+      </Link>
     </article>
   )
 }
