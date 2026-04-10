@@ -1,4 +1,4 @@
-import { SITE_NAME } from '@/lib/constants/site'
+import { SITE_NAME } from '@/shared/config/site'
 import { Shield, Menu } from 'lucide-react'
 
 interface AdminHeaderProps {

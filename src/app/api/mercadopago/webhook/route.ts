@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Payment } from 'mercadopago'
-import { mpClient } from '@/lib/mercadopago/client'
-import { prisma } from '@/lib/db/prisma'
-import { mapMercadoPagoStatus, verifyMercadoPagoWebhookSignature } from '@/lib/mercadopago/webhook'
+import { mpClient } from '@/shared/infrastructure/payments/mercadopago/client'
+import { prisma } from '@/shared/infrastructure/db/prisma'
+import { mapMercadoPagoStatus, verifyMercadoPagoWebhookSignature } from '@/shared/infrastructure/payments/mercadopago/webhook'
 
 export async function POST(req: NextRequest) {
   try {

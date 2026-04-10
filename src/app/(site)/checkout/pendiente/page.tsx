@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Clock } from 'lucide-react'
-import { Container } from '@/components/shared/layout/container'
+import { Container } from '@/shared/ui/layout/container'
 
 interface Props {
   searchParams: Promise<{ external_reference?: string }>

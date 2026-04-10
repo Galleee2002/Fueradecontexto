@@ -1,5 +1,5 @@
-import { Container } from '@/components/shared/layout/container'
-import { LoadingSkeleton, ProductCardSkeleton } from '@/components/shared/feedback/loading-skeleton'
+import { Container } from '@/shared/ui/layout/container'
+import { LoadingSkeleton, ProductCardSkeleton } from '@/shared/ui/feedback/loading-skeleton'
 
 const SKELETON_ITEMS = 8
 

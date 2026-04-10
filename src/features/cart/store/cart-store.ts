@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { CartItemUI } from '../types'
-import { MAX_CART_ITEMS } from '@/lib/constants/site'
+import { MAX_CART_ITEMS } from '@/shared/config/site'
 
 interface CartStore {
   items: CartItemUI[]

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Package, ShoppingBag, Users, LayoutGrid, ArrowLeft, Layers, Ruler, Palette } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 
 const NAV_LINKS = [
   { label: 'Productos', href: '/admin/productos', icon: Package },

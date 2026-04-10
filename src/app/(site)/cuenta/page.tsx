@@ -2,8 +2,8 @@ import { auth } from '@/auth'
 import { LoginForm } from '@/features/auth/components/login-form'
 import { OrderHistorySection } from '@/features/auth/components/order-history-section'
 import { fetchUserOrders } from '@/features/auth/queries/user-queries'
-import { Container } from '@/components/shared/layout/container'
-import { PageHeader } from '@/components/shared/layout/page-header'
+import { Container } from '@/shared/ui/layout/container'
+import { PageHeader } from '@/shared/ui/layout/page-header'
 
 export default async function AccountPage() {
   const session = await auth()

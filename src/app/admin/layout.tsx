@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { AdminShell } from '@/features/admin/components/admin-shell'
-import { requireAdminSession } from '@/lib/auth/require-admin'
+import { requireAdminSession } from '@/shared/infrastructure/auth/require-admin'
 
 export const metadata: Metadata = {
   title: 'Admin — Fueradecontexto',

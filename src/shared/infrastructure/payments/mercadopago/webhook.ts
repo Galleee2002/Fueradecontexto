@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import type { OrderStatus } from '@/lib/constants/orders'
+import type { OrderStatus } from '@/shared/config/orders'
 
 type MpStatus = string | null | undefined
 

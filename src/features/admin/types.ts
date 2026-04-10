@@ -1,5 +1,5 @@
-import type { ProductColor } from '@/features/products/types'
-import type { OrderStatus } from '@/lib/constants/orders'
+import type { ProductColor } from '@/entities/product'
+import type { OrderStatus } from '@/shared/config/orders'
 
 export interface CategoryWithSubs {
   name: string

@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { Container } from '@/components/shared/layout/container'
-import { PageHeader } from '@/components/shared/layout/page-header'
-import { fetchProductCategories, fetchSizeGuides } from '@/features/products/queries/product-queries'
+import { Container } from '@/shared/ui/layout/container'
+import { PageHeader } from '@/shared/ui/layout/page-header'
+import { getProductCategories, getSizeGuides } from '@/features/products'
 
 const PREFERRED_COLUMNS = [
   { label: 'Talle', aliases: ['talle', 'talla'] },
@@ -10,7 +10,7 @@ const PREFERRED_COLUMNS = [
 ] as const
 
 export default async function TallesPage() {
-  const [categories, guides] = await Promise.all([fetchProductCategories(), fetchSizeGuides()])
+  const [categories, guides] = await Promise.all([getProductCategories(), getSizeGuides()])
 
   const guideByCategory = new Map(guides.map((guide) => [guide.category, guide]))
 

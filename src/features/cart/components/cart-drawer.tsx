@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useCart } from '../hooks/use-cart'
 import { CartItem } from './cart-item'
-import { EmptyState } from '@/components/shared/feedback/empty-state'
+import { EmptyState } from '@/shared/ui/feedback/empty-state'
 
 export function CartDrawer() {
   const { items, isEmpty, formattedTotal } = useCart()

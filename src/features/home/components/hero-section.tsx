@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Container } from "@/components/shared/layout/container";
+import { Container } from "@/shared/ui/layout/container";
 
 export function HeroSection() {
   return (

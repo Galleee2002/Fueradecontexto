@@ -1,5 +1,5 @@
 import { ProductCard } from './product-card'
-import { EmptyState } from '@/components/shared/feedback/empty-state'
+import { EmptyState } from '@/shared/ui/feedback/empty-state'
 import type { ProductCard as ProductCardType } from '../types'
 
 interface ProductGridProps {

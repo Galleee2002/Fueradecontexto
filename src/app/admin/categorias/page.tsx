@@ -1,20 +1,8 @@
-import { sql } from '@/lib/db/client'
+import { getAdminCategoriesWithCount } from '@/features/admin/categories/application/get-admin-categories-with-count'
 import { CategoriesManager } from '@/features/admin/components/categories-manager'
-import { Container } from '@/components/shared/layout/container'
-
-async function fetchCategoriesWithCount() {
-  const rows = await sql`
-    SELECT c.name, c.subcategories, COUNT(p.id)::int AS count
-    FROM "Category" c
-    LEFT JOIN "Product" p ON p.category = c.name
-    GROUP BY c.name, c.subcategories
-    ORDER BY c.name ASC
-  `
-  return rows as { name: string; subcategories: string[]; count: number }[]
-}
 
 export default async function AdminCategoriasPage() {
-  const categories = await fetchCategoriesWithCount()
+  const categories = await getAdminCategoriesWithCount()
 
   return (
     <div className="p-6 lg:p-8 max-w-2xl">

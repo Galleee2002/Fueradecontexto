@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, Menu, Search, X } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import { SITE_NAME } from '@/lib/constants/site'
+import { SITE_NAME } from '@/shared/config/site'
 import { SOCIAL_LINKS, WHATSAPP_NUMBER } from '@/features/navigation/constants/external-links'
 
 export type NavLink = { label: string; href: string; children?: NavLink[] }

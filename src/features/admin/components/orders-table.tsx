@@ -1,5 +1,5 @@
 import { AdminPagination } from './admin-pagination'
-import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/lib/constants/orders'
+import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/shared/config/orders'
 import type { AdminOrder } from '../types'
 
 interface OrdersTableProps {

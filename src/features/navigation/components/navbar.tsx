@@ -3,11 +3,11 @@ import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { gsap } from 'gsap'
-import { Container } from '@/components/shared/layout/container'
-import { UserMenu } from '@/features/auth/components/user-menu'
+import { Container } from '@/shared/ui/layout/container'
+import { UserMenu } from '@/features/auth'
 import { CartIcon } from './cart-icon'
 import { MobileMenuTrigger } from './mobile-menu'
-import { SITE_NAME } from '@/lib/constants/site'
+import { SITE_NAME } from '@/shared/config/site'
 
 export function Navbar({ categories }: { categories: string[] }) {
   const [productsOpen, setProductsOpen] = useState(false)

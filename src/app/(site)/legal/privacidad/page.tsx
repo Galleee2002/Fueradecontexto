@@ -1,5 +1,5 @@
-import { Container } from '@/components/shared/layout/container'
-import { PageHeader } from '@/components/shared/layout/page-header'
+import { Container } from '@/shared/ui/layout/container'
+import { PageHeader } from '@/shared/ui/layout/page-header'
 
 export default function PrivacidadPage() {
   return (

@@ -3,7 +3,7 @@
 import { useState, useTransition, useRef, useEffect } from 'react'
 import { Plus, Trash2, AlertTriangle, Loader2, Pencil, Check, X, Palette } from 'lucide-react'
 import { createColor, updateColor, deleteColor } from '../actions/color-actions'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 
 interface ColorRow {
   id: string

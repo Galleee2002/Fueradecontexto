@@ -4,7 +4,7 @@ import { useCallback, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { gsap } from 'gsap'
-import { formatPrice } from '@/lib/utils/format-price'
+import { formatPrice } from '@/shared/lib/format-price'
 import type { ProductCard as ProductCardProps } from '../types'
 
 export function ProductCard({ slug, name, price, stock, imageUrl, category }: ProductCardProps) {

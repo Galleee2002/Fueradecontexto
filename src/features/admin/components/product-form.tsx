@@ -6,15 +6,15 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ImageOff, Loader2, MapPin, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 import { createStampLocation } from '../actions/stamp-location-actions'
 import { ToggleGroupInteractive } from './toggle-group-interactive'
 import { StampSizeInteractive } from './stamp-size-interactive'
+import { uploadToCloudinary } from '../lib/upload-to-cloudinary'
 import type { AdminProduct } from '../types'
-import type { ProductColor } from '@/features/products/types'
-
-const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
-const STAMP_SIZE_OPTIONS = ['20x30', '30x40', '40x50']
+import type { ProductColor } from '@/entities/product'
+import { ProductFormField } from '../products/ui/product-form-field'
+import { SIZE_OPTIONS, slugifyProductName, STAMP_SIZE_OPTIONS } from '../products/lib/product-form'
 
 interface ProductFormProps {
   product?: AdminProduct
@@ -22,41 +22,6 @@ interface ProductFormProps {
   stampLocations: string[]
   globalColors?: { id: string; name: string; hex: string }[]
   maxPreviewImages?: number
-}
-
-function slugify(str: string): string {
-  return str
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim()
-    .replace(/^-+|-+$/g, '')
-}
-
-function FormField({
-  label,
-  error,
-  required,
-  children,
-}: {
-  label: string
-  error?: string | undefined
-  required?: boolean | undefined
-  children: React.ReactNode
-}) {
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-2xs font-medium tracking-widest uppercase text-muted-foreground">
-        {label}
-        {required && <span className="text-primary ml-1">*</span>}
-      </label>
-      {children}
-      {error && <p className="text-xs text-primary">{error}</p>}
-    </div>
-  )
 }
 
 export function ProductForm({
@@ -119,11 +84,11 @@ export function ProductForm({
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value
     setName(val)
-    if (!slugLocked) setSlug(slugify(val))
+    if (!slugLocked) setSlug(slugifyProductName(val))
   }
 
   function handleSlugChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSlug(slugify(e.target.value))
+    setSlug(slugifyProductName(e.target.value))
     setSlugLocked(true)
   }
 
@@ -142,75 +107,31 @@ export function ProductForm({
     })
   }
 
-  async function uploadToCloudinary(file: File): Promise<string | null> {
-    setUploadError('')
-
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-    const uploadFolder = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER
-
-    if (!cloudName || !uploadPreset) {
-      setUploadError('Falta configurar Cloudinary en variables de entorno.')
-      return null
-    }
-
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('upload_preset', uploadPreset)
-    if (uploadFolder) formData.append('folder', uploadFolder)
-
-    setIsUploadingImage(true)
-    try {
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData,
-      })
-
-      const rawBody = await response.text()
-      let data: {
-        secure_url?: string
-        error?: { message?: string }
-      } = {}
-
-      try {
-        data = JSON.parse(rawBody) as {
-          secure_url?: string
-          error?: { message?: string }
-        }
-      } catch {
-        // Cloudinary can return non-JSON payloads for some failures.
-      }
-
-      if (!response.ok || !data.secure_url) {
-        setUploadError(
-          data.error?.message ??
-            'Cloudinary rechazó la imagen o devolvió una respuesta inválida. Revisá preset/carpeta.',
-        )
-        return null
-      }
-
-      return data.secure_url
-    } catch {
-      setUploadError('Error de red al subir la imagen. Intentá de nuevo.')
-      return null
-    } finally {
-      setIsUploadingImage(false)
-    }
-  }
-
   async function handleImageUpload(file: File) {
-    const uploaded = await uploadToCloudinary(file)
-    if (!uploaded) return
-    setImageUrl(uploaded)
+    setUploadError('')
+    setIsUploadingImage(true)
+    const { url, error } = await uploadToCloudinary(file)
+    setIsUploadingImage(false)
+    if (!url) {
+      setUploadError(error)
+      return
+    }
+    setImageUrl(url)
   }
 
   async function handlePreviewImageUpload(file: File, index: number) {
-    const uploaded = await uploadToCloudinary(file)
-    if (!uploaded) return
+    setUploadError('')
+    setIsUploadingImage(true)
+    const { url, error } = await uploadToCloudinary(file)
+    setIsUploadingImage(false)
+    if (!url) {
+      setUploadError(error)
+      return
+    }
 
     setPreviewImages((prev) => {
       const next = [...prev]
-      next[index] = uploaded
+      next[index] = url
       return next.slice(0, maxPreviewImages)
     })
   }
@@ -306,7 +227,7 @@ export function ProductForm({
               Información básica
             </p>
 
-            <FormField label="Nombre" error={errors.name?.[0]} required>
+            <ProductFormField label="Nombre" error={errors.name?.[0]} required>
               <input
                 type="text"
                 value={name}
@@ -314,9 +235,9 @@ export function ProductForm({
                 placeholder="Ej: Remera Lino Oversize"
                 className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
               />
-            </FormField>
+            </ProductFormField>
 
-            <FormField label="Slug (URL)" error={errors.slug?.[0]} required>
+            <ProductFormField label="Slug (URL)" error={errors.slug?.[0]} required>
               <div className="flex gap-2 items-center">
                 <input
                   type="text"
@@ -329,7 +250,7 @@ export function ProductForm({
                   <button
                     type="button"
                     onClick={() => {
-                      setSlug(slugify(name))
+                      setSlug(slugifyProductName(name))
                       setSlugLocked(false)
                     }}
                     className="px-3 py-2.5 text-2xs font-medium tracking-widest uppercase border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors whitespace-nowrap"
@@ -341,9 +262,9 @@ export function ProductForm({
               <p className="text-xs text-muted-foreground">
                 /productos/<span className="text-foreground">{slug || '...'}</span>
               </p>
-            </FormField>
+            </ProductFormField>
 
-            <FormField label="Descripción" error={errors.description?.[0]}>
+            <ProductFormField label="Descripción" error={errors.description?.[0]}>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -352,7 +273,7 @@ export function ProductForm({
                 className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground resize-none"
               />
               <p className="text-xs text-muted-foreground text-right">{description.length}/2000</p>
-            </FormField>
+            </ProductFormField>
           </div>
 
           <div className="bg-background border border-border p-6 space-y-6">
@@ -361,7 +282,7 @@ export function ProductForm({
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <FormField label="Precio (ARS)" error={errors.price?.[0]} required>
+              <ProductFormField label="Precio (ARS)" error={errors.price?.[0]} required>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                     $
@@ -376,9 +297,9 @@ export function ProductForm({
                     className="w-full pl-7 pr-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
                   />
                 </div>
-              </FormField>
+              </ProductFormField>
 
-              <FormField label="Stock" error={errors.stock?.[0]} required>
+              <ProductFormField label="Stock" error={errors.stock?.[0]} required>
                 <input
                   type="number"
                   value={stock}
@@ -389,9 +310,9 @@ export function ProductForm({
                   placeholder="0"
                   className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
                 />
-              </FormField>
+              </ProductFormField>
 
-              <FormField label="Categoría" error={errors.category?.[0]} required>
+              <ProductFormField label="Categoría" error={errors.category?.[0]} required>
                 {!useCustomCategory ? (
                   <div className="space-y-2">
                     <select
@@ -436,10 +357,10 @@ export function ProductForm({
                     </button>
                   </div>
                 )}
-              </FormField>
+              </ProductFormField>
 
               {selectedCategorySubs.length > 0 && (
-                <FormField label="Subcategoría">
+                <ProductFormField label="Subcategoría">
                   <select
                     value={subcategory}
                     onChange={(e) => setSubcategory(e.target.value)}
@@ -450,7 +371,7 @@ export function ProductForm({
                       <option key={sub} value={sub}>{sub}</option>
                     ))}
                   </select>
-                </FormField>
+                </ProductFormField>
               )}
             </div>
           </div>
@@ -461,7 +382,7 @@ export function ProductForm({
               Imagenes del producto
             </p>
 
-            <FormField label="Subir imagen" error={errors.imageUrl?.[0]} required>
+            <ProductFormField label="Subir imagen" error={errors.imageUrl?.[0]} required>
               <div className="space-y-2">
                 <label className="inline-flex items-center gap-2 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors cursor-pointer w-fit">
                   {isUploadingImage ? (
@@ -486,7 +407,7 @@ export function ProductForm({
                 </label>
                 {uploadError && <p className="text-xs text-primary">{uploadError}</p>}
               </div>
-            </FormField>
+            </ProductFormField>
 
             {imageUrl ? (
               <div className="space-y-2">
@@ -514,7 +435,7 @@ export function ProductForm({
               </div>
             )}
 
-            <FormField label={`Imagenes preview (max ${maxPreviewImages})`} error={errors.previewImages?.[0]}>
+            <ProductFormField label={`Imagenes preview (max ${maxPreviewImages})`} error={errors.previewImages?.[0]}>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {Array.from({ length: maxPreviewImages }).map((_, index) => {
                   const previewUrl = previewImages[index] ?? ''
@@ -572,7 +493,7 @@ export function ProductForm({
                   )
                 })}
               </div>
-            </FormField>
+            </ProductFormField>
           </div>
 
           {/* Customization options */}

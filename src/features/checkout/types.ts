@@ -1,4 +1,4 @@
-import type { OrderStatus } from '@/lib/constants/orders'
+import type { OrderStatus } from '@/shared/config/orders'
 
 export type StepId = 1 | 2 | 3
 

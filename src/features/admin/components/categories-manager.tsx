@@ -10,7 +10,7 @@ import {
   renameSubcategory,
   deleteSubcategory,
 } from '../actions/category-actions'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 
 interface CategoryRow {
   name: string

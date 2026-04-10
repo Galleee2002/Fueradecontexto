@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { ShoppingBag, ChevronDown } from 'lucide-react'
-import { useCart } from '@/features/cart/hooks/use-cart'
-import { formatPrice } from '@/lib/utils/format-price'
+import { useCart } from '@/features/cart'
+import { formatPrice } from '@/shared/lib/format-price'
 
 export function OrderSummaryAccordion({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)

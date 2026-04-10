@@ -1,6 +1,6 @@
 import { LogoutButton } from './logout-button'
-import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/lib/constants/orders'
-import type { UserOrder } from '@/features/auth/queries/user-queries'
+import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/shared/config/orders'
+import type { UserOrder } from '../queries/user-queries'
 
 interface OrderHistorySectionProps {
   user: { name?: string | null; email?: string | null }

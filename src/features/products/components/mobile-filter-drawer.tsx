@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { SlidersHorizontal, X } from 'lucide-react'
-import { Container } from '@/components/shared/layout/container'
+import { Container } from '@/shared/ui/layout/container'
 import { ProductFilters } from './product-filters'
 import { useProductFilters } from '../hooks/use-product-filters'
 

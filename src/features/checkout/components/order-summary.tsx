@@ -1,8 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useCart } from '@/features/cart/hooks/use-cart'
-import { formatPrice } from '@/lib/utils/format-price'
+import { useCart } from '@/features/cart'
+import { formatPrice } from '@/shared/lib/format-price'
 
 export function OrderSummary() {
   const { items, totalPrice } = useCart()

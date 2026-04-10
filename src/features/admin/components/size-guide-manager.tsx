@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { Plus, Trash2, Loader2, Ruler, PackageX } from 'lucide-react'
 import { upsertSizeGuide, deleteSizeGuide } from '../actions/size-guide-actions'
-import type { SizeGuide, SizeGuideRow } from '@/features/products/types'
+import type { SizeGuide, SizeGuideRow } from '@/entities/product'
 
 interface SizeGuideManagerProps {
   guides: SizeGuide[]

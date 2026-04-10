@@ -1,8 +1,8 @@
-import { sql } from '@/lib/db/client'
-import { MAX_PRODUCTS_PER_PAGE } from '@/lib/constants/site'
+import { sql } from '@/shared/infrastructure/db/client'
+import { MAX_PRODUCTS_PER_PAGE } from '@/shared/config/site'
 import type { ProductCard, ProductFull, ProductFilters, SizeGuide } from '../types'
 
-export async function fetchProducts(
+export async function findProducts(
   filters?: ProductFilters,
   page = 1,
   limit = MAX_PRODUCTS_PER_PAGE
@@ -46,7 +46,7 @@ export async function fetchProducts(
   return { products: rows as ProductCard[], total, totalPages }
 }
 
-export async function fetchProductBySlug(slug: string): Promise<ProductFull | null> {
+export async function findProductBySlug(slug: string): Promise<ProductFull | null> {
   const rows = await sql`
     SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
@@ -59,7 +59,7 @@ export async function fetchProductBySlug(slug: string): Promise<ProductFull | nu
   return (rows[0] as ProductFull) ?? null
 }
 
-export async function fetchSizeGuideByCategory(category: string): Promise<SizeGuide | null> {
+export async function findSizeGuideByCategory(category: string): Promise<SizeGuide | null> {
   const rows = await sql`
     SELECT id, category, rows, "createdAt", "updatedAt"
     FROM "SizeGuide"
@@ -69,7 +69,7 @@ export async function fetchSizeGuideByCategory(category: string): Promise<SizeGu
   return (rows[0] as SizeGuide) ?? null
 }
 
-export async function fetchSizeGuides(): Promise<SizeGuide[]> {
+export async function findSizeGuides(): Promise<SizeGuide[]> {
   const rows = await sql`
     SELECT id, category, rows, "createdAt", "updatedAt"
     FROM "SizeGuide"
@@ -78,7 +78,7 @@ export async function fetchSizeGuides(): Promise<SizeGuide[]> {
   return rows as SizeGuide[]
 }
 
-export async function fetchProductCategories(): Promise<string[]> {
+export async function findProductCategories(): Promise<string[]> {
   const rows = await sql`
     SELECT c.name
     FROM "Category" c
@@ -90,7 +90,7 @@ export async function fetchProductCategories(): Promise<string[]> {
   return rows.map((r) => (r as { name: string }).name)
 }
 
-export async function fetchRelatedProducts(
+export async function findRelatedProducts(
   category: string,
   excludeSlug: string,
   limit = 4

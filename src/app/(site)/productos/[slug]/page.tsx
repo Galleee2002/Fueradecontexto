@@ -1,25 +1,24 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ProductDetail } from '@/features/products/components/product-detail'
-import { RelatedProducts } from '@/features/products/components/related-products'
-import { fetchProductBySlug, fetchProducts, fetchSizeGuideByCategory } from '@/features/products/queries/product-queries'
-import { Container } from '@/components/shared/layout/container'
-import { SITE_NAME } from '@/lib/constants/site'
+import { getProductDetail, getProducts, ProductDetail, RelatedProducts } from '@/features/products'
+import { Container } from '@/shared/ui/layout/container'
+import { SITE_NAME } from '@/shared/config/site'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
-  const { products } = await fetchProducts(undefined, 1, 200)
+  const { products } = await getProducts(undefined, 1, 200)
   return products.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = await fetchProductBySlug(slug)
-  if (!product) return { title: 'Producto no encontrado' }
+  const detail = await getProductDetail(slug)
+  if (!detail) return { title: 'Producto no encontrado' }
+  const { product } = detail
   return {
     title: `${product.name} — ${SITE_NAME}`,
     description: product.description ?? `${product.name} en ${SITE_NAME}. Indumentaria de autor.`,
@@ -33,10 +32,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const product = await fetchProductBySlug(slug)
-  if (!product) notFound()
-
-  const sizeGuide = await fetchSizeGuideByCategory(product.category)
+  const detail = await getProductDetail(slug)
+  if (!detail) notFound()
+  const { product, sizeGuide } = detail
 
   return (
     <main>

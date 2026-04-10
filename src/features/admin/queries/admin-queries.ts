@@ -1,6 +1,6 @@
-import { sql } from '@/lib/db/client'
+import { sql } from '@/shared/infrastructure/db/client'
 import type { AdminProduct, AdminStats, AdminProductStatus, AdminOrder, AdminClient } from '../types'
-import type { SizeGuide } from '@/features/products/types'
+import type { SizeGuide } from '@/entities/product'
 
 const ADMIN_PAGE_SIZE = 20
 

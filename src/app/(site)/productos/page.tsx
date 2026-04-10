@@ -1,11 +1,14 @@
-import { ProductGrid } from '@/features/products/components/product-grid'
-import { ProductFilters } from '@/features/products/components/product-filters'
-import { ProductPagination } from '@/features/products/components/product-pagination'
-import { MobileFilterDrawer } from '@/features/products/components/mobile-filter-drawer'
-import { fetchProducts, fetchProductCategories } from '@/features/products/queries/product-queries'
+import {
+  getProductCategories,
+  getProducts,
+  MobileFilterDrawer,
+  ProductFilters,
+  ProductGrid,
+  ProductPagination,
+} from '@/features/products'
 import { ServicesStrip } from '@/features/home/components/services-strip'
-import { Container } from '@/components/shared/layout/container'
-import { PageHeader } from '@/components/shared/layout/page-header'
+import { Container } from '@/shared/ui/layout/container'
+import { PageHeader } from '@/shared/ui/layout/page-header'
 import { SearchBar } from '@/features/navigation/components/search-bar'
 import type { ProductFilters as ProductFiltersType } from '@/features/products/types'
 
@@ -24,8 +27,8 @@ export default async function ProductsPage({
   }
 
   const [{ products, total, totalPages }, categories] = await Promise.all([
-    fetchProducts(filters, currentPage),
-    fetchProductCategories(),
+    getProducts(filters, currentPage),
+    getProductCategories(),
   ])
 
   return (

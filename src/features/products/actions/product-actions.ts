@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { sql } from '@/lib/db/client'
+import { sql } from '@/shared/infrastructure/db/client'
 import { productSchema } from '../schemas/product-schema'
 import type { ProductInput } from '../schemas/product-schema'
 

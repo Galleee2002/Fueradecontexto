@@ -1,7 +1,7 @@
 'use client'
 
 import { useCartStore } from '../store/cart-store'
-import { formatPrice } from '@/lib/utils/format-price'
+import { formatPrice } from '@/shared/lib/format-price'
 
 export function useCart() {
   const store = useCartStore()

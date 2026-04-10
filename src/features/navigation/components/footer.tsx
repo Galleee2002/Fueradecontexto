@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Container } from '@/components/shared/layout/container'
-import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/constants/site'
+import { Container } from '@/shared/ui/layout/container'
+import { SITE_NAME, SITE_DESCRIPTION } from '@/shared/config/site'
 
 const NAV_LINKS = [
   { label: 'Explorar', href: '/productos' },

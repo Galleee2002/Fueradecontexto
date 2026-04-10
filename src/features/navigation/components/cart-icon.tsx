@@ -2,9 +2,8 @@
 
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
-import { useCart } from '@/features/cart/hooks/use-cart'
+import { useCart, useCartStore } from '@/features/cart'
 import { useSyncExternalStore } from 'react'
-import { useCartStore } from '@/features/cart/store/cart-store'
 
 export function CartIcon() {
   const { totalItems } = useCart()

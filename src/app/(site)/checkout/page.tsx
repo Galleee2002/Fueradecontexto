@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Container } from '@/components/shared/layout/container'
+import { Container } from '@/shared/ui/layout/container'
 import { useCart } from '@/features/cart/hooks/use-cart'
 import { CheckoutSteps } from '@/features/checkout/components/checkout-steps'
 import { StepContact } from '@/features/checkout/components/step-contact'

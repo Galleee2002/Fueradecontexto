@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 
 interface AdminPaginationProps {
   currentPage: number

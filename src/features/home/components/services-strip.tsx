@@ -1,5 +1,5 @@
 import { Truck, Tag, CreditCard } from 'lucide-react'
-import { Container } from '@/components/shared/layout/container'
+import { Container } from '@/shared/ui/layout/container'
 
 const SERVICES = [
   {

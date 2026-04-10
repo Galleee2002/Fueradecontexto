@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { Minus, Plus, X } from 'lucide-react'
-import { formatPrice } from '@/lib/utils/format-price'
+import { formatPrice } from '@/shared/lib/format-price'
 import { useCart } from '../hooks/use-cart'
 import type { CartItemUI } from '../types'
 

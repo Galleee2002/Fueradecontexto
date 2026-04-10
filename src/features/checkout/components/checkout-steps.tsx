@@ -1,7 +1,7 @@
 'use client'
 
 import { Check } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 import type { StepId } from '../types'
 
 const STEPS: { id: StepId; label: string }[] = [

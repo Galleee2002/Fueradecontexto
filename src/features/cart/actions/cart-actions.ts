@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { sql } from '@/lib/db/client'
+import { sql } from '@/shared/infrastructure/db/client'
 
 export async function addToCart(productId: string, quantity: number, sessionId: string) {
   await sql`

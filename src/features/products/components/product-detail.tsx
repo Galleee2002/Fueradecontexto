@@ -1,16 +1,8 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { AddToCartButton } from '@/features/cart/components/add-to-cart-button'
-import { formatPrice } from '@/lib/utils/format-price'
+import { useProductPurchase } from '../hooks/use-product-purchase'
 import { ProductImageGallery } from './product-image-gallery'
-import { ColorSelector } from './color-selector'
-import { SizeSelector } from './size-selector'
-import { StampSelector } from './stamp-selector'
-import { MultiStampSelector } from './multi-stamp-selector'
-import { QuantitySelector } from './quantity-selector'
-import { SizeGuideModal } from './size-guide-modal'
-import { ServiceStripe } from './service-stripe'
+import { ProductPurchasePanel } from '../ui/product-purchase-panel'
 import type { ProductFull, SizeGuide } from '../types'
 
 interface ProductDetailProps {
@@ -18,43 +10,8 @@ interface ProductDetailProps {
   sizeGuide: SizeGuide | null
 }
 
-const STAMP_SIDES = ['FRENTE', 'DORSO'] as const
-type StampSide = (typeof STAMP_SIDES)[number]
-
-const SIZE_ORDER = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] as const
-const STAMP_SIZE_ORDER = ['20x30', '30x40', '40x50'] as const
-
 export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
-  const [quantity, setQuantity] = useState(1)
-  const [selectedColor, setSelectedColor] = useState<string | null>(null)
-  const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  const [selectedStampSide, setSelectedStampSide] = useState<StampSide>('DORSO')
-  const [selectedStampSize, setSelectedStampSize] = useState<string | null>(null)
-  const [selectedStampLocations, setSelectedStampLocations] = useState<string[]>([])
-  const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
-
-  const orderedSizes = useMemo(
-    () => SIZE_ORDER.filter((size) => product.availableSizes.includes(size)),
-    [product.availableSizes],
-  )
-
-  const filteredStampSizes = useMemo(
-    () => {
-      const orderedStampSizes = STAMP_SIZE_ORDER.filter((size) => product.stampSizes.includes(size))
-
-      return selectedStampSide === 'FRENTE'
-        ? orderedStampSizes.filter((size) => size !== '40x50')
-        : orderedStampSizes
-    },
-    [product.stampSizes, selectedStampSide],
-  )
-
-  const isPurchasable = product.active && product.stock > 0
-  const effectiveSelectedStampSize =
-    selectedStampSize &&
-    filteredStampSizes.includes(selectedStampSize as (typeof STAMP_SIZE_ORDER)[number])
-      ? selectedStampSize
-      : null
+  const purchase = useProductPurchase(product)
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 py-8 lg:py-12">
@@ -64,103 +21,27 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
         productName={product.name}
       />
 
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
-            {product.category}
-          </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-serif leading-tight">{product.name}</h1>
-          <p className="text-2xl font-semibold">{formatPrice(product.price)}</p>
-        </div>
-
-        <ColorSelector
-          colors={product.availableColors}
-          selected={selectedColor}
-          onChange={setSelectedColor}
-        />
-
-        <SizeSelector
-          sizes={orderedSizes}
-          selected={selectedSize}
-          onChange={setSelectedSize}
-          onGuideClick={() => setSizeGuideOpen(true)}
-        />
-
-        <div className="space-y-3">
-          <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
-            Lado de estampa
-            {selectedStampSide ? <> — <span className="text-foreground">{selectedStampSide}</span></> : null}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {STAMP_SIDES.map((side) => (
-              <button
-                key={side}
-                type="button"
-                onClick={() => setSelectedStampSide(side)}
-                className={`px-3 py-1.5 text-xs font-medium tracking-wide border transition-colors ${
-                  selectedStampSide === side
-                    ? 'bg-foreground text-background border-foreground'
-                    : 'border-border text-foreground hover:border-foreground'
-                }`}
-              >
-                {side}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <StampSelector
-          label="Tamaño de estampa"
-          options={filteredStampSizes}
-          selected={effectiveSelectedStampSize}
-          onChange={setSelectedStampSize}
-        />
-
-        <MultiStampSelector
-          label="Ubicación de estampa"
-          options={product.stampLocations}
-          selected={selectedStampLocations}
-          onChange={setSelectedStampLocations}
-        />
-
-        {product.description && (
-          <p className="text-base text-muted-foreground leading-relaxed">{product.description}</p>
-        )}
-
-        <div className="flex items-center justify-between gap-3 border-y border-border py-3 text-sm">
-          <span className="text-muted-foreground">Disponibilidad</span>
-          <span className={isPurchasable ? 'font-medium text-foreground' : 'font-medium text-error-foreground'}>
-            {isPurchasable
-              ? `${product.stock} unidad${product.stock === 1 ? '' : 'es'} disponible${product.stock === 1 ? '' : 's'}`
-              : 'Sin stock disponible'}
-          </span>
-        </div>
-
-        <QuantitySelector value={quantity} onChange={setQuantity} max={Math.max(1, Math.min(10, product.stock))} />
-
-        <AddToCartButton
-          productId={product.id}
-          productName={product.name}
-          productPrice={product.price}
-          productImageUrl={product.imageUrl}
-          productSlug={product.slug}
-          quantity={quantity}
-          {...(selectedColor !== null ? { selectedColor } : {})}
-          {...(selectedSize !== null ? { selectedSize } : {})}
-          {...(effectiveSelectedStampSize !== null ? { selectedStampSize: effectiveSelectedStampSize } : {})}
-          {...(selectedStampLocations.length > 0 ? { selectedStampLocations } : {})}
-          disabled={!isPurchasable}
-          disabledLabel="Sin stock"
-        />
-
-        <ServiceStripe />
-      </div>
-
-      <SizeGuideModal
-        isOpen={sizeGuideOpen}
-        onClose={() => setSizeGuideOpen(false)}
-        category={product.category}
-        guide={sizeGuide}
+      <ProductPurchasePanel
+        product={product}
+        sizeGuide={sizeGuide}
+        quantity={purchase.quantity}
+        selectedColor={purchase.selectedColor}
+        selectedSize={purchase.selectedSize}
+        selectedStampSide={purchase.selectedStampSide}
+        selectedStampLocations={purchase.selectedStampLocations}
+        orderedSizes={purchase.orderedSizes}
+        filteredStampSizes={purchase.filteredStampSizes}
+        effectiveSelectedStampSize={purchase.effectiveSelectedStampSize}
+        isPurchasable={purchase.isPurchasable}
+        sizeGuideOpen={purchase.sizeGuideOpen}
+        onQuantityChange={purchase.setQuantity}
+        onColorChange={purchase.setSelectedColor}
+        onSizeChange={purchase.setSelectedSize}
+        onStampSideChange={purchase.setSelectedStampSide}
+        onStampSizeChange={purchase.setSelectedStampSize}
+        onStampLocationsChange={purchase.setSelectedStampLocations}
+        onOpenSizeGuide={() => purchase.setSizeGuideOpen(true)}
+        onCloseSizeGuide={() => purchase.setSizeGuideOpen(false)}
       />
     </section>
   )

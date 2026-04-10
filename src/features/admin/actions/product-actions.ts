@@ -1,8 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { sql } from '@/lib/db/client'
-import { assertAdminSession } from '@/lib/auth/require-admin'
+import { sql } from '@/shared/infrastructure/db/client'
+import { assertAdminSession } from '@/shared/infrastructure/auth/require-admin'
 import { productSchema } from '@/features/products/schemas/product-schema'
 import type { ProductInput } from '@/features/products/schemas/product-schema'
 

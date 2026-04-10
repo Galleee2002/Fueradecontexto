@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 import { z } from 'zod'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 import type { ContactData } from '../types'
 
 const contactSchema = z.object({

@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import { z } from 'zod'
 import { ArrowLeft } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/shared/lib/cn'
 import type { ShippingData } from '../types'
 
 const PROVINCIAS = [

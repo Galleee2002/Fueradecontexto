@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ProductCard } from './product-card'
-import { fetchRelatedProducts } from '../queries/product-queries'
-import { Container } from '@/components/shared/layout/container'
+import { getRelatedProducts } from '../application/get-related-products'
+import { Container } from '@/shared/ui/layout/container'
 
 interface RelatedProductsProps {
   category: string
@@ -9,7 +9,7 @@ interface RelatedProductsProps {
 }
 
 export async function RelatedProducts({ category, currentSlug }: RelatedProductsProps) {
-  const products = await fetchRelatedProducts(category, currentSlug, 4)
+  const products = await getRelatedProducts(category, currentSlug, 4)
   if (products.length < 2) return null
 
   return (
