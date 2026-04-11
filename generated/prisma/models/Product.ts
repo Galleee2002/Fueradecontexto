@@ -76,6 +76,7 @@ export type ProductCountAggregateOutputType = {
   price: number
   imageUrl: number
   previewImages: number
+  images: number
   category: number
   subcategory: number
   active: number
@@ -141,6 +142,7 @@ export type ProductCountAggregateInputType = {
   price?: true
   imageUrl?: true
   previewImages?: true
+  images?: true
   category?: true
   subcategory?: true
   active?: true
@@ -249,6 +251,7 @@ export type ProductGroupByOutputType = {
   price: runtime.Decimal
   imageUrl: string
   previewImages: runtime.JsonValue
+  images: runtime.JsonValue
   category: string
   subcategory: string
   active: boolean
@@ -293,6 +296,7 @@ export type ProductWhereInput = {
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFilter<"Product"> | string
   previewImages?: Prisma.JsonFilter<"Product">
+  images?: Prisma.JsonFilter<"Product">
   category?: Prisma.StringFilter<"Product"> | string
   subcategory?: Prisma.StringFilter<"Product"> | string
   active?: Prisma.BoolFilter<"Product"> | boolean
@@ -316,6 +320,7 @@ export type ProductOrderByWithRelationInput = {
   price?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   previewImages?: Prisma.SortOrder
+  images?: Prisma.SortOrder
   category?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -342,6 +347,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFilter<"Product"> | string
   previewImages?: Prisma.JsonFilter<"Product">
+  images?: Prisma.JsonFilter<"Product">
   category?: Prisma.StringFilter<"Product"> | string
   subcategory?: Prisma.StringFilter<"Product"> | string
   active?: Prisma.BoolFilter<"Product"> | boolean
@@ -365,6 +371,7 @@ export type ProductOrderByWithAggregationInput = {
   price?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   previewImages?: Prisma.SortOrder
+  images?: Prisma.SortOrder
   category?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -394,6 +401,7 @@ export type ProductScalarWhereWithAggregatesInput = {
   price?: Prisma.DecimalWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringWithAggregatesFilter<"Product"> | string
   previewImages?: Prisma.JsonWithAggregatesFilter<"Product">
+  images?: Prisma.JsonWithAggregatesFilter<"Product">
   category?: Prisma.StringWithAggregatesFilter<"Product"> | string
   subcategory?: Prisma.StringWithAggregatesFilter<"Product"> | string
   active?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
@@ -415,6 +423,7 @@ export type ProductCreateInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -438,6 +447,7 @@ export type ProductUncheckedCreateInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -461,6 +471,7 @@ export type ProductUpdateInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -484,6 +495,7 @@ export type ProductUncheckedUpdateInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -507,6 +519,7 @@ export type ProductCreateManyInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -528,6 +541,7 @@ export type ProductUpdateManyMutationInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -549,6 +563,7 @@ export type ProductUncheckedUpdateManyInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -570,6 +585,7 @@ export type ProductCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   previewImages?: Prisma.SortOrder
+  images?: Prisma.SortOrder
   category?: Prisma.SortOrder
   subcategory?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -694,6 +710,7 @@ export type ProductCreateWithoutCartItemsInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -716,6 +733,7 @@ export type ProductUncheckedCreateWithoutCartItemsInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -754,6 +772,7 @@ export type ProductUpdateWithoutCartItemsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -776,6 +795,7 @@ export type ProductUncheckedUpdateWithoutCartItemsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -798,6 +818,7 @@ export type ProductCreateWithoutOrderItemsInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -820,6 +841,7 @@ export type ProductUncheckedCreateWithoutOrderItemsInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl: string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category: string
   subcategory?: string
   active?: boolean
@@ -858,6 +880,7 @@ export type ProductUpdateWithoutOrderItemsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -880,6 +903,7 @@ export type ProductUncheckedUpdateWithoutOrderItemsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   previewImages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  images?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.StringFieldUpdateOperationsInput | string
   subcategory?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -942,6 +966,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   price?: boolean
   imageUrl?: boolean
   previewImages?: boolean
+  images?: boolean
   category?: boolean
   subcategory?: boolean
   active?: boolean
@@ -966,6 +991,7 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   price?: boolean
   imageUrl?: boolean
   previewImages?: boolean
+  images?: boolean
   category?: boolean
   subcategory?: boolean
   active?: boolean
@@ -987,6 +1013,7 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   price?: boolean
   imageUrl?: boolean
   previewImages?: boolean
+  images?: boolean
   category?: boolean
   subcategory?: boolean
   active?: boolean
@@ -1008,6 +1035,7 @@ export type ProductSelectScalar = {
   price?: boolean
   imageUrl?: boolean
   previewImages?: boolean
+  images?: boolean
   category?: boolean
   subcategory?: boolean
   active?: boolean
@@ -1021,7 +1049,7 @@ export type ProductSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "description" | "price" | "imageUrl" | "previewImages" | "category" | "subcategory" | "active" | "stock" | "availableColors" | "availableSizes" | "stampSizes" | "stampLocations" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "description" | "price" | "imageUrl" | "previewImages" | "images" | "category" | "subcategory" | "active" | "stock" | "availableColors" | "availableSizes" | "stampSizes" | "stampLocations" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cartItems?: boolean | Prisma.Product$cartItemsArgs<ExtArgs>
   orderItems?: boolean | Prisma.Product$orderItemsArgs<ExtArgs>
@@ -1044,6 +1072,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     price: runtime.Decimal
     imageUrl: string
     previewImages: runtime.JsonValue
+    images: runtime.JsonValue
     category: string
     subcategory: string
     active: boolean
@@ -1487,6 +1516,7 @@ export interface ProductFieldRefs {
   readonly price: Prisma.FieldRef<"Product", 'Decimal'>
   readonly imageUrl: Prisma.FieldRef<"Product", 'String'>
   readonly previewImages: Prisma.FieldRef<"Product", 'Json'>
+  readonly images: Prisma.FieldRef<"Product", 'Json'>
   readonly category: Prisma.FieldRef<"Product", 'String'>
   readonly subcategory: Prisma.FieldRef<"Product", 'String'>
   readonly active: Prisma.FieldRef<"Product", 'Boolean'>
