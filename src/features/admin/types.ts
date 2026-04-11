@@ -1,4 +1,4 @@
-import type { ProductColor } from '@/entities/product'
+import type { ProductColor, ProductImage } from '@/entities/product'
 import type { OrderStatus } from '@/shared/config/orders'
 
 export interface CategoryWithSubs {
@@ -14,7 +14,7 @@ export interface AdminProduct {
   price: number
   stock: number
   imageUrl: string
-  previewImages: string[]
+  images: ProductImage[]
   category: string
   subcategory: string
   active: boolean

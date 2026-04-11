@@ -1,6 +1,17 @@
 import { sql } from '@/shared/infrastructure/db/client'
 import { MAX_PRODUCTS_PER_PAGE } from '@/shared/config/site'
 import type { ProductCard, ProductFull, ProductFilters, SizeGuide } from '../types'
+import { getPrimaryProductImage, normalizeProductImages } from '@/entities/product/images'
+
+function mapProductRow<T extends { imageUrl?: unknown; previewImages?: unknown; images?: unknown }>(row: T) {
+  const images = normalizeProductImages(row)
+
+  return {
+    ...row,
+    imageUrl: getPrimaryProductImage(images, typeof row.imageUrl === 'string' ? row.imageUrl : ''),
+    images,
+  }
+}
 
 export async function findProducts(
   filters?: ProductFilters,
@@ -18,6 +29,7 @@ export async function findProducts(
 
   const rows = await sql`
     SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category
     FROM "Product" p
@@ -43,12 +55,13 @@ export async function findProducts(
   const total = (countRows[0] as { total: number }).total
   const totalPages = Math.ceil(total / limit)
 
-  return { products: rows as ProductCard[], total, totalPages }
+  return { products: rows.map((row) => mapProductRow(row)) as ProductCard[], total, totalPages }
 }
 
 export async function findProductBySlug(slug: string): Promise<ProductFull | null> {
   const rows = await sql`
     SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category, p.active, p."createdAt", p."updatedAt", p."deletedAt",
            p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
@@ -56,7 +69,7 @@ export async function findProductBySlug(slug: string): Promise<ProductFull | nul
     WHERE p.slug = ${slug} AND p.active = true AND p."deletedAt" IS NULL
     LIMIT 1
   `
-  return (rows[0] as ProductFull) ?? null
+  return rows[0] ? (mapProductRow(rows[0]) as ProductFull) : null
 }
 
 export async function findSizeGuideByCategory(category: string): Promise<SizeGuide | null> {
@@ -97,6 +110,7 @@ export async function findRelatedProducts(
 ): Promise<ProductCard[]> {
   const rows = await sql`
     SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category
     FROM "Product" p
@@ -107,5 +121,5 @@ export async function findRelatedProducts(
     ORDER BY p."createdAt" DESC
     LIMIT ${limit}
   `
-  return rows as ProductCard[]
+  return rows.map((row) => mapProductRow(row)) as ProductCard[]
 }

@@ -2,6 +2,7 @@ export type {
   ProductCard,
   ProductColor,
   ProductFull,
+  ProductImage,
   SizeGuide,
   SizeGuideRow,
 } from '@/entities/product'

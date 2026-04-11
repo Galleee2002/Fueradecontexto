@@ -5,7 +5,7 @@ import type { ProductColor } from '../types'
 interface ColorSelectorProps {
   colors: ProductColor[]
   selected: string | null
-  onChange: (color: string) => void
+  onChange: (color: string | null) => void
 }
 
 export function ColorSelector({ colors, selected, onChange }: ColorSelectorProps) {
@@ -20,7 +20,7 @@ export function ColorSelector({ colors, selected, onChange }: ColorSelectorProps
         {colors.map(({ name, hex }) => (
           <button
             key={name}
-            onClick={() => onChange(name)}
+            onClick={() => onChange(selected === name ? null : name)}
             aria-label={`Color ${name}`}
             className={`w-7 h-7 rounded-full transition-all duration-150 focus:outline-none ${
               selected === name

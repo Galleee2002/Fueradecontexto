@@ -26,7 +26,7 @@ interface ProductPurchasePanelProps {
   isPurchasable: boolean
   sizeGuideOpen: boolean
   onQuantityChange: (value: number) => void
-  onColorChange: (value: string) => void
+  onColorChange: (value: string | null) => void
   onSizeChange: (value: string) => void
   onStampSideChange: (value: StampSide) => void
   onStampSizeChange: (value: string) => void

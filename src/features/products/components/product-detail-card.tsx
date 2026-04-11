@@ -18,7 +18,7 @@ function buildMiniDescription(name: string, category: string): string {
   return `${cleanName.slice(0, 45)}... ${base}`
 }
 
-export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, previewImages, category }: ProductCardProps) {
+export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, images, category }: ProductCardProps) {
   const [activeSlide, setActiveSlide] = useState(0)
   const cardRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -26,9 +26,14 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, prev
   const buttonRef = useRef<HTMLAnchorElement>(null)
 
   const slides = useMemo(() => {
-    const unique = [imageUrl, ...previewImages].filter((url, index, array) => url && array.indexOf(url) === index)
-    return unique.slice(0, 4)
-  }, [imageUrl, previewImages])
+    const unique = images
+      .map((image) => image.url)
+      .filter((url, index, array) => url && array.indexOf(url) === index)
+
+    if (unique.length > 0) return unique.slice(0, 4)
+
+    return imageUrl ? [imageUrl] : []
+  }, [imageUrl, images])
   const miniDescription = useMemo(() => buildMiniDescription(name, category), [name, category])
 
   useEffect(() => {
@@ -36,6 +41,8 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, prev
   }, [])
 
   useEffect(() => {
+    if (slides.length <= 1) return
+
     const reducedMotion =
       typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -86,10 +93,12 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, prev
   }, [])
 
   const goToPreviousSlide = useCallback(() => {
+    if (slides.length === 0) return
     setActiveSlide((current) => (current - 1 + slides.length) % slides.length)
   }, [slides.length])
 
   const goToNextSlide = useCallback(() => {
+    if (slides.length === 0) return
     setActiveSlide((current) => (current + 1) % slides.length)
   }, [slides.length])
 
@@ -123,38 +132,44 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, prev
           </div>
         </Link>
 
-        <button
-          type="button"
-          onClick={goToPreviousSlide}
-          aria-label="Imagen anterior"
-          className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
-        >
-          {'‹'}
-        </button>
-        <button
-          type="button"
-          onClick={goToNextSlide}
-          aria-label="Imagen siguiente"
-          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
-        >
-          {'›'}
-        </button>
-
-        <div className="absolute inset-x-0 bottom-3 flex justify-center gap-2">
-          {slides.map((_, index) => (
+        {slides.length > 1 && (
+          <>
             <button
-              key={index}
               type="button"
-              onClick={() => setActiveSlide(index)}
-              aria-label={`Ir a imagen ${index + 1}`}
-              className={
-                index === activeSlide
-                  ? 'h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,0.75)]'
-                  : 'h-2.5 w-2.5 rounded-full bg-background/75'
-              }
-            />
-          ))}
-        </div>
+              onClick={goToPreviousSlide}
+              aria-label="Imagen anterior"
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
+            >
+              {'‹'}
+            </button>
+            <button
+              type="button"
+              onClick={goToNextSlide}
+              aria-label="Imagen siguiente"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
+            >
+              {'›'}
+            </button>
+          </>
+        )}
+
+        {slides.length > 1 && (
+          <div className="absolute inset-x-0 bottom-3 flex justify-center gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                aria-label={`Ir a imagen ${index + 1}`}
+                className={
+                  index === activeSlide
+                    ? 'h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,0.75)]'
+                    : 'h-2.5 w-2.5 rounded-full bg-background/75'
+                }
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="space-y-3 px-1 pb-1 pt-4">

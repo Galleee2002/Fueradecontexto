@@ -1,13 +1,21 @@
 import { z } from 'zod'
 
+const productImageSchema = z.object({
+  url: z.string().trim().url('URL de imagen inválida'),
+  colorName: z.preprocess(
+    (value) => (typeof value === 'string' ? value.trim() || undefined : undefined),
+    z.string().min(1).optional(),
+  ),
+})
+
 export const productSchema = z.object({
   slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Solo letras minúsculas, números y guiones'),
   name: z.string().min(1, 'El nombre es requerido').max(200),
   description: z.string().max(2000).optional(),
   price: z.number().positive('El precio debe ser mayor a 0'),
   stock: z.number().int('El stock debe ser un entero').nonnegative('El stock no puede ser negativo'),
-  imageUrl: z.string().trim().url('URL de imagen inválida'),
-  previewImages: z.array(z.string().trim().url('URL de preview inválida')).max(3, 'Máximo 3 imágenes preview').default([]),
+  imageUrl: z.string().trim().url('URL de imagen inválida').optional(),
+  images: z.array(productImageSchema).min(1, 'Subí al menos una imagen del producto'),
   category: z.string().min(1, 'La categoría es requerida'),
   subcategory: z.string().max(60).default(''),
   active: z.boolean().default(true),
@@ -20,6 +28,20 @@ export const productSchema = z.object({
   availableSizes: z.array(z.string()).default([]),
   stampSizes: z.array(z.string()).default([]),
   stampLocations: z.array(z.string()).default([]),
+}).superRefine((data, ctx) => {
+  const allowedColorNames = new Set(data.availableColors.map((color) => color.name.trim().toLowerCase()))
+
+  data.images.forEach((image, index) => {
+    if (!image.colorName) return
+
+    if (!allowedColorNames.has(image.colorName.trim().toLowerCase())) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['images', index, 'colorName'],
+        message: 'La imagen solo puede vincularse a un color seleccionado en el producto.',
+      })
+    }
+  })
 })
 
 export type ProductInput = z.infer<typeof productSchema>

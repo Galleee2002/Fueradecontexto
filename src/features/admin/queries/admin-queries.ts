@@ -1,8 +1,19 @@
 import { sql } from '@/shared/infrastructure/db/client'
 import type { AdminProduct, AdminStats, AdminProductStatus, AdminOrder, AdminClient } from '../types'
 import type { SizeGuide } from '@/entities/product'
+import { getPrimaryProductImage, normalizeProductImages } from '@/entities/product/images'
 
 const ADMIN_PAGE_SIZE = 20
+
+function mapAdminProductRow<T extends { imageUrl?: unknown; previewImages?: unknown; images?: unknown }>(row: T) {
+  const images = normalizeProductImages(row)
+
+  return {
+    ...row,
+    imageUrl: getPrimaryProductImage(images, typeof row.imageUrl === 'string' ? row.imageUrl : ''),
+    images,
+  }
+}
 
 export async function fetchAdminProducts(
   search?: string,
@@ -21,6 +32,7 @@ export async function fetchAdminProducts(
 
   const rows = await sql`
       SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
+        COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
         COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
         p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
         p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
@@ -45,12 +57,13 @@ export async function fetchAdminProducts(
   const total = (countRows[0] as { total: number }).total
   const totalPages = Math.ceil(total / ADMIN_PAGE_SIZE)
 
-  return { products: rows as AdminProduct[], total, totalPages }
+  return { products: rows.map((row) => mapAdminProductRow(row)) as AdminProduct[], total, totalPages }
 }
 
 export async function fetchAdminProductById(id: string): Promise<AdminProduct | null> {
   const rows = await sql`
     SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
+           COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
            p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
@@ -58,7 +71,7 @@ export async function fetchAdminProductById(id: string): Promise<AdminProduct | 
     WHERE p.id = ${id} AND p."deletedAt" IS NULL
     LIMIT 1
   `
-  return (rows[0] as AdminProduct) ?? null
+  return rows[0] ? (mapAdminProductRow(rows[0]) as AdminProduct) : null
 }
 
 export async function fetchSizeGuides(): Promise<SizeGuide[]> {

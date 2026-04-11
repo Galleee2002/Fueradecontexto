@@ -1,27 +1,27 @@
 'use client'
 
-import Image from 'next/image'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ImageOff, Loader2, MapPin, Plus, X } from 'lucide-react'
+import { ArrowLeft, Loader2, MapPin, Plus, X } from 'lucide-react'
 import { createAdminProduct, updateAdminProduct } from '../actions/product-actions'
 import { cn } from '@/shared/lib/cn'
 import { createStampLocation } from '../actions/stamp-location-actions'
 import { ToggleGroupInteractive } from './toggle-group-interactive'
 import { StampSizeInteractive } from './stamp-size-interactive'
+import { ProductImagesManager } from './product-images-manager'
 import { uploadToCloudinary } from '../lib/upload-to-cloudinary'
 import type { AdminProduct } from '../types'
-import type { ProductColor } from '@/entities/product'
+import type { ProductColor, ProductImage } from '@/entities/product'
 import { ProductFormField } from '../products/ui/product-form-field'
 import { SIZE_OPTIONS, slugifyProductName, STAMP_SIZE_OPTIONS } from '../products/lib/product-form'
+import { normalizeProductImages } from '@/entities/product/images'
 
 interface ProductFormProps {
   product?: AdminProduct
   categories: { name: string; subcategories: string[] }[]
   stampLocations: string[]
   globalColors?: { id: string; name: string; hex: string }[]
-  maxPreviewImages?: number
 }
 
 export function ProductForm({
@@ -29,7 +29,6 @@ export function ProductForm({
   categories,
   stampLocations: stampLocationsProp,
   globalColors = [],
-  maxPreviewImages = 3,
 }: ProductFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -50,12 +49,10 @@ export function ProductForm({
     !!product?.category && !categories.some(c => c.name === product.category),
   )
   const [subcategory, setSubcategory] = useState(product?.subcategory ?? '')
-  const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? '')
-  const [previewImages, setPreviewImages] = useState<string[]>(() =>
-    (product?.previewImages ?? []).slice(0, maxPreviewImages),
-  )
+  const [images, setImages] = useState<ProductImage[]>(() => normalizeProductImages(product ?? {}))
   const [uploadError, setUploadError] = useState('')
   const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [clearedImageAssignments, setClearedImageAssignments] = useState(0)
   const [active, setActive] = useState(product?.active ?? true)
 
   // Colors
@@ -116,24 +113,40 @@ export function ProductForm({
       setUploadError(error)
       return
     }
-    setImageUrl(url)
+    setImages((prev) => [...prev, { url, colorName: null }])
   }
 
-  async function handlePreviewImageUpload(file: File, index: number) {
-    setUploadError('')
-    setIsUploadingImage(true)
-    const { url, error } = await uploadToCloudinary(file)
-    setIsUploadingImage(false)
-    if (!url) {
-      setUploadError(error)
+  function toggleAvailableColor(color: { name: string; hex: string }) {
+    const normalizedName = color.name.toLowerCase()
+    const isSelected = availableColors.some((currentColor) => currentColor.name.toLowerCase() === normalizedName)
+
+    if (!isSelected) {
+      setAvailableColors((prev) => [...prev, { name: color.name, hex: color.hex }])
       return
     }
 
-    setPreviewImages((prev) => {
-      const next = [...prev]
-      next[index] = url
-      return next.slice(0, maxPreviewImages)
+    setAvailableColors((prev) =>
+      prev.filter((currentColor) => currentColor.name.toLowerCase() !== normalizedName),
+    )
+
+    const removedAssignments = images.filter(
+      (image) => image.colorName?.toLowerCase() === normalizedName,
+    ).length
+
+    const nextImages = images.map((image) => {
+      if (image.colorName?.toLowerCase() !== normalizedName) return image
+
+      return {
+        ...image,
+        colorName: null,
+      }
     })
+
+    setImages(nextImages)
+
+    if (removedAssignments > 0) {
+      setClearedImageAssignments((current) => current + removedAssignments)
+    }
   }
 
   const effectiveCategory = useCustomCategory ? customCategory : category
@@ -149,11 +162,12 @@ export function ProductForm({
       return
     }
 
-    const normalizedImageUrl = imageUrl.trim()
-    const normalizedPreviewImages = previewImages
-      .map((url) => url.trim())
-      .filter((url) => url.length > 0 && url !== normalizedImageUrl)
-      .slice(0, maxPreviewImages)
+    const normalizedImages = images
+      .map((image) => ({
+        url: image.url.trim(),
+        colorName: image.colorName?.trim() || undefined,
+      }))
+      .filter((image) => image.url.length > 0)
 
     const input = {
       slug,
@@ -161,8 +175,7 @@ export function ProductForm({
       description: description.trim() || undefined,
       price: Number(price),
       stock: Number(stock),
-      imageUrl: normalizedImageUrl,
-      previewImages: normalizedPreviewImages,
+      images: normalizedImages,
       category: effectiveCategory,
       subcategory: selectedCategorySubs.length > 0 ? subcategory : '',
       active,
@@ -278,7 +291,7 @@ export function ProductForm({
 
           <div className="bg-background border border-border p-6 space-y-6">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
-              Precio y categoría
+              Precio, categoría y color
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -374,139 +387,16 @@ export function ProductForm({
                 </ProductFormField>
               )}
             </div>
-          </div>
 
-          {/* Image upload */}
-          <div className="bg-background border border-border p-6 space-y-4">
-            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
-              Imagenes del producto
-            </p>
-
-            <ProductFormField label="Subir imagen" error={errors.imageUrl?.[0]} required>
-              <div className="space-y-2">
-                <label className="inline-flex items-center gap-2 px-3 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors cursor-pointer w-fit">
-                  {isUploadingImage ? (
-                    <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      Subiendo imagen...
-                    </>
-                  ) : (
-                    <>Seleccionar archivo</>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={isUploadingImage}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) void handleImageUpload(file)
-                      e.currentTarget.value = ''
-                    }}
-                  />
-                </label>
-                {uploadError && <p className="text-xs text-primary">{uploadError}</p>}
+            <div className="space-y-3 border-t border-border pt-6">
+              <div className="space-y-1">
+                <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+                  Colores disponibles
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Seleccioná primero los colores habilitados para que luego puedan vincularse a cada imagen.
+                </p>
               </div>
-            </ProductFormField>
-
-            {imageUrl ? (
-              <div className="space-y-2">
-                <div className="relative aspect-[3/4] w-40 bg-surface border border-border overflow-hidden">
-                  <Image
-                    src={imageUrl}
-                    alt="Imagen principal"
-                    fill
-                    sizes="160px"
-                    className="object-cover"
-                    onError={() => setUploadError('No se pudo previsualizar la imagen subida.')}
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setImageUrl('')}
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
-                >
-                  Eliminar imagen
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center w-40 aspect-[3/4] bg-surface border border-border border-dashed text-muted-foreground">
-                <ImageOff className="h-8 w-8 opacity-40" strokeWidth={1} />
-              </div>
-            )}
-
-            <ProductFormField label={`Imagenes preview (max ${maxPreviewImages})`} error={errors.previewImages?.[0]}>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {Array.from({ length: maxPreviewImages }).map((_, index) => {
-                  const previewUrl = previewImages[index] ?? ''
-
-                  return (
-                    <div key={index} className="space-y-2">
-                      <div className="relative aspect-square bg-surface border border-border overflow-hidden">
-                        {previewUrl ? (
-                          <Image
-                            src={previewUrl}
-                            alt={`Preview ${index + 1}`}
-                            fill
-                            sizes="(max-width: 640px) 100vw, 180px"
-                            className="object-cover"
-                            onError={() => setUploadError('No se pudo previsualizar una imagen preview.')}
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                            <ImageOff className="h-6 w-6 opacity-40" strokeWidth={1} />
-                          </div>
-                        )}
-                      </div>
-
-                      <label className="inline-flex items-center justify-center w-full px-2.5 py-2 text-xs border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors cursor-pointer">
-                        {previewUrl ? 'Reemplazar' : 'Subir preview'}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          disabled={isUploadingImage}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0]
-                            if (file) void handlePreviewImageUpload(file, index)
-                            e.currentTarget.value = ''
-                          }}
-                        />
-                      </label>
-
-                      {previewUrl && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPreviewImages((prev) => {
-                              const next = [...prev]
-                              next[index] = ''
-                              return next
-                            })
-                          }}
-                          className="w-full text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
-                        >
-                          Eliminar
-                        </button>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </ProductFormField>
-          </div>
-
-          {/* Customization options */}
-          <div className="bg-background border border-border p-6 space-y-6">
-            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
-              Opciones de personalización
-            </p>
-
-            {/* Global colors palette */}
-            <div className="space-y-3">
-              <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
-                Colores disponibles
-              </p>
 
               {globalColors.length === 0 ? (
                 <p className="text-xs text-muted-foreground">
@@ -525,18 +415,12 @@ export function ProductForm({
                       <button
                         key={gc.id}
                         type="button"
-                        onClick={() => {
-                          setAvailableColors((prev) =>
-                            isSelected
-                              ? prev.filter((c) => c.name.toLowerCase() !== gc.name.toLowerCase())
-                              : [...prev, { name: gc.name, hex: gc.hex }],
-                          )
-                        }}
+                        onClick={() => toggleAvailableColor(gc)}
                         aria-pressed={isSelected}
                         aria-label={`${isSelected ? 'Quitar' : 'Agregar'} color ${gc.name}`}
                         title={gc.name}
                         className={cn(
-                          'flex items-center gap-1.5 border px-2 py-1 text-xs transition-colors',
+                          'flex min-h-[44px] items-center gap-1.5 border px-3 py-2 text-xs transition-colors',
                           isSelected
                             ? 'border-primary text-foreground bg-primary/5'
                             : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground',
@@ -555,7 +439,27 @@ export function ProductForm({
                 </div>
               )}
             </div>
+          </div>
 
+          <ProductImagesManager
+            images={images}
+            availableColors={availableColors}
+            isUploading={isUploadingImage}
+            uploadError={uploadError}
+            validationError={errors.images?.[0]}
+            clearedAssignments={clearedImageAssignments}
+            onUpload={handleImageUpload}
+            onImagesChange={(nextImages) => {
+              setImages(nextImages)
+              setClearedImageAssignments(0)
+            }}
+          />
+
+          {/* Customization options */}
+          <div className="bg-background border border-border p-6 space-y-6">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+              Opciones de personalización
+            </p>
             <div className="space-y-3">
               <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Talles disponibles
@@ -727,6 +631,10 @@ export function ProductForm({
                 <span className={active ? 'text-primary font-medium' : 'text-muted-foreground'}>
                   {active ? 'Activo' : 'Inactivo'}
                 </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Imágenes</span>
+                <span className="text-foreground font-medium">{images.length}</span>
               </div>
             </div>
           </div>

@@ -3,6 +3,11 @@ export interface ProductColor {
   hex: string
 }
 
+export interface ProductImage {
+  url: string
+  colorName?: string | null | undefined
+}
+
 export interface ProductCard {
   id: string
   slug: string
@@ -10,7 +15,7 @@ export interface ProductCard {
   price: number
   stock: number
   imageUrl: string
-  previewImages: string[]
+  images: ProductImage[]
   category: string
 }
 

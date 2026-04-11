@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { sql } from '@/shared/infrastructure/db/client'
 import { productSchema } from '../schemas/product-schema'
 import type { ProductInput } from '../schemas/product-schema'
+import { getLegacyPreviewImages, getPrimaryProductImage } from '@/entities/product/images'
+import { ensureProductColumnSupport } from '@/shared/infrastructure/db/product-column-support'
 
 export async function createProduct(input: ProductInput) {
   const parsed = productSchema.safeParse(input)
@@ -11,12 +13,27 @@ export async function createProduct(input: ProductInput) {
     return { error: parsed.error.flatten() }
   }
 
-  const { slug, name, description, price, imageUrl, previewImages, category, active } = parsed.data
+  const { slug, name, description, price, images, category, active } = parsed.data
+  const imageUrl = getPrimaryProductImage(images)
+  const previewImages = getLegacyPreviewImages(images)
+  const { hasImages, hasPreviewImages } = await ensureProductColumnSupport()
 
-  await sql`
-    INSERT INTO "Product" (slug, name, description, price, "imageUrl", "previewImages", category, active)
-    VALUES (${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${active})
-  `
+  if (hasImages && hasPreviewImages) {
+    await sql`
+      INSERT INTO "Product" (slug, name, description, price, "imageUrl", "previewImages", "images", category, active)
+      VALUES (${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${JSON.stringify(images)}::jsonb, ${category}, ${active})
+    `
+  } else if (hasPreviewImages) {
+    await sql`
+      INSERT INTO "Product" (slug, name, description, price, "imageUrl", "previewImages", category, active)
+      VALUES (${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${active})
+    `
+  } else {
+    await sql`
+      INSERT INTO "Product" (slug, name, description, price, "imageUrl", category, active)
+      VALUES (${slug}, ${name}, ${description ?? null}, ${price}, ${imageUrl}, ${category}, ${active})
+    `
+  }
 
   revalidatePath('/productos')
   return { success: true }

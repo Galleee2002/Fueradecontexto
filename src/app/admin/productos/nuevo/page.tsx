@@ -18,7 +18,6 @@ export default async function NuevoProductoPage() {
         categories={categories}
         stampLocations={stampLocations}
         globalColors={globalColors}
-        maxPreviewImages={3}
       />
     </div>
   )
