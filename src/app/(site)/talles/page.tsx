@@ -23,20 +23,6 @@ export default async function TallesPage() {
         />
 
         <section className="py-10 md:py-14 space-y-6">
-          <div className="rounded-xl border border-border bg-surface p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground">Guia de talles por categoria</h2>
-            <p className="mt-4 max-w-3xl text-muted-foreground leading-relaxed">
-              Esta vista es temporal. Las tablas se administran desde panel y cada prenda consume la
-              guia de su categoria dentro de la ficha de producto.
-            </p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Gestion de tablas:{' '}
-              <Link href="/admin/guia-talles" className="text-foreground underline underline-offset-4">
-                /admin/guia-talles
-              </Link>
-            </p>
-          </div>
-
           <div className="grid gap-5 md:grid-cols-2">
             {categories.map((category) => {
               const guide = guideByCategory.get(category)

@@ -1,4 +1,5 @@
 import { sql } from '@/shared/infrastructure/db/client'
+import { ensureOrderColumnSupport } from '@/shared/infrastructure/db/order-column-support'
 import type { AdminProduct, AdminStats, AdminProductStatus, AdminOrder, AdminClient } from '../types'
 import type { SizeGuide } from '@/entities/product'
 import { getPrimaryProductImage, normalizeProductImages } from '@/entities/product/images'
@@ -129,6 +130,7 @@ export async function fetchAdminColors(): Promise<{ id: string; name: string; he
 export async function fetchAdminOrders(
   page = 1,
 ): Promise<{ orders: AdminOrder[]; total: number; totalPages: number }> {
+  await ensureOrderColumnSupport()
   const offset = (page - 1) * ADMIN_PAGE_SIZE
 
   const rows = await sql`
@@ -136,12 +138,17 @@ export async function fetchAdminOrders(
            o.status, o."createdAt", COUNT(oi.id)::int AS "itemCount"
     FROM "Order" o
     LEFT JOIN "OrderItem" oi ON oi."orderId" = o.id
+    WHERE o."deletedAt" IS NULL
     GROUP BY o.id
     ORDER BY o."createdAt" DESC
     LIMIT ${ADMIN_PAGE_SIZE} OFFSET ${offset}
   `
 
-  const countRows = await sql`SELECT COUNT(*)::int AS total FROM "Order"`
+  const countRows = await sql`
+    SELECT COUNT(*)::int AS total
+    FROM "Order"
+    WHERE "deletedAt" IS NULL
+  `
   const total = (countRows[0] as { total: number }).total
   const totalPages = Math.ceil(total / ADMIN_PAGE_SIZE)
 

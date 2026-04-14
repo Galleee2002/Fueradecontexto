@@ -1204,7 +1204,8 @@ export const OrderScalarFieldEnum = {
   mpPreferenceId: 'mpPreferenceId',
   mpPaymentId: 'mpPaymentId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]

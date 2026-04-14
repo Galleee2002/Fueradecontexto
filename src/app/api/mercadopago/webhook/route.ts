@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Payment } from 'mercadopago'
 import { mpClient } from '@/shared/infrastructure/payments/mercadopago/client'
 import { prisma } from '@/shared/infrastructure/db/prisma'
+import { ensureOrderColumnSupport } from '@/shared/infrastructure/db/order-column-support'
 import { mapMercadoPagoStatus, verifyMercadoPagoWebhookSignature } from '@/shared/infrastructure/payments/mercadopago/webhook'
 
 export async function POST(req: NextRequest) {
   try {
+    await ensureOrderColumnSupport()
+
     const body = await req.json()
 
     // MP sends topic=payment notifications
@@ -53,7 +56,11 @@ export async function POST(req: NextRequest) {
       })
 
       if (!order) {
-        throw new Error(`Order ${orderId} not found`)
+        return
+      }
+
+      if (order.deletedAt) {
+        return
       }
 
       if (order.status === 'paid' && order.mpPaymentId === paymentId) {

@@ -1,4 +1,5 @@
 import { AdminPagination } from './admin-pagination'
+import { DeleteOrderButton } from './delete-order-button'
 import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/shared/config/orders'
 import type { AdminOrder } from '../types'
 
@@ -42,6 +43,9 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
               <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
                 Fecha
               </th>
+              <th className="w-24 py-3 px-4 text-right text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -51,7 +55,7 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
               const statusLabel = ORDER_STATUS_LABELS[order.status] ?? order.status
 
               return (
-                <tr key={order.id} className="hover:bg-surface/60 transition-colors">
+                <tr key={order.id} className="group hover:bg-surface/60 transition-colors">
                   <td className="py-3 px-4">
                     <span className="font-mono text-xs text-muted-foreground">
                       {order.id.slice(0, 8)}…
@@ -80,6 +84,11 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
                     <span className="text-xs text-muted-foreground">
                       {new Date(order.createdAt).toLocaleDateString('es-AR')}
                     </span>
+                  </td>
+                  <td className="w-24 py-3 px-4">
+                    <div className="flex items-center justify-end">
+                      <DeleteOrderButton id={order.id} customerName={order.customerName} />
+                    </div>
                   </td>
                 </tr>
               )

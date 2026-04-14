@@ -111,9 +111,6 @@ export function FaqSection() {
                 <h2 className="font-serif text-3xl font-normal tracking-tight text-foreground sm:text-4xl lg:text-5xl">
                   Todo lo que necesitás saber antes de pedir.
                 </h2>
-                <p className="max-w-2xl text-sm leading-relaxed text-foreground/72 sm:text-base">
-                  Dudas comunes sobre pedidos, producción y estampado.
-                </p>
               </div>
             </div>
 
