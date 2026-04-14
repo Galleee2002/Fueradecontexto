@@ -19,3 +19,20 @@ export async function deleteAdminOrder(id: string) {
   revalidatePath('/cuenta')
   return { success: true }
 }
+
+export async function deleteAdminClientOrders(customerEmail: string) {
+  await assertAdminSession()
+  await ensureOrderColumnSupport()
+
+  await sql`
+    UPDATE "Order"
+    SET "deletedAt" = NOW(), "updatedAt" = NOW()
+    WHERE "customerEmail" = ${customerEmail}
+      AND "deletedAt" IS NULL
+  `
+
+  revalidatePath('/admin/clientes')
+  revalidatePath('/admin/ordenes')
+  revalidatePath('/cuenta')
+  return { success: true }
+}

@@ -156,6 +156,8 @@ export async function fetchAdminOrders(
 }
 
 export async function fetchAdminClients(): Promise<AdminClient[]> {
+  await ensureOrderColumnSupport()
+
   const rows = await sql`
     SELECT "customerEmail",
            (ARRAY_AGG("customerName" ORDER BY "createdAt" DESC))[1] AS "customerName",
@@ -163,6 +165,7 @@ export async function fetchAdminClients(): Promise<AdminClient[]> {
            SUM(total)::float AS "totalSpent",
            MAX("createdAt") AS "lastOrderAt"
     FROM "Order"
+    WHERE "deletedAt" IS NULL
     GROUP BY "customerEmail"
     ORDER BY MAX("createdAt") DESC
   `

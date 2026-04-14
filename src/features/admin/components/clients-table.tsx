@@ -1,3 +1,4 @@
+import { DeleteClientButton } from './delete-client-button'
 import type { AdminClient } from '../types'
 
 interface ClientsTableProps {
@@ -30,6 +31,9 @@ export function ClientsTable({ clients }: ClientsTableProps) {
             <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
               Última orden
             </th>
+            <th className="w-24 py-3 px-4 text-right text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -51,6 +55,16 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                 <span className="text-xs text-muted-foreground">
                   {new Date(client.lastOrderAt).toLocaleDateString('es-AR')}
                 </span>
+              </td>
+              <td className="w-24 py-3 px-4">
+                <div className="flex items-center justify-end">
+                  <DeleteClientButton
+                    customerEmail={client.customerEmail}
+                    customerName={client.customerName}
+                    totalOrders={client.totalOrders}
+                    totalSpent={client.totalSpent}
+                  />
+                </div>
               </td>
             </tr>
           ))}
