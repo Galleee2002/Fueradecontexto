@@ -3,11 +3,17 @@
 import Image from 'next/image'
 import { useCart } from '@/features/cart'
 import { formatPrice } from '@/shared/lib/format-price'
+import type { ShippingQuote } from '../types'
 
-export function OrderSummary() {
+interface OrderSummaryProps {
+  shippingQuote: ShippingQuote | null
+  isShippingQuoteLoading?: boolean
+}
+
+export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: OrderSummaryProps) {
   const { items, totalPrice } = useCart()
 
-  const envio = 0 // TODO: calcular costo de envío cuando el servicio esté disponible
+  const envio = shippingQuote?.price ?? 0
 
   return (
     <div>
@@ -54,7 +60,7 @@ export function OrderSummary() {
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Envío</span>
           <span className="text-muted-foreground">
-            {envio === 0 ? 'A calcular' : formatPrice(envio)}
+            {isShippingQuoteLoading ? 'Cotizando…' : envio === 0 ? 'A calcular' : formatPrice(envio)}
           </span>
         </div>
       </div>
@@ -65,7 +71,7 @@ export function OrderSummary() {
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Los impuestos y el costo de envío final se confirmarán antes del despacho.
+        El envío se cotiza con Correo Argentino antes de generar el pago.
       </p>
     </div>
   )

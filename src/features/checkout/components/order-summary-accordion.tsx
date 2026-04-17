@@ -2,12 +2,16 @@
 
 import { useState } from 'react'
 import { ShoppingBag, ChevronDown } from 'lucide-react'
-import { useCart } from '@/features/cart'
 import { formatPrice } from '@/shared/lib/format-price'
 
-export function OrderSummaryAccordion({ children }: { children: React.ReactNode }) {
+export function OrderSummaryAccordion({
+  children,
+  total,
+}: {
+  children: React.ReactNode
+  total: number
+}) {
   const [isOpen, setIsOpen] = useState(false)
-  const { totalPrice } = useCart()
 
   return (
     <>
@@ -21,7 +25,7 @@ export function OrderSummaryAccordion({ children }: { children: React.ReactNode 
           {isOpen ? 'Ocultar resumen' : 'Ver resumen del pedido'}
         </span>
         <span className="flex items-center gap-2">
-          <span className="font-semibold">{formatPrice(totalPrice)}</span>
+          <span className="font-semibold">{formatPrice(total)}</span>
           <ChevronDown
             className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           />

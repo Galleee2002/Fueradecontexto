@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { sql } from '@/shared/infrastructure/db/client'
 import { assertAdminSession } from '@/shared/infrastructure/auth/require-admin'
 import { ensureOrderColumnSupport } from '@/shared/infrastructure/db/order-column-support'
+import { syncOrderTracking } from '@/features/checkout/application/sync-order-shipping'
 
 export async function deleteAdminOrder(id: string) {
   await assertAdminSession()
@@ -35,4 +36,14 @@ export async function deleteAdminClientOrders(customerEmail: string) {
   revalidatePath('/admin/ordenes')
   revalidatePath('/cuenta')
   return { success: true }
+}
+
+export async function syncAdminOrderTracking(id: string) {
+  await assertAdminSession()
+  const result = await syncOrderTracking(id)
+
+  revalidatePath('/admin/ordenes')
+  revalidatePath('/cuenta')
+
+  return result
 }

@@ -4,6 +4,7 @@ import { mpClient } from '@/shared/infrastructure/payments/mercadopago/client'
 import { prisma } from '@/shared/infrastructure/db/prisma'
 import { ensureOrderColumnSupport } from '@/shared/infrastructure/db/order-column-support'
 import { mapMercadoPagoStatus, verifyMercadoPagoWebhookSignature } from '@/shared/infrastructure/payments/mercadopago/webhook'
+import { importOrderShipment } from '@/features/checkout/application/sync-order-shipping'
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
     }
 
     const newStatus = mapMercadoPagoStatus(payment.status)
+    let shouldImportShipment = false
 
     await prisma.$transaction(async (tx) => {
       const order = await tx.order.findUnique({
@@ -89,6 +91,8 @@ export async function POST(req: NextRequest) {
             throw new Error(`Insufficient stock for product ${item.productId}`)
           }
         }
+
+        shouldImportShipment = true
       }
 
       const statusToPersist =
@@ -99,9 +103,15 @@ export async function POST(req: NextRequest) {
         data: {
           status: statusToPersist,
           mpPaymentId: paymentId,
+          shippingStatus: shouldImportShipment ? 'import_pending' : order.shippingStatus,
+          shippingError: shouldImportShipment ? null : order.shippingError,
         },
       })
     })
+
+    if (shouldImportShipment) {
+      await importOrderShipment(orderId)
+    }
 
     return NextResponse.json({ ok: true })
   } catch (error) {

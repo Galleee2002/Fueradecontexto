@@ -1,17 +1,32 @@
 'use client'
 
 import { ArrowLeft, ShieldCheck } from 'lucide-react'
-import type { ContactData, ShippingData } from '../types'
+import type { ContactData, ShippingData, ShippingQuote } from '../types'
+import { formatPrice } from '@/shared/lib/format-price'
 
 interface StepPaymentProps {
   contactData: ContactData
   shippingData: ShippingData
+  shippingQuote: ShippingQuote | null
   onConfirm: () => void
   onBack: () => void
   isLoading: boolean
+  isShippingQuoteLoading: boolean
+  shippingQuoteError: string | null
 }
 
-export function StepPayment({ contactData, shippingData, onConfirm, onBack, isLoading }: StepPaymentProps) {
+export function StepPayment({
+  contactData,
+  shippingData,
+  shippingQuote,
+  onConfirm,
+  onBack,
+  isLoading,
+  isShippingQuoteLoading,
+  shippingQuoteError,
+}: StepPaymentProps) {
+  const isSubmitDisabled = isLoading || isShippingQuoteLoading || !shippingQuote || !!shippingQuoteError
+
   return (
     <div>
       <h2 className="font-serif text-2xl mb-8">Confirmar y pagar</h2>
@@ -34,6 +49,24 @@ export function StepPayment({ contactData, shippingData, onConfirm, onBack, isLo
           <p className="text-sm text-muted-foreground">
             {shippingData.ciudad}, {shippingData.provincia} ({shippingData.codigoPostal})
           </p>
+          <div className="mt-3 border-t border-border pt-3 space-y-1.5">
+            {isShippingQuoteLoading ? (
+              <p className="text-sm text-muted-foreground">Cotizando envío con Correo Argentino…</p>
+            ) : shippingQuoteError ? (
+              <p className="text-sm text-error">{shippingQuoteError}</p>
+            ) : shippingQuote ? (
+              <>
+                <p className="text-sm font-medium text-foreground">
+                  {shippingQuote.productName} · {formatPrice(shippingQuote.price)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Entrega estimada entre {shippingQuote.deliveryTimeMin} y {shippingQuote.deliveryTimeMax} días hábiles.
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">Todavía no hay una cotización válida.</p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -63,7 +96,7 @@ export function StepPayment({ contactData, shippingData, onConfirm, onBack, isLo
         <button
           type="button"
           onClick={onConfirm}
-          disabled={isLoading}
+          disabled={isSubmitDisabled}
           className="w-full sm:w-auto bg-mp-blue hover:bg-mp-blue-hover disabled:opacity-60 text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors flex items-center justify-center gap-3"
         >
           {isLoading ? (

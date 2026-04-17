@@ -387,6 +387,7 @@ export const ModelName = {
   Category: 'Category',
   StampLocation: 'StampLocation',
   Color: 'Color',
+  ShippingProviderSettings: 'ShippingProviderSettings',
   Product: 'Product',
   SizeGuide: 'SizeGuide',
   CartItem: 'CartItem',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "stampLocation" | "color" | "product" | "sizeGuide" | "cartItem" | "order" | "orderItem" | "user"
+    modelProps: "category" | "stampLocation" | "color" | "shippingProviderSettings" | "product" | "sizeGuide" | "cartItem" | "order" | "orderItem" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -631,6 +632,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ColorCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ColorCountAggregateOutputType> | number
+        }
+      }
+    }
+    ShippingProviderSettings: {
+      payload: Prisma.$ShippingProviderSettingsPayload<ExtArgs>
+      fields: Prisma.ShippingProviderSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShippingProviderSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShippingProviderSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.ShippingProviderSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShippingProviderSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.ShippingProviderSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.ShippingProviderSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.ShippingProviderSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ShippingProviderSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.ShippingProviderSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>
+        }
+        update: {
+          args: Prisma.ShippingProviderSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ShippingProviderSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShippingProviderSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ShippingProviderSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.ShippingProviderSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingProviderSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.ShippingProviderSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShippingProviderSettings>
+        }
+        groupBy: {
+          args: Prisma.ShippingProviderSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShippingProviderSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShippingProviderSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShippingProviderSettingsCountAggregateOutputType> | number
         }
       }
     }
@@ -1146,6 +1221,28 @@ export const ColorScalarFieldEnum = {
 export type ColorScalarFieldEnum = (typeof ColorScalarFieldEnum)[keyof typeof ColorScalarFieldEnum]
 
 
+export const ShippingProviderSettingsScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  customerId: 'customerId',
+  originPostalCode: 'originPostalCode',
+  senderName: 'senderName',
+  senderEmail: 'senderEmail',
+  senderPhone: 'senderPhone',
+  senderStreet: 'senderStreet',
+  senderStreetNumber: 'senderStreetNumber',
+  senderFloor: 'senderFloor',
+  senderApartment: 'senderApartment',
+  senderCity: 'senderCity',
+  senderProvinceCode: 'senderProvinceCode',
+  senderPostalCode: 'senderPostalCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShippingProviderSettingsScalarFieldEnum = (typeof ShippingProviderSettingsScalarFieldEnum)[keyof typeof ShippingProviderSettingsScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
@@ -1163,6 +1260,10 @@ export const ProductScalarFieldEnum = {
   availableSizes: 'availableSizes',
   stampSizes: 'stampSizes',
   stampLocations: 'stampLocations',
+  shippingWeightGrams: 'shippingWeightGrams',
+  shippingHeightCm: 'shippingHeightCm',
+  shippingWidthCm: 'shippingWidthCm',
+  shippingLengthCm: 'shippingLengthCm',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -1201,6 +1302,18 @@ export const OrderScalarFieldEnum = {
   total: 'total',
   status: 'status',
   shippingAddress: 'shippingAddress',
+  shippingMethod: 'shippingMethod',
+  shippingCarrier: 'shippingCarrier',
+  shippingCost: 'shippingCost',
+  shippingQuotePayload: 'shippingQuotePayload',
+  shippingDimensions: 'shippingDimensions',
+  shippingStatus: 'shippingStatus',
+  shippingExternalId: 'shippingExternalId',
+  trackingNumber: 'trackingNumber',
+  shippingTrackingPayload: 'shippingTrackingPayload',
+  shippingImportedAt: 'shippingImportedAt',
+  shippingLastSyncAt: 'shippingLastSyncAt',
+  shippingError: 'shippingError',
   mpPreferenceId: 'mpPreferenceId',
   mpPaymentId: 'mpPaymentId',
   createdAt: 'createdAt',
@@ -1248,6 +1361,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1469,6 +1590,7 @@ export type GlobalOmitConfig = {
   category?: Prisma.CategoryOmit
   stampLocation?: Prisma.StampLocationOmit
   color?: Prisma.ColorOmit
+  shippingProviderSettings?: Prisma.ShippingProviderSettingsOmit
   product?: Prisma.ProductOmit
   sizeGuide?: Prisma.SizeGuideOmit
   cartItem?: Prisma.CartItemOmit

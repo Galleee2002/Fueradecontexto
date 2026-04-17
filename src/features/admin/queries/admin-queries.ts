@@ -35,7 +35,8 @@ export async function fetchAdminProducts(
       SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
         COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
         COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
-        p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
+        p.category, p.subcategory, p.active, p."shippingWeightGrams", p."shippingHeightCm",
+        p."shippingWidthCm", p."shippingLengthCm", p."createdAt", p."updatedAt",
         p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
       FROM "Product" p
       WHERE p."deletedAt" IS NULL
@@ -66,7 +67,8 @@ export async function fetchAdminProductById(id: string): Promise<AdminProduct | 
     SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
-           p.category, p.subcategory, p.active, p."createdAt", p."updatedAt",
+           p.category, p.subcategory, p.active, p."shippingWeightGrams", p."shippingHeightCm",
+           p."shippingWidthCm", p."shippingLengthCm", p."createdAt", p."updatedAt",
            p."availableColors", p."availableSizes", p."stampSizes", p."stampLocations"
     FROM "Product" p
     WHERE p.id = ${id} AND p."deletedAt" IS NULL
@@ -135,11 +137,20 @@ export async function fetchAdminOrders(
 
   const rows = await sql`
     SELECT o.id, o."customerEmail", o."customerName", o.total::float,
-           o.status, o."createdAt", COUNT(oi.id)::int AS "itemCount"
+           o.status, o."shippingCarrier", o."shippingCost"::float, o."shippingStatus", o."trackingNumber",
+           COALESCE(o."shippingTrackingPayload"->'events'->0->>'event', NULL) AS "shippingLastEvent",
+           COALESCE(
+             CASE
+               WHEN o."shippingMethod" = 'correo_argentino_home' THEN 'Correo Argentino a domicilio'
+               ELSE NULL
+             END,
+             'Sin envío cotizado'
+           ) AS "shippingMethodLabel",
+           o."createdAt", COUNT(oi.id)::int AS "itemCount"
     FROM "Order" o
     LEFT JOIN "OrderItem" oi ON oi."orderId" = o.id
     WHERE o."deletedAt" IS NULL
-    GROUP BY o.id
+    GROUP BY o.id, o."shippingCarrier", o."shippingCost", o."shippingStatus", o."trackingNumber", o."shippingTrackingPayload", o."shippingMethod"
     ORDER BY o."createdAt" DESC
     LIMIT ${ADMIN_PAGE_SIZE} OFFSET ${offset}
   `

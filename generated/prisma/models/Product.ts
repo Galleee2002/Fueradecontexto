@@ -29,11 +29,19 @@ export type AggregateProduct = {
 export type ProductAvgAggregateOutputType = {
   price: runtime.Decimal | null
   stock: number | null
+  shippingWeightGrams: number | null
+  shippingHeightCm: number | null
+  shippingWidthCm: number | null
+  shippingLengthCm: number | null
 }
 
 export type ProductSumAggregateOutputType = {
   price: runtime.Decimal | null
   stock: number | null
+  shippingWeightGrams: number | null
+  shippingHeightCm: number | null
+  shippingWidthCm: number | null
+  shippingLengthCm: number | null
 }
 
 export type ProductMinAggregateOutputType = {
@@ -47,6 +55,10 @@ export type ProductMinAggregateOutputType = {
   subcategory: string | null
   active: boolean | null
   stock: number | null
+  shippingWeightGrams: number | null
+  shippingHeightCm: number | null
+  shippingWidthCm: number | null
+  shippingLengthCm: number | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -63,6 +75,10 @@ export type ProductMaxAggregateOutputType = {
   subcategory: string | null
   active: boolean | null
   stock: number | null
+  shippingWeightGrams: number | null
+  shippingHeightCm: number | null
+  shippingWidthCm: number | null
+  shippingLengthCm: number | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -85,6 +101,10 @@ export type ProductCountAggregateOutputType = {
   availableSizes: number
   stampSizes: number
   stampLocations: number
+  shippingWeightGrams: number
+  shippingHeightCm: number
+  shippingWidthCm: number
+  shippingLengthCm: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -95,11 +115,19 @@ export type ProductCountAggregateOutputType = {
 export type ProductAvgAggregateInputType = {
   price?: true
   stock?: true
+  shippingWeightGrams?: true
+  shippingHeightCm?: true
+  shippingWidthCm?: true
+  shippingLengthCm?: true
 }
 
 export type ProductSumAggregateInputType = {
   price?: true
   stock?: true
+  shippingWeightGrams?: true
+  shippingHeightCm?: true
+  shippingWidthCm?: true
+  shippingLengthCm?: true
 }
 
 export type ProductMinAggregateInputType = {
@@ -113,6 +141,10 @@ export type ProductMinAggregateInputType = {
   subcategory?: true
   active?: true
   stock?: true
+  shippingWeightGrams?: true
+  shippingHeightCm?: true
+  shippingWidthCm?: true
+  shippingLengthCm?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -129,6 +161,10 @@ export type ProductMaxAggregateInputType = {
   subcategory?: true
   active?: true
   stock?: true
+  shippingWeightGrams?: true
+  shippingHeightCm?: true
+  shippingWidthCm?: true
+  shippingLengthCm?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -151,6 +187,10 @@ export type ProductCountAggregateInputType = {
   availableSizes?: true
   stampSizes?: true
   stampLocations?: true
+  shippingWeightGrams?: true
+  shippingHeightCm?: true
+  shippingWidthCm?: true
+  shippingLengthCm?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -260,6 +300,10 @@ export type ProductGroupByOutputType = {
   availableSizes: runtime.JsonValue
   stampSizes: runtime.JsonValue
   stampLocations: runtime.JsonValue
+  shippingWeightGrams: number | null
+  shippingHeightCm: number | null
+  shippingWidthCm: number | null
+  shippingLengthCm: number | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -305,6 +349,10 @@ export type ProductWhereInput = {
   availableSizes?: Prisma.JsonFilter<"Product">
   stampSizes?: Prisma.JsonFilter<"Product">
   stampLocations?: Prisma.JsonFilter<"Product">
+  shippingWeightGrams?: Prisma.IntNullableFilter<"Product"> | number | null
+  shippingHeightCm?: Prisma.IntNullableFilter<"Product"> | number | null
+  shippingWidthCm?: Prisma.IntNullableFilter<"Product"> | number | null
+  shippingLengthCm?: Prisma.IntNullableFilter<"Product"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
@@ -329,6 +377,10 @@ export type ProductOrderByWithRelationInput = {
   availableSizes?: Prisma.SortOrder
   stampSizes?: Prisma.SortOrder
   stampLocations?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -356,6 +408,10 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   availableSizes?: Prisma.JsonFilter<"Product">
   stampSizes?: Prisma.JsonFilter<"Product">
   stampLocations?: Prisma.JsonFilter<"Product">
+  shippingWeightGrams?: Prisma.IntNullableFilter<"Product"> | number | null
+  shippingHeightCm?: Prisma.IntNullableFilter<"Product"> | number | null
+  shippingWidthCm?: Prisma.IntNullableFilter<"Product"> | number | null
+  shippingLengthCm?: Prisma.IntNullableFilter<"Product"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
@@ -380,6 +436,10 @@ export type ProductOrderByWithAggregationInput = {
   availableSizes?: Prisma.SortOrder
   stampSizes?: Prisma.SortOrder
   stampLocations?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -410,6 +470,10 @@ export type ProductScalarWhereWithAggregatesInput = {
   availableSizes?: Prisma.JsonWithAggregatesFilter<"Product">
   stampSizes?: Prisma.JsonWithAggregatesFilter<"Product">
   stampLocations?: Prisma.JsonWithAggregatesFilter<"Product">
+  shippingWeightGrams?: Prisma.IntNullableWithAggregatesFilter<"Product"> | number | null
+  shippingHeightCm?: Prisma.IntNullableWithAggregatesFilter<"Product"> | number | null
+  shippingWidthCm?: Prisma.IntNullableWithAggregatesFilter<"Product"> | number | null
+  shippingLengthCm?: Prisma.IntNullableWithAggregatesFilter<"Product"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
@@ -432,6 +496,10 @@ export type ProductCreateInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -456,6 +524,10 @@ export type ProductUncheckedCreateInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -480,6 +552,10 @@ export type ProductUpdateInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -504,6 +580,10 @@ export type ProductUncheckedUpdateInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -528,6 +608,10 @@ export type ProductCreateManyInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -550,6 +634,10 @@ export type ProductUpdateManyMutationInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -572,6 +660,10 @@ export type ProductUncheckedUpdateManyInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -594,6 +686,10 @@ export type ProductCountOrderByAggregateInput = {
   availableSizes?: Prisma.SortOrder
   stampSizes?: Prisma.SortOrder
   stampLocations?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -602,6 +698,10 @@ export type ProductCountOrderByAggregateInput = {
 export type ProductAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   stock?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrder
 }
 
 export type ProductMaxOrderByAggregateInput = {
@@ -615,6 +715,10 @@ export type ProductMaxOrderByAggregateInput = {
   subcategory?: Prisma.SortOrder
   active?: Prisma.SortOrder
   stock?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -631,6 +735,10 @@ export type ProductMinOrderByAggregateInput = {
   subcategory?: Prisma.SortOrder
   active?: Prisma.SortOrder
   stock?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -639,6 +747,10 @@ export type ProductMinOrderByAggregateInput = {
 export type ProductSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   stock?: Prisma.SortOrder
+  shippingWeightGrams?: Prisma.SortOrder
+  shippingHeightCm?: Prisma.SortOrder
+  shippingWidthCm?: Prisma.SortOrder
+  shippingLengthCm?: Prisma.SortOrder
 }
 
 export type ProductScalarRelationFilter = {
@@ -664,6 +776,14 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type IntFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -719,6 +839,10 @@ export type ProductCreateWithoutCartItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -742,6 +866,10 @@ export type ProductUncheckedCreateWithoutCartItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -781,6 +909,10 @@ export type ProductUpdateWithoutCartItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -804,6 +936,10 @@ export type ProductUncheckedUpdateWithoutCartItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -827,6 +963,10 @@ export type ProductCreateWithoutOrderItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -850,6 +990,10 @@ export type ProductUncheckedCreateWithoutOrderItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: number | null
+  shippingHeightCm?: number | null
+  shippingWidthCm?: number | null
+  shippingLengthCm?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -889,6 +1033,10 @@ export type ProductUpdateWithoutOrderItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -912,6 +1060,10 @@ export type ProductUncheckedUpdateWithoutOrderItemsInput = {
   availableSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampSizes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   stampLocations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingWeightGrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingHeightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingWidthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingLengthCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -975,6 +1127,10 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   availableSizes?: boolean
   stampSizes?: boolean
   stampLocations?: boolean
+  shippingWeightGrams?: boolean
+  shippingHeightCm?: boolean
+  shippingWidthCm?: boolean
+  shippingLengthCm?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1000,6 +1156,10 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   availableSizes?: boolean
   stampSizes?: boolean
   stampLocations?: boolean
+  shippingWeightGrams?: boolean
+  shippingHeightCm?: boolean
+  shippingWidthCm?: boolean
+  shippingLengthCm?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1022,6 +1182,10 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   availableSizes?: boolean
   stampSizes?: boolean
   stampLocations?: boolean
+  shippingWeightGrams?: boolean
+  shippingHeightCm?: boolean
+  shippingWidthCm?: boolean
+  shippingLengthCm?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1044,12 +1208,16 @@ export type ProductSelectScalar = {
   availableSizes?: boolean
   stampSizes?: boolean
   stampLocations?: boolean
+  shippingWeightGrams?: boolean
+  shippingHeightCm?: boolean
+  shippingWidthCm?: boolean
+  shippingLengthCm?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "description" | "price" | "imageUrl" | "previewImages" | "images" | "category" | "subcategory" | "active" | "stock" | "availableColors" | "availableSizes" | "stampSizes" | "stampLocations" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "description" | "price" | "imageUrl" | "previewImages" | "images" | "category" | "subcategory" | "active" | "stock" | "availableColors" | "availableSizes" | "stampSizes" | "stampLocations" | "shippingWeightGrams" | "shippingHeightCm" | "shippingWidthCm" | "shippingLengthCm" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cartItems?: boolean | Prisma.Product$cartItemsArgs<ExtArgs>
   orderItems?: boolean | Prisma.Product$orderItemsArgs<ExtArgs>
@@ -1081,6 +1249,10 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     availableSizes: runtime.JsonValue
     stampSizes: runtime.JsonValue
     stampLocations: runtime.JsonValue
+    shippingWeightGrams: number | null
+    shippingHeightCm: number | null
+    shippingWidthCm: number | null
+    shippingLengthCm: number | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1525,6 +1697,10 @@ export interface ProductFieldRefs {
   readonly availableSizes: Prisma.FieldRef<"Product", 'Json'>
   readonly stampSizes: Prisma.FieldRef<"Product", 'Json'>
   readonly stampLocations: Prisma.FieldRef<"Product", 'Json'>
+  readonly shippingWeightGrams: Prisma.FieldRef<"Product", 'Int'>
+  readonly shippingHeightCm: Prisma.FieldRef<"Product", 'Int'>
+  readonly shippingWidthCm: Prisma.FieldRef<"Product", 'Int'>
+  readonly shippingLengthCm: Prisma.FieldRef<"Product", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Product", 'DateTime'>

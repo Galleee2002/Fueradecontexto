@@ -30,6 +30,25 @@ model Color {
   createdAt DateTime @default(now())
 }
 
+model ShippingProviderSettings {
+  id                 String   @id @default(cuid())
+  provider           String   @unique
+  customerId         String
+  originPostalCode   String
+  senderName         String
+  senderEmail        String
+  senderPhone        String
+  senderStreet       String
+  senderStreetNumber String
+  senderFloor        String   @default("")
+  senderApartment    String   @default("")
+  senderCity         String
+  senderProvinceCode String
+  senderPostalCode   String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
 model Product {
   id               String      @id @default(cuid())
   slug             String      @unique
@@ -47,6 +66,10 @@ model Product {
   availableSizes   Json        @default("[]")
   stampSizes       Json        @default("[]")
   stampLocations   Json        @default("[]")
+  shippingWeightGrams Int?
+  shippingHeightCm Int?
+  shippingWidthCm  Int?
+  shippingLengthCm Int?
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   deletedAt        DateTime?
@@ -81,6 +104,18 @@ model Order {
   total           Decimal     @db.Decimal(10, 2)
   status          String      @default("pending")
   shippingAddress Json
+  shippingMethod  String?
+  shippingCarrier String?
+  shippingCost    Decimal?    @db.Decimal(10, 2)
+  shippingQuotePayload Json?
+  shippingDimensions Json?
+  shippingStatus  String      @default("not_imported")
+  shippingExternalId String?
+  trackingNumber  String?
+  shippingTrackingPayload Json?
+  shippingImportedAt DateTime?
+  shippingLastSyncAt DateTime?
+  shippingError   String?
   mpPreferenceId  String?
   mpPaymentId     String?
   createdAt       DateTime    @default(now())

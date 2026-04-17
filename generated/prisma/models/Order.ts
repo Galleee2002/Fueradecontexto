@@ -28,10 +28,12 @@ export type AggregateOrder = {
 
 export type OrderAvgAggregateOutputType = {
   total: runtime.Decimal | null
+  shippingCost: runtime.Decimal | null
 }
 
 export type OrderSumAggregateOutputType = {
   total: runtime.Decimal | null
+  shippingCost: runtime.Decimal | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -42,6 +44,15 @@ export type OrderMinAggregateOutputType = {
   userId: string | null
   total: runtime.Decimal | null
   status: string | null
+  shippingMethod: string | null
+  shippingCarrier: string | null
+  shippingCost: runtime.Decimal | null
+  shippingStatus: string | null
+  shippingExternalId: string | null
+  trackingNumber: string | null
+  shippingImportedAt: Date | null
+  shippingLastSyncAt: Date | null
+  shippingError: string | null
   mpPreferenceId: string | null
   mpPaymentId: string | null
   createdAt: Date | null
@@ -57,6 +68,15 @@ export type OrderMaxAggregateOutputType = {
   userId: string | null
   total: runtime.Decimal | null
   status: string | null
+  shippingMethod: string | null
+  shippingCarrier: string | null
+  shippingCost: runtime.Decimal | null
+  shippingStatus: string | null
+  shippingExternalId: string | null
+  trackingNumber: string | null
+  shippingImportedAt: Date | null
+  shippingLastSyncAt: Date | null
+  shippingError: string | null
   mpPreferenceId: string | null
   mpPaymentId: string | null
   createdAt: Date | null
@@ -73,6 +93,18 @@ export type OrderCountAggregateOutputType = {
   total: number
   status: number
   shippingAddress: number
+  shippingMethod: number
+  shippingCarrier: number
+  shippingCost: number
+  shippingQuotePayload: number
+  shippingDimensions: number
+  shippingStatus: number
+  shippingExternalId: number
+  trackingNumber: number
+  shippingTrackingPayload: number
+  shippingImportedAt: number
+  shippingLastSyncAt: number
+  shippingError: number
   mpPreferenceId: number
   mpPaymentId: number
   createdAt: number
@@ -84,10 +116,12 @@ export type OrderCountAggregateOutputType = {
 
 export type OrderAvgAggregateInputType = {
   total?: true
+  shippingCost?: true
 }
 
 export type OrderSumAggregateInputType = {
   total?: true
+  shippingCost?: true
 }
 
 export type OrderMinAggregateInputType = {
@@ -98,6 +132,15 @@ export type OrderMinAggregateInputType = {
   userId?: true
   total?: true
   status?: true
+  shippingMethod?: true
+  shippingCarrier?: true
+  shippingCost?: true
+  shippingStatus?: true
+  shippingExternalId?: true
+  trackingNumber?: true
+  shippingImportedAt?: true
+  shippingLastSyncAt?: true
+  shippingError?: true
   mpPreferenceId?: true
   mpPaymentId?: true
   createdAt?: true
@@ -113,6 +156,15 @@ export type OrderMaxAggregateInputType = {
   userId?: true
   total?: true
   status?: true
+  shippingMethod?: true
+  shippingCarrier?: true
+  shippingCost?: true
+  shippingStatus?: true
+  shippingExternalId?: true
+  trackingNumber?: true
+  shippingImportedAt?: true
+  shippingLastSyncAt?: true
+  shippingError?: true
   mpPreferenceId?: true
   mpPaymentId?: true
   createdAt?: true
@@ -129,6 +181,18 @@ export type OrderCountAggregateInputType = {
   total?: true
   status?: true
   shippingAddress?: true
+  shippingMethod?: true
+  shippingCarrier?: true
+  shippingCost?: true
+  shippingQuotePayload?: true
+  shippingDimensions?: true
+  shippingStatus?: true
+  shippingExternalId?: true
+  trackingNumber?: true
+  shippingTrackingPayload?: true
+  shippingImportedAt?: true
+  shippingLastSyncAt?: true
+  shippingError?: true
   mpPreferenceId?: true
   mpPaymentId?: true
   createdAt?: true
@@ -232,6 +296,18 @@ export type OrderGroupByOutputType = {
   total: runtime.Decimal
   status: string
   shippingAddress: runtime.JsonValue
+  shippingMethod: string | null
+  shippingCarrier: string | null
+  shippingCost: runtime.Decimal | null
+  shippingQuotePayload: runtime.JsonValue | null
+  shippingDimensions: runtime.JsonValue | null
+  shippingStatus: string
+  shippingExternalId: string | null
+  trackingNumber: string | null
+  shippingTrackingPayload: runtime.JsonValue | null
+  shippingImportedAt: Date | null
+  shippingLastSyncAt: Date | null
+  shippingError: string | null
   mpPreferenceId: string | null
   mpPaymentId: string | null
   createdAt: Date
@@ -271,6 +347,18 @@ export type OrderWhereInput = {
   total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFilter<"Order"> | string
   shippingAddress?: Prisma.JsonFilter<"Order">
+  shippingMethod?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingCarrier?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingCost?: Prisma.DecimalNullableFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.JsonNullableFilter<"Order">
+  shippingDimensions?: Prisma.JsonNullableFilter<"Order">
+  shippingStatus?: Prisma.StringFilter<"Order"> | string
+  shippingExternalId?: Prisma.StringNullableFilter<"Order"> | string | null
+  trackingNumber?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingTrackingPayload?: Prisma.JsonNullableFilter<"Order">
+  shippingImportedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  shippingLastSyncAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  shippingError?: Prisma.StringNullableFilter<"Order"> | string | null
   mpPreferenceId?: Prisma.StringNullableFilter<"Order"> | string | null
   mpPaymentId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -289,6 +377,18 @@ export type OrderOrderByWithRelationInput = {
   total?: Prisma.SortOrder
   status?: Prisma.SortOrder
   shippingAddress?: Prisma.SortOrder
+  shippingMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingCarrier?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingCost?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingQuotePayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingDimensions?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingStatus?: Prisma.SortOrder
+  shippingExternalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  trackingNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingTrackingPayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingImportedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingLastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingError?: Prisma.SortOrderInput | Prisma.SortOrder
   mpPreferenceId?: Prisma.SortOrderInput | Prisma.SortOrder
   mpPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -310,6 +410,18 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFilter<"Order"> | string
   shippingAddress?: Prisma.JsonFilter<"Order">
+  shippingMethod?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingCarrier?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingCost?: Prisma.DecimalNullableFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.JsonNullableFilter<"Order">
+  shippingDimensions?: Prisma.JsonNullableFilter<"Order">
+  shippingStatus?: Prisma.StringFilter<"Order"> | string
+  shippingExternalId?: Prisma.StringNullableFilter<"Order"> | string | null
+  trackingNumber?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingTrackingPayload?: Prisma.JsonNullableFilter<"Order">
+  shippingImportedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  shippingLastSyncAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  shippingError?: Prisma.StringNullableFilter<"Order"> | string | null
   mpPreferenceId?: Prisma.StringNullableFilter<"Order"> | string | null
   mpPaymentId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -328,6 +440,18 @@ export type OrderOrderByWithAggregationInput = {
   total?: Prisma.SortOrder
   status?: Prisma.SortOrder
   shippingAddress?: Prisma.SortOrder
+  shippingMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingCarrier?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingCost?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingQuotePayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingDimensions?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingStatus?: Prisma.SortOrder
+  shippingExternalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  trackingNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingTrackingPayload?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingImportedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingLastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingError?: Prisma.SortOrderInput | Prisma.SortOrder
   mpPreferenceId?: Prisma.SortOrderInput | Prisma.SortOrder
   mpPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -352,6 +476,18 @@ export type OrderScalarWhereWithAggregatesInput = {
   total?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringWithAggregatesFilter<"Order"> | string
   shippingAddress?: Prisma.JsonWithAggregatesFilter<"Order">
+  shippingMethod?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  shippingCarrier?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  shippingCost?: Prisma.DecimalNullableWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.JsonNullableWithAggregatesFilter<"Order">
+  shippingDimensions?: Prisma.JsonNullableWithAggregatesFilter<"Order">
+  shippingStatus?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  shippingExternalId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  trackingNumber?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  shippingTrackingPayload?: Prisma.JsonNullableWithAggregatesFilter<"Order">
+  shippingImportedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  shippingLastSyncAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  shippingError?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   mpPreferenceId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   mpPaymentId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -367,6 +503,18 @@ export type OrderCreateInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -385,6 +533,18 @@ export type OrderUncheckedCreateInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -401,6 +561,18 @@ export type OrderUpdateInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -419,6 +591,18 @@ export type OrderUncheckedUpdateInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -436,6 +620,18 @@ export type OrderCreateManyInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -451,6 +647,18 @@ export type OrderUpdateManyMutationInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -467,6 +675,18 @@ export type OrderUncheckedUpdateManyInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -483,6 +703,18 @@ export type OrderCountOrderByAggregateInput = {
   total?: Prisma.SortOrder
   status?: Prisma.SortOrder
   shippingAddress?: Prisma.SortOrder
+  shippingMethod?: Prisma.SortOrder
+  shippingCarrier?: Prisma.SortOrder
+  shippingCost?: Prisma.SortOrder
+  shippingQuotePayload?: Prisma.SortOrder
+  shippingDimensions?: Prisma.SortOrder
+  shippingStatus?: Prisma.SortOrder
+  shippingExternalId?: Prisma.SortOrder
+  trackingNumber?: Prisma.SortOrder
+  shippingTrackingPayload?: Prisma.SortOrder
+  shippingImportedAt?: Prisma.SortOrder
+  shippingLastSyncAt?: Prisma.SortOrder
+  shippingError?: Prisma.SortOrder
   mpPreferenceId?: Prisma.SortOrder
   mpPaymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -492,6 +724,7 @@ export type OrderCountOrderByAggregateInput = {
 
 export type OrderAvgOrderByAggregateInput = {
   total?: Prisma.SortOrder
+  shippingCost?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -502,6 +735,15 @@ export type OrderMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   total?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shippingMethod?: Prisma.SortOrder
+  shippingCarrier?: Prisma.SortOrder
+  shippingCost?: Prisma.SortOrder
+  shippingStatus?: Prisma.SortOrder
+  shippingExternalId?: Prisma.SortOrder
+  trackingNumber?: Prisma.SortOrder
+  shippingImportedAt?: Prisma.SortOrder
+  shippingLastSyncAt?: Prisma.SortOrder
+  shippingError?: Prisma.SortOrder
   mpPreferenceId?: Prisma.SortOrder
   mpPaymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -517,6 +759,15 @@ export type OrderMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   total?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shippingMethod?: Prisma.SortOrder
+  shippingCarrier?: Prisma.SortOrder
+  shippingCost?: Prisma.SortOrder
+  shippingStatus?: Prisma.SortOrder
+  shippingExternalId?: Prisma.SortOrder
+  trackingNumber?: Prisma.SortOrder
+  shippingImportedAt?: Prisma.SortOrder
+  shippingLastSyncAt?: Prisma.SortOrder
+  shippingError?: Prisma.SortOrder
   mpPreferenceId?: Prisma.SortOrder
   mpPaymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -526,6 +777,7 @@ export type OrderMinOrderByAggregateInput = {
 
 export type OrderSumOrderByAggregateInput = {
   total?: Prisma.SortOrder
+  shippingCost?: Prisma.SortOrder
 }
 
 export type OrderScalarRelationFilter = {
@@ -541,6 +793,14 @@ export type OrderListRelationFilter = {
 
 export type OrderOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type OrderCreateNestedOneWithoutItemsInput = {
@@ -607,6 +867,18 @@ export type OrderCreateWithoutItemsInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -624,6 +896,18 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -655,6 +939,18 @@ export type OrderUpdateWithoutItemsInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -672,6 +968,18 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +995,18 @@ export type OrderCreateWithoutUserInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -703,6 +1023,18 @@ export type OrderUncheckedCreateWithoutUserInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -749,6 +1081,18 @@ export type OrderScalarWhereInput = {
   total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFilter<"Order"> | string
   shippingAddress?: Prisma.JsonFilter<"Order">
+  shippingMethod?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingCarrier?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingCost?: Prisma.DecimalNullableFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.JsonNullableFilter<"Order">
+  shippingDimensions?: Prisma.JsonNullableFilter<"Order">
+  shippingStatus?: Prisma.StringFilter<"Order"> | string
+  shippingExternalId?: Prisma.StringNullableFilter<"Order"> | string | null
+  trackingNumber?: Prisma.StringNullableFilter<"Order"> | string | null
+  shippingTrackingPayload?: Prisma.JsonNullableFilter<"Order">
+  shippingImportedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  shippingLastSyncAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  shippingError?: Prisma.StringNullableFilter<"Order"> | string | null
   mpPreferenceId?: Prisma.StringNullableFilter<"Order"> | string | null
   mpPaymentId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -764,6 +1108,18 @@ export type OrderCreateManyUserInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
   shippingAddress: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: string | null
+  shippingCarrier?: string | null
+  shippingCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: string
+  shippingExternalId?: string | null
+  trackingNumber?: string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Date | string | null
+  shippingLastSyncAt?: Date | string | null
+  shippingError?: string | null
   mpPreferenceId?: string | null
   mpPaymentId?: string | null
   createdAt?: Date | string
@@ -779,6 +1135,18 @@ export type OrderUpdateWithoutUserInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -795,6 +1163,18 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -811,6 +1191,18 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shippingAddress?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCarrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  shippingQuotePayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingDimensions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  shippingExternalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shippingTrackingPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  shippingImportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingLastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  shippingError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPreferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mpPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -858,6 +1250,18 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   total?: boolean
   status?: boolean
   shippingAddress?: boolean
+  shippingMethod?: boolean
+  shippingCarrier?: boolean
+  shippingCost?: boolean
+  shippingQuotePayload?: boolean
+  shippingDimensions?: boolean
+  shippingStatus?: boolean
+  shippingExternalId?: boolean
+  trackingNumber?: boolean
+  shippingTrackingPayload?: boolean
+  shippingImportedAt?: boolean
+  shippingLastSyncAt?: boolean
+  shippingError?: boolean
   mpPreferenceId?: boolean
   mpPaymentId?: boolean
   createdAt?: boolean
@@ -877,6 +1281,18 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   total?: boolean
   status?: boolean
   shippingAddress?: boolean
+  shippingMethod?: boolean
+  shippingCarrier?: boolean
+  shippingCost?: boolean
+  shippingQuotePayload?: boolean
+  shippingDimensions?: boolean
+  shippingStatus?: boolean
+  shippingExternalId?: boolean
+  trackingNumber?: boolean
+  shippingTrackingPayload?: boolean
+  shippingImportedAt?: boolean
+  shippingLastSyncAt?: boolean
+  shippingError?: boolean
   mpPreferenceId?: boolean
   mpPaymentId?: boolean
   createdAt?: boolean
@@ -894,6 +1310,18 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   total?: boolean
   status?: boolean
   shippingAddress?: boolean
+  shippingMethod?: boolean
+  shippingCarrier?: boolean
+  shippingCost?: boolean
+  shippingQuotePayload?: boolean
+  shippingDimensions?: boolean
+  shippingStatus?: boolean
+  shippingExternalId?: boolean
+  trackingNumber?: boolean
+  shippingTrackingPayload?: boolean
+  shippingImportedAt?: boolean
+  shippingLastSyncAt?: boolean
+  shippingError?: boolean
   mpPreferenceId?: boolean
   mpPaymentId?: boolean
   createdAt?: boolean
@@ -911,6 +1339,18 @@ export type OrderSelectScalar = {
   total?: boolean
   status?: boolean
   shippingAddress?: boolean
+  shippingMethod?: boolean
+  shippingCarrier?: boolean
+  shippingCost?: boolean
+  shippingQuotePayload?: boolean
+  shippingDimensions?: boolean
+  shippingStatus?: boolean
+  shippingExternalId?: boolean
+  trackingNumber?: boolean
+  shippingTrackingPayload?: boolean
+  shippingImportedAt?: boolean
+  shippingLastSyncAt?: boolean
+  shippingError?: boolean
   mpPreferenceId?: boolean
   mpPaymentId?: boolean
   createdAt?: boolean
@@ -918,7 +1358,7 @@ export type OrderSelectScalar = {
   deletedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerEmail" | "customerName" | "customerPhone" | "userId" | "total" | "status" | "shippingAddress" | "mpPreferenceId" | "mpPaymentId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerEmail" | "customerName" | "customerPhone" | "userId" | "total" | "status" | "shippingAddress" | "shippingMethod" | "shippingCarrier" | "shippingCost" | "shippingQuotePayload" | "shippingDimensions" | "shippingStatus" | "shippingExternalId" | "trackingNumber" | "shippingTrackingPayload" | "shippingImportedAt" | "shippingLastSyncAt" | "shippingError" | "mpPreferenceId" | "mpPaymentId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
@@ -946,6 +1386,18 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     total: runtime.Decimal
     status: string
     shippingAddress: runtime.JsonValue
+    shippingMethod: string | null
+    shippingCarrier: string | null
+    shippingCost: runtime.Decimal | null
+    shippingQuotePayload: runtime.JsonValue | null
+    shippingDimensions: runtime.JsonValue | null
+    shippingStatus: string
+    shippingExternalId: string | null
+    trackingNumber: string | null
+    shippingTrackingPayload: runtime.JsonValue | null
+    shippingImportedAt: Date | null
+    shippingLastSyncAt: Date | null
+    shippingError: string | null
     mpPreferenceId: string | null
     mpPaymentId: string | null
     createdAt: Date
@@ -1384,6 +1836,18 @@ export interface OrderFieldRefs {
   readonly total: Prisma.FieldRef<"Order", 'Decimal'>
   readonly status: Prisma.FieldRef<"Order", 'String'>
   readonly shippingAddress: Prisma.FieldRef<"Order", 'Json'>
+  readonly shippingMethod: Prisma.FieldRef<"Order", 'String'>
+  readonly shippingCarrier: Prisma.FieldRef<"Order", 'String'>
+  readonly shippingCost: Prisma.FieldRef<"Order", 'Decimal'>
+  readonly shippingQuotePayload: Prisma.FieldRef<"Order", 'Json'>
+  readonly shippingDimensions: Prisma.FieldRef<"Order", 'Json'>
+  readonly shippingStatus: Prisma.FieldRef<"Order", 'String'>
+  readonly shippingExternalId: Prisma.FieldRef<"Order", 'String'>
+  readonly trackingNumber: Prisma.FieldRef<"Order", 'String'>
+  readonly shippingTrackingPayload: Prisma.FieldRef<"Order", 'Json'>
+  readonly shippingImportedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly shippingLastSyncAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly shippingError: Prisma.FieldRef<"Order", 'String'>
   readonly mpPreferenceId: Prisma.FieldRef<"Order", 'String'>
   readonly mpPaymentId: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>

@@ -33,6 +33,11 @@ export type StampLocation = Prisma.StampLocationModel
  */
 export type Color = Prisma.ColorModel
 /**
+ * Model ShippingProviderSettings
+ * 
+ */
+export type ShippingProviderSettings = Prisma.ShippingProviderSettingsModel
+/**
  * Model Product
  * 
  */

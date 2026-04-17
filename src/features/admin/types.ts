@@ -13,6 +13,10 @@ export interface AdminProduct {
   description: string | null
   price: number
   stock: number
+  shippingWeightGrams: number | null
+  shippingHeightCm: number | null
+  shippingWidthCm: number | null
+  shippingLengthCm: number | null
   imageUrl: string
   images: ProductImage[]
   category: string
@@ -41,6 +45,12 @@ export interface AdminOrder {
   customerName: string
   total: number
   status: OrderStatus
+  shippingCarrier: string | null
+  shippingCost: number | null
+  shippingStatus: string
+  trackingNumber: string | null
+  shippingMethodLabel: string
+  shippingLastEvent: string | null
   createdAt: Date
   itemCount: number
 }

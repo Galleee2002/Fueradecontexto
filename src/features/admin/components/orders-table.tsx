@@ -1,7 +1,10 @@
 import { AdminPagination } from './admin-pagination'
 import { DeleteOrderButton } from './delete-order-button'
 import { ORDER_STATUS_LABELS, ORDER_STATUS_STYLES } from '@/shared/config/orders'
+import { ORDER_SHIPPING_STATUS_LABELS, ORDER_SHIPPING_STATUS_STYLES } from '@/shared/config/shipping'
 import type { AdminOrder } from '../types'
+import { SyncOrderTrackingButton } from './sync-order-tracking-button'
+import { formatPrice } from '@/shared/lib/format-price'
 
 interface OrdersTableProps {
   orders: AdminOrder[]
@@ -40,6 +43,9 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
               <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Estado
               </th>
+              <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden lg:table-cell">
+                Envío
+              </th>
               <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground hidden md:table-cell">
                 Fecha
               </th>
@@ -53,6 +59,12 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
               const statusClass =
                 ORDER_STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
               const statusLabel = ORDER_STATUS_LABELS[order.status] ?? order.status
+              const shippingStatusClass =
+                ORDER_SHIPPING_STATUS_STYLES[order.shippingStatus as keyof typeof ORDER_SHIPPING_STATUS_STYLES] ??
+                'bg-surface text-muted-foreground border-border'
+              const shippingStatusLabel =
+                ORDER_SHIPPING_STATUS_LABELS[order.shippingStatus as keyof typeof ORDER_SHIPPING_STATUS_LABELS] ??
+                order.shippingStatus
 
               return (
                 <tr key={order.id} className="group hover:bg-surface/60 transition-colors">
@@ -80,13 +92,30 @@ export function OrdersTable({ orders, currentPage, totalPages, total }: OrdersTa
                       {statusLabel}
                     </span>
                   </td>
+                  <td className="py-3 px-4 hidden lg:table-cell">
+                    <div className="space-y-1">
+                      <p className="text-xs font-medium text-foreground">{order.shippingMethodLabel}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {order.shippingCost != null ? formatPrice(order.shippingCost) : 'Sin cotización'}
+                      </p>
+                      <span
+                        className={`inline-block border px-2 py-0.5 text-2xs font-medium tracking-wide uppercase ${shippingStatusClass}`}
+                      >
+                        {shippingStatusLabel}
+                      </span>
+                      <p className="text-xs text-muted-foreground">
+                        {order.trackingNumber ?? order.shippingLastEvent ?? 'Tracking pendiente'}
+                      </p>
+                    </div>
+                  </td>
                   <td className="py-3 px-4 hidden md:table-cell">
                     <span className="text-xs text-muted-foreground">
                       {new Date(order.createdAt).toLocaleDateString('es-AR')}
                     </span>
                   </td>
                   <td className="w-24 py-3 px-4">
-                    <div className="flex items-center justify-end">
+                    <div className="flex items-center justify-end gap-1">
+                      <SyncOrderTrackingButton id={order.id} disabled={!order.trackingNumber} />
                       <DeleteOrderButton id={order.id} customerName={order.customerName} />
                     </div>
                   </td>

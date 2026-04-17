@@ -54,6 +54,7 @@ export const ModelName = {
   Category: 'Category',
   StampLocation: 'StampLocation',
   Color: 'Color',
+  ShippingProviderSettings: 'ShippingProviderSettings',
   Product: 'Product',
   SizeGuide: 'SizeGuide',
   CartItem: 'CartItem',
@@ -107,6 +108,28 @@ export const ColorScalarFieldEnum = {
 export type ColorScalarFieldEnum = (typeof ColorScalarFieldEnum)[keyof typeof ColorScalarFieldEnum]
 
 
+export const ShippingProviderSettingsScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  customerId: 'customerId',
+  originPostalCode: 'originPostalCode',
+  senderName: 'senderName',
+  senderEmail: 'senderEmail',
+  senderPhone: 'senderPhone',
+  senderStreet: 'senderStreet',
+  senderStreetNumber: 'senderStreetNumber',
+  senderFloor: 'senderFloor',
+  senderApartment: 'senderApartment',
+  senderCity: 'senderCity',
+  senderProvinceCode: 'senderProvinceCode',
+  senderPostalCode: 'senderPostalCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShippingProviderSettingsScalarFieldEnum = (typeof ShippingProviderSettingsScalarFieldEnum)[keyof typeof ShippingProviderSettingsScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
@@ -124,6 +147,10 @@ export const ProductScalarFieldEnum = {
   availableSizes: 'availableSizes',
   stampSizes: 'stampSizes',
   stampLocations: 'stampLocations',
+  shippingWeightGrams: 'shippingWeightGrams',
+  shippingHeightCm: 'shippingHeightCm',
+  shippingWidthCm: 'shippingWidthCm',
+  shippingLengthCm: 'shippingLengthCm',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -162,6 +189,18 @@ export const OrderScalarFieldEnum = {
   total: 'total',
   status: 'status',
   shippingAddress: 'shippingAddress',
+  shippingMethod: 'shippingMethod',
+  shippingCarrier: 'shippingCarrier',
+  shippingCost: 'shippingCost',
+  shippingQuotePayload: 'shippingQuotePayload',
+  shippingDimensions: 'shippingDimensions',
+  shippingStatus: 'shippingStatus',
+  shippingExternalId: 'shippingExternalId',
+  trackingNumber: 'trackingNumber',
+  shippingTrackingPayload: 'shippingTrackingPayload',
+  shippingImportedAt: 'shippingImportedAt',
+  shippingLastSyncAt: 'shippingLastSyncAt',
+  shippingError: 'shippingError',
   mpPreferenceId: 'mpPreferenceId',
   mpPaymentId: 'mpPaymentId',
   createdAt: 'createdAt',
@@ -209,6 +248,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {

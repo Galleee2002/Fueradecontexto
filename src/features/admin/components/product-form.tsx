@@ -41,6 +41,10 @@ export function ProductForm({
   const [description, setDescription] = useState(product?.description ?? '')
   const [price, setPrice] = useState(product?.price?.toString() ?? '')
   const [stock, setStock] = useState(product?.stock?.toString() ?? '0')
+  const [shippingWeightGrams, setShippingWeightGrams] = useState(product?.shippingWeightGrams?.toString() ?? '')
+  const [shippingHeightCm, setShippingHeightCm] = useState(product?.shippingHeightCm?.toString() ?? '')
+  const [shippingWidthCm, setShippingWidthCm] = useState(product?.shippingWidthCm?.toString() ?? '')
+  const [shippingLengthCm, setShippingLengthCm] = useState(product?.shippingLengthCm?.toString() ?? '')
   const [category, setCategory] = useState(product?.category ?? '')
   const [customCategory, setCustomCategory] = useState(
     product?.category && !categories.some(c => c.name === product.category) ? product.category : '',
@@ -175,6 +179,10 @@ export function ProductForm({
       description: description.trim() || undefined,
       price: Number(price),
       stock: Number(stock),
+      shippingWeightGrams: Number(shippingWeightGrams),
+      shippingHeightCm: Number(shippingHeightCm),
+      shippingWidthCm: Number(shippingWidthCm),
+      shippingLengthCm: Number(shippingLengthCm),
       images: normalizedImages,
       category: effectiveCategory,
       subcategory: selectedCategorySubs.length > 0 ? subcategory : '',
@@ -439,6 +447,70 @@ export function ProductForm({
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="bg-background border border-border p-6 space-y-6">
+            <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+              Logística de envío
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <ProductFormField label="Peso (gramos)" error={errors.shippingWeightGrams?.[0]} required>
+                <input
+                  type="number"
+                  value={shippingWeightGrams}
+                  onChange={(e) => setShippingWeightGrams(e.target.value)}
+                  min="1"
+                  step="1"
+                  inputMode="numeric"
+                  placeholder="500"
+                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
+                />
+              </ProductFormField>
+
+              <ProductFormField label="Alto (cm)" error={errors.shippingHeightCm?.[0]} required>
+                <input
+                  type="number"
+                  value={shippingHeightCm}
+                  onChange={(e) => setShippingHeightCm(e.target.value)}
+                  min="1"
+                  step="1"
+                  inputMode="numeric"
+                  placeholder="5"
+                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
+                />
+              </ProductFormField>
+
+              <ProductFormField label="Ancho (cm)" error={errors.shippingWidthCm?.[0]} required>
+                <input
+                  type="number"
+                  value={shippingWidthCm}
+                  onChange={(e) => setShippingWidthCm(e.target.value)}
+                  min="1"
+                  step="1"
+                  inputMode="numeric"
+                  placeholder="25"
+                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
+                />
+              </ProductFormField>
+
+              <ProductFormField label="Largo (cm)" error={errors.shippingLengthCm?.[0]} required>
+                <input
+                  type="number"
+                  value={shippingLengthCm}
+                  onChange={(e) => setShippingLengthCm(e.target.value)}
+                  min="1"
+                  step="1"
+                  inputMode="numeric"
+                  placeholder="30"
+                  className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground tabular-nums"
+                />
+              </ProductFormField>
+            </div>
+
+            <p className="text-xs text-muted-foreground">
+              Estos datos se usan para cotizar e importar el envío con Correo Argentino.
+            </p>
           </div>
 
           <ProductImagesManager

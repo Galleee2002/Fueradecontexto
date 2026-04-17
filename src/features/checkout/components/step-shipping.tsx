@@ -1,10 +1,10 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { z } from 'zod'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
-import type { ShippingData } from '../types'
+import type { ShippingData, ShippingFormErrors } from '../types'
+import { shippingSchema } from '../schemas/checkout-schema'
 
 const PROVINCIAS = [
   'Buenos Aires',
@@ -33,19 +33,9 @@ const PROVINCIAS = [
   'Tucumán',
 ]
 
-const shippingSchema = z.object({
-  calle: z.string().min(1, 'La calle es requerida'),
-  numero: z.string().min(1, 'El número es requerido'),
-  pisoDpto: z.string(),
-  ciudad: z.string().min(1, 'La ciudad es requerida'),
-  provincia: z.string().min(1, 'La provincia es requerida'),
-  codigoPostal: z.string().min(4, 'El código postal es requerido'),
-})
-
-type FormErrors = Partial<Record<keyof ShippingData, string>>
-
 interface StepShippingProps {
   defaultValues: ShippingData | null
+  serverErrors?: ShippingFormErrors
   onNext: (data: ShippingData) => void
   onBack: () => void
 }
@@ -55,7 +45,7 @@ const inputBase =
 
 const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
 
-export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProps) {
+export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: StepShippingProps) {
   const formRef = useRef<HTMLFormElement>(null)
   const [values, setValues] = useState<ShippingData>({
     calle: defaultValues?.calle ?? '',
@@ -65,7 +55,18 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
     provincia: defaultValues?.provincia ?? '',
     codigoPostal: defaultValues?.codigoPostal ?? '',
   })
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [errors, setErrors] = useState<ShippingFormErrors>({})
+
+  useEffect(() => {
+    if (!serverErrors || Object.keys(serverErrors).length === 0) {
+      return
+    }
+
+    setErrors((current) => ({ ...current, ...serverErrors }))
+    requestAnimationFrame(() => {
+      formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+    })
+  }, [serverErrors])
 
   function handleChange(field: keyof ShippingData, value: string) {
     setValues((prev) => ({ ...prev, [field]: value }))
@@ -77,7 +78,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
     const result = shippingSchema.safeParse(values)
 
     if (!result.success) {
-      const fieldErrors: FormErrors = {}
+      const fieldErrors: ShippingFormErrors = {}
       for (const issue of result.error.issues) {
         const key = issue.path[0] as keyof ShippingData
         if (!fieldErrors[key]) fieldErrors[key] = issue.message
@@ -187,7 +188,7 @@ export function StepShipping({ defaultValues, onNext, onBack }: StepShippingProp
               autoComplete="postal-code"
               value={values.codigoPostal}
               onChange={(e) => handleChange('codigoPostal', e.target.value)}
-              placeholder="C1043…"
+              placeholder="1414 o C1414ABC"
               aria-invalid={Boolean(errors.codigoPostal)}
               aria-describedby={errors.codigoPostal ? 'shipping-cp-error' : undefined}
               className={cn(inputBase, errors.codigoPostal && 'border-error focus-visible:ring-error')}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Package, ShoppingBag, Users, LayoutGrid, ArrowLeft, Layers, Ruler, Palette } from 'lucide-react'
+import { Package, ShoppingBag, Users, LayoutGrid, ArrowLeft, Layers, Ruler, Palette, Truck } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 
 const NAV_LINKS = [
@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: 'Categorías', href: '/admin/categorias', icon: Layers },
   { label: 'Colores', href: '/admin/colores', icon: Palette },
   { label: 'Guía de talles', href: '/admin/guia-talles', icon: Ruler },
+  { label: 'Envíos', href: '/admin/envios', icon: Truck },
   { label: 'Órdenes', href: '/admin/ordenes', icon: ShoppingBag },
   { label: 'Clientes', href: '/admin/clientes', icon: Users },
 ]

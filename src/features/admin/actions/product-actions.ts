@@ -21,6 +21,10 @@ export async function createAdminProduct(input: ProductInput) {
     description,
     price,
     stock,
+    shippingWeightGrams,
+    shippingHeightCm,
+    shippingWidthCm,
+    shippingLengthCm,
     images,
     category,
     subcategory,
@@ -38,30 +42,30 @@ export async function createAdminProduct(input: ProductInput) {
 
   if (hasImages && hasPreviewImages) {
     await sql`
-      INSERT INTO "Product" (id, slug, name, description, price, stock, "imageUrl", "previewImages", "images", category, subcategory, active,
+      INSERT INTO "Product" (id, slug, name, description, price, stock, "shippingWeightGrams", "shippingHeightCm", "shippingWidthCm", "shippingLengthCm", "imageUrl", "previewImages", "images", category, subcategory, active,
                             "availableColors", "availableSizes", "stampSizes", "stampLocations",
                             "createdAt", "updatedAt")
-      VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${JSON.stringify(images)}::jsonb, ${category}, ${subcategory}, ${active},
+      VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${shippingWeightGrams}, ${shippingHeightCm}, ${shippingWidthCm}, ${shippingLengthCm}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${JSON.stringify(images)}::jsonb, ${category}, ${subcategory}, ${active},
               ${JSON.stringify(availableColors)}::jsonb, ${JSON.stringify(availableSizes)}::jsonb,
               ${JSON.stringify(stampSizes)}::jsonb, ${JSON.stringify(stampLocations)}::jsonb,
               NOW(), NOW())
     `
   } else if (hasPreviewImages) {
     await sql`
-      INSERT INTO "Product" (id, slug, name, description, price, stock, "imageUrl", "previewImages", category, subcategory, active,
+      INSERT INTO "Product" (id, slug, name, description, price, stock, "shippingWeightGrams", "shippingHeightCm", "shippingWidthCm", "shippingLengthCm", "imageUrl", "previewImages", category, subcategory, active,
                             "availableColors", "availableSizes", "stampSizes", "stampLocations",
                             "createdAt", "updatedAt")
-      VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${subcategory}, ${active},
+      VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${shippingWeightGrams}, ${shippingHeightCm}, ${shippingWidthCm}, ${shippingLengthCm}, ${imageUrl}, ${JSON.stringify(previewImages)}::jsonb, ${category}, ${subcategory}, ${active},
               ${JSON.stringify(availableColors)}::jsonb, ${JSON.stringify(availableSizes)}::jsonb,
               ${JSON.stringify(stampSizes)}::jsonb, ${JSON.stringify(stampLocations)}::jsonb,
               NOW(), NOW())
     `
   } else {
     await sql`
-      INSERT INTO "Product" (id, slug, name, description, price, stock, "imageUrl", category, subcategory, active,
+      INSERT INTO "Product" (id, slug, name, description, price, stock, "shippingWeightGrams", "shippingHeightCm", "shippingWidthCm", "shippingLengthCm", "imageUrl", category, subcategory, active,
                             "availableColors", "availableSizes", "stampSizes", "stampLocations",
                             "createdAt", "updatedAt")
-      VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${imageUrl}, ${category}, ${subcategory}, ${active},
+      VALUES (${id}, ${slug}, ${name}, ${description ?? null}, ${price}, ${stock}, ${shippingWeightGrams}, ${shippingHeightCm}, ${shippingWidthCm}, ${shippingLengthCm}, ${imageUrl}, ${category}, ${subcategory}, ${active},
               ${JSON.stringify(availableColors)}::jsonb, ${JSON.stringify(availableSizes)}::jsonb,
               ${JSON.stringify(stampSizes)}::jsonb, ${JSON.stringify(stampLocations)}::jsonb,
               NOW(), NOW())
@@ -86,6 +90,10 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
     description,
     price,
     stock,
+    shippingWeightGrams,
+    shippingHeightCm,
+    shippingWidthCm,
+    shippingLengthCm,
     images,
     category,
     subcategory,
@@ -108,6 +116,10 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
         description = ${description ?? null},
         price = ${price},
         stock = ${stock},
+        "shippingWeightGrams" = ${shippingWeightGrams},
+        "shippingHeightCm" = ${shippingHeightCm},
+        "shippingWidthCm" = ${shippingWidthCm},
+        "shippingLengthCm" = ${shippingLengthCm},
         "imageUrl" = ${imageUrl},
         "previewImages" = ${JSON.stringify(previewImages)}::jsonb,
         "images" = ${JSON.stringify(images)}::jsonb,
@@ -130,6 +142,10 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
         description = ${description ?? null},
         price = ${price},
         stock = ${stock},
+        "shippingWeightGrams" = ${shippingWeightGrams},
+        "shippingHeightCm" = ${shippingHeightCm},
+        "shippingWidthCm" = ${shippingWidthCm},
+        "shippingLengthCm" = ${shippingLengthCm},
         "imageUrl" = ${imageUrl},
         "previewImages" = ${JSON.stringify(previewImages)}::jsonb,
         category = ${category},
@@ -151,6 +167,10 @@ export async function updateAdminProduct(id: string, input: ProductInput) {
         description = ${description ?? null},
         price = ${price},
         stock = ${stock},
+        "shippingWeightGrams" = ${shippingWeightGrams},
+        "shippingHeightCm" = ${shippingHeightCm},
+        "shippingWidthCm" = ${shippingWidthCm},
+        "shippingLengthCm" = ${shippingLengthCm},
         "imageUrl" = ${imageUrl},
         category = ${category},
         subcategory = ${subcategory},

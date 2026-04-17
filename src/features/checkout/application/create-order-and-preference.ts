@@ -7,8 +7,10 @@ import {
   updateOrderPaymentState,
 } from '../infrastructure/order-repository'
 import { createMercadoPagoPreference } from '../infrastructure/payment-gateway'
+import { buildShippingQuote } from './build-shipping-quote'
 import { checkoutCartSchema } from '../schemas/checkout-schema'
-import type { CartItemInput, ContactData, ShippingData } from '../types'
+import type { CartItemInput, ContactData, ShippingData, ShippingSelection } from '../types'
+import { buildQuoteSelectionMismatchError } from '../lib/shipping-dimensions'
 
 export interface CreatePreferenceResult {
   initPoint: string
@@ -22,6 +24,7 @@ export async function createOrderAndPreferenceUseCase(
   contact: ContactData,
   shipping: ShippingData,
   cartItems: CartItemInput[],
+  shippingSelection: ShippingSelection,
 ): Promise<CreatePreferenceResult | CreateOrderError> {
   const cartParsed = checkoutCartSchema.safeParse(cartItems)
   if (!cartParsed.success) {
@@ -46,7 +49,7 @@ export async function createOrderAndPreferenceUseCase(
     priceRows.map((row) => [row.id, { price: row.price, name: row.name, stock: row.stock }]),
   )
 
-  let total = 0
+  let subtotal = 0
   for (const [productId, quantity] of quantityByProductId.entries()) {
     const product = productMap.get(productId)
 
@@ -63,11 +66,32 @@ export async function createOrderAndPreferenceUseCase(
       }
     }
 
-    total += product.price * quantity
+    subtotal += product.price * quantity
+  }
+
+  let shippingQuote
+  try {
+    shippingQuote = await buildShippingQuote(shipping, validatedCart)
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'No se pudo cotizar el envío.',
+    }
+  }
+
+  const selectionMatches =
+    shippingSelection.cartFingerprint === shippingQuote.cartFingerprint &&
+    shippingSelection.addressFingerprint === shippingQuote.addressFingerprint &&
+    shippingSelection.price === shippingQuote.price &&
+    shippingSelection.productType === shippingQuote.productType &&
+    shippingSelection.productName === shippingQuote.productName
+
+  if (!selectionMatches) {
+    return { error: buildQuoteSelectionMismatchError() }
   }
 
   const session = await auth()
   const userId = session?.user?.id ?? null
+  const total = subtotal + shippingQuote.price
 
   let orderId: string | null = null
   let preferenceId: string | null = null
@@ -76,9 +100,11 @@ export async function createOrderAndPreferenceUseCase(
     const order = await createOrder({
       contact,
       shipping,
+      subtotal,
       total,
       userId,
       status: 'pending' satisfies OrderStatus,
+      shippingQuote,
       items: validatedCart.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
@@ -99,6 +125,12 @@ export async function createOrderAndPreferenceUseCase(
           name: product.name,
         }
       }),
+      {
+        productId: 'shipping-correo-argentino',
+        quantity: 1,
+        price: shippingQuote.price,
+        name: 'Envio Correo Argentino',
+      },
       order.id,
     )
 
