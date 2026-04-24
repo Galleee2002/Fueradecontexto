@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Cormorant_Garamond, Inter } from 'next/font/google'
 import { Providers } from '@/shared/ui/providers'
+import { SITE_URL } from '@/shared/config/site'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -17,8 +18,16 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Fueradecontexto — Indumentaria & Accesorios',
   description: 'Minimalismo elevado, editorial, sofisticación moderna.',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({
