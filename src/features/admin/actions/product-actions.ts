@@ -7,6 +7,7 @@ import { productSchema } from '@/features/products/schemas/product-schema'
 import type { ProductInput } from '@/features/products/schemas/product-schema'
 import { getLegacyPreviewImages, getPrimaryProductImage } from '@/entities/product/images'
 import { ensureProductColumnSupport } from '@/shared/infrastructure/db/product-column-support'
+import { evaluateProductQuality } from '../lib/product-quality'
 
 export async function createAdminProduct(input: ProductInput) {
   await assertAdminSession()
@@ -207,6 +208,56 @@ export async function deleteAdminProduct(id: string) {
 
 export async function toggleAdminProductActive(id: string, active: boolean) {
   await assertAdminSession()
+  if (active) {
+    const rows = await sql`
+      SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
+             COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
+             p.category, p.active, p."shippingWeightGrams", p."shippingHeightCm",
+             p."shippingWidthCm", p."shippingLengthCm"
+      FROM "Product" p
+      WHERE p.id = ${id} AND p."deletedAt" IS NULL
+      LIMIT 1
+    `
+
+    const product = rows[0] as {
+      id: string
+      slug: string
+      name: string
+      description: string | null
+      price: number
+      stock: number
+      images: { url: string; colorName?: string | null }[]
+      category: string
+      active: boolean
+      shippingWeightGrams: number | null
+      shippingHeightCm: number | null
+      shippingWidthCm: number | null
+      shippingLengthCm: number | null
+    } | undefined
+
+    if (!product) {
+      return { error: 'No encontramos el producto.' }
+    }
+
+    const quality = evaluateProductQuality({
+      description: product.description ?? undefined,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      images: product.images,
+      category: product.category,
+      shippingWeightGrams: product.shippingWeightGrams,
+      shippingHeightCm: product.shippingHeightCm,
+      shippingWidthCm: product.shippingWidthCm,
+      shippingLengthCm: product.shippingLengthCm,
+      active: true,
+    })
+
+    if (quality.blockers.length > 0) {
+      return { error: quality.blockers[0] }
+    }
+  }
+
   await sql`
     UPDATE "Product"
     SET active = ${active}, "updatedAt" = NOW()

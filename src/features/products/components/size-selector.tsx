@@ -13,12 +13,12 @@ export function SizeSelector({ sizes, selected, onChange, onGuideClick }: SizeSe
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
+        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           Talle{selected ? <> — <span className="text-foreground">{selected}</span></> : null}
         </p>
         <button
           onClick={onGuideClick}
-          className="text-xs underline underline-offset-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="text-xs text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
         >
           Guía de talles
         </button>
@@ -28,7 +28,7 @@ export function SizeSelector({ sizes, selected, onChange, onGuideClick }: SizeSe
           <button
             key={size}
             onClick={() => onChange(size)}
-            className={`px-3 py-2.5 min-h-[44px] sm:py-1.5 sm:min-h-0 text-xs uppercase font-medium tracking-wider border transition-colors ${
+            className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
               selected === size
                 ? 'bg-foreground text-background border-foreground'
                 : 'border-border text-foreground hover:border-foreground'

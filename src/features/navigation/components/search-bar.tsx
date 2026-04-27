@@ -48,14 +48,14 @@ export function SearchBar() {
               if (!query) setOpen(false)
             }}
             placeholder="Buscar productos…"
-            className="border-b border-foreground bg-transparent text-sm py-1 pr-8 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary w-40 placeholder:text-muted-foreground"
+            className="brand-input h-11 w-52 pr-10"
           />
         </form>
       ) : (
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-foreground transition-colors hover:border-border hover:bg-surface hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Buscar"
         >
           <Search className="h-5 w-5 stroke-[1.5]" />

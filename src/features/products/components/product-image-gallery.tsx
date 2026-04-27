@@ -38,7 +38,7 @@ export function ProductImageGallery({ images, selectedColor, productName }: Prod
 
   if (!activeImage) {
     return (
-      <div className="flex aspect-[3/4] items-center justify-center border border-border bg-surface text-sm text-muted-foreground">
+      <div className="brand-panel-solid flex aspect-[3/4] items-center justify-center text-sm text-muted-foreground">
         No hay imágenes cargadas.
       </div>
     )
@@ -63,7 +63,7 @@ export function ProductImageGallery({ images, selectedColor, productName }: Prod
       
       </div>
 
-      <div className="relative overflow-hidden border border-border bg-surface">
+      <div className="relative overflow-hidden rounded-[1.8rem] border border-border bg-surface shadow-[0_30px_60px_rgba(18,24,32,0.06)]">
         <div className="relative aspect-[4/5] min-h-[420px] sm:min-h-[520px] lg:min-h-[680px]">
           {canSlide && (
             <>

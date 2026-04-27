@@ -43,7 +43,7 @@ export function ProductPagination({ currentPage, totalPages, total }: ProductPag
   const pages = getPageNumbers(currentPage, totalPages)
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4">
+    <div className="brand-panel-solid flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-muted-foreground">
         {total} producto{total !== 1 ? 's' : ''} encontrado{total !== 1 ? 's' : ''}
       </p>
@@ -66,7 +66,7 @@ export function ProductPagination({ currentPage, totalPages, total }: ProductPag
           page === '...' ? (
             <span
               key={`ellipsis-${idx}`}
-              className="inline-flex items-center justify-center h-9 w-9 text-sm text-muted-foreground select-none"
+              className="inline-flex h-10 w-10 select-none items-center justify-center text-sm text-muted-foreground"
             >
               …
             </span>
@@ -75,7 +75,7 @@ export function ProductPagination({ currentPage, totalPages, total }: ProductPag
               key={page}
               href={buildHref(page)}
               aria-current={page === currentPage ? 'page' : undefined}
-              className={`inline-flex items-center justify-center h-9 w-9 rounded-none text-sm font-medium transition-colors ${
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors ${
                 page === currentPage
                   ? 'bg-foreground text-background'
                   : 'text-foreground hover:bg-surface'

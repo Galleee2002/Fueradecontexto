@@ -20,9 +20,9 @@ export function StampSelector({ label, options, selected, onChange }: StampSelec
           <button
             key={option}
             onClick={() => onChange(option)}
-            className={`px-3 py-1.5 text-xs font-medium tracking-wide border transition-colors ${
+            className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
               selected === option
-                ? 'bg-foreground text-background border-foreground'
+                ? 'border-foreground bg-foreground text-background'
                 : 'border-border text-foreground hover:border-foreground'
             }`}
           >

@@ -13,11 +13,11 @@ export function MobileFilterDrawer({ categories }: { categories: string[] }) {
   return (
     <>
       {/* Sticky bottom bar */}
-      <div className="fixed bottom-0 inset-x-0 z-30 lg:hidden bg-background border-t border-border">
+      <div className="fixed bottom-0 inset-x-0 z-30 border-t border-border bg-[rgba(245,245,247,0.95)] backdrop-blur-xl lg:hidden">
         <Container>
           <button
             onClick={() => setOpen(true)}
-            className="flex items-center justify-between w-full py-3.5 min-h-[56px]"
+            className="flex min-h-[56px] w-full items-center justify-between py-3.5"
           >
             <span className="flex items-center gap-2 text-sm font-medium tracking-wide">
               <SlidersHorizontal className="h-4 w-4" />
@@ -35,14 +35,14 @@ export function MobileFilterDrawer({ categories }: { categories: string[] }) {
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 bg-foreground/40 z-40 lg:hidden"
+          className="fixed inset-0 z-40 bg-foreground/38 backdrop-blur-sm lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}
 
       {/* Drawer panel */}
       <div
-        className={`fixed bottom-0 inset-x-0 z-50 lg:hidden bg-background transition-transform duration-300 ${
+        className={`fixed bottom-0 inset-x-0 z-50 rounded-t-[1.8rem] border border-border bg-[rgba(245,245,247,0.98)] shadow-[0_-20px_40px_rgba(18,24,32,0.08)] transition-transform duration-300 lg:hidden ${
           open ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
@@ -64,7 +64,7 @@ export function MobileFilterDrawer({ categories }: { categories: string[] }) {
         <div className="px-4 pb-6 pt-4 border-t border-border">
           <button
             onClick={() => setOpen(false)}
-            className="w-full bg-primary hover:bg-primary-hover text-primary-foreground py-3.5 text-xs font-medium tracking-widest uppercase transition-colors"
+            className="brand-button-primary w-full"
           >
             Ver resultados
           </button>

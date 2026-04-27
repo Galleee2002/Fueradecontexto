@@ -29,18 +29,21 @@ export function StepPayment({
 
   return (
     <div>
-      <h2 className="font-serif text-2xl mb-8">Confirmar y pagar</h2>
+      <div className="mb-8 space-y-2">
+        <p className="brand-kicker">Paso 3</p>
+        <h2 className="text-3xl font-medium tracking-[-0.05em]">Confirmar y pagar</h2>
+      </div>
 
       {/* Order review */}
       <div className="space-y-4 mb-8">
-        <div className="border border-border p-4">
+        <div className="brand-panel-solid p-4">
           <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">Contacto</p>
           <p className="text-sm">{contactData.nombre} {contactData.apellido}</p>
           <p className="text-sm text-muted-foreground">{contactData.email}</p>
           <p className="text-sm text-muted-foreground">{contactData.telefono}</p>
         </div>
 
-        <div className="border border-border p-4">
+        <div className="brand-panel-solid p-4">
           <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">Envío</p>
           <p className="text-sm">
             {shippingData.calle} {shippingData.numero}
@@ -71,7 +74,7 @@ export function StepPayment({
       </div>
 
       {/* MP security notice */}
-      <div className="flex items-start gap-3 mb-8 p-4 bg-surface border border-border">
+      <div className="mb-8 flex items-start gap-3 rounded-[1.25rem] border border-border bg-surface p-4">
         <ShieldCheck className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
         <div>
           <p className="text-xs font-medium text-foreground mb-0.5">Pago seguro con Mercado Pago</p>
@@ -82,7 +85,7 @@ export function StepPayment({
         </div>
       </div>
 
-      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={onBack}
@@ -97,7 +100,7 @@ export function StepPayment({
           type="button"
           onClick={onConfirm}
           disabled={isSubmitDisabled}
-          className="w-full sm:w-auto bg-mp-blue hover:bg-mp-blue-hover disabled:opacity-60 text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors flex items-center justify-center gap-3"
+          className="flex w-full items-center justify-center gap-3 rounded-full bg-mp-blue px-10 py-4 text-xs font-medium uppercase tracking-[0.24em] text-primary-foreground transition-colors hover:bg-mp-blue-hover disabled:opacity-60 sm:w-auto"
         >
           {isLoading ? (
             <>

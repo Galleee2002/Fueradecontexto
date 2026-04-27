@@ -18,42 +18,43 @@ export default async function ConfirmacionPage({ searchParams }: Props) {
   const orderId = params.external_reference ?? params.orderId
 
   return (
-    <main className="min-h-screen flex items-center py-24">
+    <main className="brand-shell flex min-h-screen items-center py-20 sm:py-24">
       <Container>
-        <div className="max-w-md mx-auto text-center">
+        <div className="brand-panel-solid mx-auto max-w-2xl px-8 py-12 text-center sm:px-12">
           <CheckCircle
-            className="w-16 h-16 mx-auto mb-8 text-foreground"
+            className="mx-auto mb-8 h-16 w-16 text-foreground"
             strokeWidth={1.5}
           />
 
-          <h1 className="font-serif text-3xl md:text-4xl mb-4">
+          <p className="brand-kicker mb-3">Pago confirmado</p>
+          <h1 className="mb-4 font-serif text-3xl md:text-4xl">
             Tu pedido fue confirmado
           </h1>
 
           {orderId && (
-            <p className="text-muted-foreground mb-2">
+            <p className="mb-2 text-muted-foreground">
               Número de orden:{' '}
-              <span className="text-foreground font-medium tracking-widest">{orderId}</span>
+              <span className="font-medium tracking-[0.22em] text-foreground">{orderId}</span>
             </p>
           )}
 
           {params.email && (
-            <p className="text-muted-foreground text-sm mb-10">
+            <p className="mb-10 text-sm text-muted-foreground">
               Recibirás un email de confirmación en{' '}
               <span className="text-foreground">{params.email}</span>
             </p>
           )}
 
           {!params.email && (
-            <p className="text-muted-foreground text-sm mb-10">
+            <p className="mb-10 text-sm text-muted-foreground">
               Pronto recibirás un email con los detalles de tu pedido.
             </p>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/productos"
-              className="bg-foreground text-primary-foreground hover:bg-primary px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+              className="brand-button-primary px-8"
             >
               Seguir comprando
             </Link>

@@ -9,19 +9,20 @@ interface OrderHistorySectionProps {
 
 export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) {
   return (
-    <div className="py-12 space-y-10">
+    <div className="space-y-8 py-12">
       {/* User header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="brand-panel-solid flex items-start justify-between gap-4 px-6 py-6">
         <div>
-          <h2 className="font-serif text-2xl text-foreground">{user.name ?? 'Mi cuenta'}</h2>
+          <p className="brand-kicker">Mi cuenta</p>
+          <h2 className="mt-2 text-2xl font-medium tracking-[-0.04em] text-foreground">{user.name ?? 'Mi cuenta'}</h2>
           <p className="text-sm text-muted-foreground mt-1">{user.email}</p>
         </div>
         <LogoutButton />
       </div>
 
       {/* Order history */}
-      <div className="space-y-4">
-        <h3 className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
+      <div className="brand-panel-solid space-y-4 px-6 py-6">
+        <h3 className="border-b border-border pb-3 text-2xs font-medium uppercase tracking-widest text-muted-foreground">
           Historial de órdenes
         </h3>
 
@@ -30,7 +31,7 @@ export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) 
             Todavía no realizaste ninguna compra.
           </p>
         ) : (
-          <div className="divide-y divide-border border border-border">
+          <div className="divide-y divide-border rounded-[1.25rem] border border-border bg-surface">
             {orders.map((order) => {
               const statusClass =
                 ORDER_STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'

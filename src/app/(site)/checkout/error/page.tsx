@@ -4,32 +4,33 @@ import { Container } from '@/shared/ui/layout/container'
 
 export default function ErrorPagoPage() {
   return (
-    <main className="min-h-screen flex items-center py-24">
+    <main className="brand-shell flex min-h-screen items-center py-20 sm:py-24">
       <Container>
-        <div className="max-w-md mx-auto text-center">
+        <div className="brand-panel-solid mx-auto max-w-2xl px-8 py-12 text-center sm:px-12">
           <XCircle
-            className="w-16 h-16 mx-auto mb-8 text-error"
+            className="mx-auto mb-8 h-16 w-16 text-error"
             strokeWidth={1.5}
           />
 
-          <h1 className="font-serif text-3xl md:text-4xl mb-4">
+          <p className="brand-kicker mb-3">Pago rechazado</p>
+          <h1 className="mb-4 font-serif text-3xl md:text-4xl">
             El pago no pudo procesarse
           </h1>
 
-          <p className="text-muted-foreground mb-10">
+          <p className="mb-10 text-muted-foreground">
             Tu pago fue rechazado. Podés intentarlo nuevamente con otro medio de pago.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/carrito"
-              className="bg-foreground text-primary-foreground hover:bg-primary px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+              className="brand-button-primary px-8"
             >
               Volver al carrito
             </Link>
             <Link
               href="/productos"
-              className="border border-border px-8 py-4 text-xs font-medium tracking-widest uppercase rounded-none hover:bg-surface transition-colors"
+              className="brand-button-secondary px-8"
             >
               Seguir comprando
             </Link>

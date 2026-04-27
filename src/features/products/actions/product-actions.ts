@@ -6,8 +6,11 @@ import { productSchema } from '../schemas/product-schema'
 import type { ProductInput } from '../schemas/product-schema'
 import { getLegacyPreviewImages, getPrimaryProductImage } from '@/entities/product/images'
 import { ensureProductColumnSupport } from '@/shared/infrastructure/db/product-column-support'
+import { assertAdminSession } from '@/shared/infrastructure/auth/require-admin'
 
 export async function createProduct(input: ProductInput) {
+  await assertAdminSession()
+
   const parsed = productSchema.safeParse(input)
   if (!parsed.success) {
     return { error: parsed.error.flatten() }
@@ -40,6 +43,7 @@ export async function createProduct(input: ProductInput) {
 }
 
 export async function toggleProductActive(id: string, active: boolean) {
+  await assertAdminSession()
   await sql`UPDATE "Product" SET active = ${active} WHERE id = ${id}`
   revalidatePath('/productos')
 }

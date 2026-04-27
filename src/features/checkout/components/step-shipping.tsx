@@ -41,9 +41,9 @@ interface StepShippingProps {
 }
 
 const inputBase =
-  'w-full border border-border bg-background px-4 py-3 text-base sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 rounded-none transition-colors'
+  'brand-input text-base sm:text-sm'
 
-const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
+const labelBase = 'mb-2 block text-[11px] uppercase tracking-[0.22em] text-muted-foreground'
 
 export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: StepShippingProps) {
   const formRef = useRef<HTMLFormElement>(null)
@@ -55,22 +55,32 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
     provincia: defaultValues?.provincia ?? '',
     codigoPostal: defaultValues?.codigoPostal ?? '',
   })
-  const [errors, setErrors] = useState<ShippingFormErrors>({})
+  const [clientErrors, setClientErrors] = useState<ShippingFormErrors>({})
+  const [dismissedServerErrors, setDismissedServerErrors] = useState<Partial<Record<keyof ShippingData, true>>>({})
 
   useEffect(() => {
     if (!serverErrors || Object.keys(serverErrors).length === 0) {
       return
     }
 
-    setErrors((current) => ({ ...current, ...serverErrors }))
     requestAnimationFrame(() => {
       formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
     })
   }, [serverErrors])
 
+  const errors: ShippingFormErrors = {
+    ...Object.fromEntries(
+      Object.entries(serverErrors ?? {}).filter(([key]) => !dismissedServerErrors[key as keyof ShippingData]),
+    ),
+    ...clientErrors,
+  }
+
   function handleChange(field: keyof ShippingData, value: string) {
     setValues((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }))
+    if (errors[field]) {
+      setClientErrors((prev) => ({ ...prev, [field]: undefined }))
+      setDismissedServerErrors((prev) => ({ ...prev, [field]: true }))
+    }
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -83,7 +93,7 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
         const key = issue.path[0] as keyof ShippingData
         if (!fieldErrors[key]) fieldErrors[key] = issue.message
       }
-      setErrors(fieldErrors)
+      setClientErrors(fieldErrors)
       requestAnimationFrame(() => {
         formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
       })
@@ -95,7 +105,10 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate>
-      <h2 className="font-serif text-2xl mb-8">Dirección de envío</h2>
+      <div className="mb-8 space-y-2">
+        <p className="brand-kicker">Paso 2</p>
+        <h2 className="text-3xl font-medium tracking-[-0.05em]">Dirección de envío</h2>
+      </div>
 
       <div className="space-y-6">
         {/* Calle + Número */}
@@ -231,11 +244,11 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
         </div>
       </div>
 
-      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 mt-10">
+      <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="w-4 h-4" />
           Volver
@@ -243,7 +256,7 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
 
         <button
           type="submit"
-          className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+          className="brand-button-primary w-full sm:w-auto"
         >
           Continuar
         </button>

@@ -118,7 +118,7 @@ prisma/
 generated/                       # Output de Prisma — NO editar
 
 docs/
-├── SYSTEM_DESIGN.md             # Design system — fuente de verdad
+├── ../DESIGN.md                 # Design system — fuente de verdad
 ├── PLAN.md                      # Roadmap de implementación por fases
 ├── DATOS.md                     # Referencia de datos
 └── CODEBASE.md                  # Este archivo

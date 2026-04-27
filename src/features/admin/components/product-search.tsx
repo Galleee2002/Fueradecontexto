@@ -49,7 +49,7 @@ export function ProductSearch({ defaultValue }: ProductSearchProps) {
         placeholder="Buscar por nombre..."
         defaultValue={defaultValue}
         onChange={handleChange}
-        className="w-full pl-9 pr-8 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
+        className="brand-input pl-9 pr-8"
       />
       {defaultValue && (
         <button

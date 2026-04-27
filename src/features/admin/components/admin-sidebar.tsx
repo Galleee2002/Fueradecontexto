@@ -26,21 +26,21 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        'fixed lg:relative inset-y-0 left-0 z-40 w-64 lg:w-56 shrink-0 bg-background border-r border-border flex flex-col h-full transition-transform duration-300',
+        'fixed inset-y-0 left-0 z-40 flex h-dvh w-64 shrink-0 flex-col border-r border-border bg-[rgba(255,255,255,0.78)] backdrop-blur-xl transition-transform duration-300 lg:sticky lg:top-0 lg:z-10 lg:h-dvh lg:w-60',
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
       )}
     >
       {/* Logo */}
-      <div className="h-14 flex items-center gap-3 px-5 border-b border-border">
-        <LayoutGrid className="h-4 w-4 text-primary shrink-0" strokeWidth={1.5} />
-        <span className="text-xs font-medium tracking-widest uppercase text-foreground">
+      <div className="flex h-16 items-center gap-3 border-b border-border px-5">
+        <LayoutGrid className="h-4 w-4 shrink-0 text-primary" strokeWidth={1.5} />
+        <span className="text-xs font-medium uppercase tracking-[0.24em] text-foreground">
           Admin
         </span>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 overflow-y-auto">
-        <p className="px-3 mb-2 text-2xs font-medium tracking-widest uppercase text-muted-foreground">
+        <p className="mb-2 px-3 text-2xs font-medium uppercase tracking-widest text-muted-foreground">
           Panel
         </p>
         <ul className="space-y-0.5">
@@ -52,9 +52,9 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                   href={href}
                   onClick={onClose}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 text-sm transition-colors rounded-none',
+                    'flex items-center gap-3 rounded-full px-3 py-2.5 text-sm transition-colors',
                     isActive
-                      ? 'bg-primary/10 text-primary font-medium'
+                      ? 'bg-primary/10 text-primary font-medium shadow-[0_10px_18px_rgba(0,102,204,0.08)]'
                       : 'text-muted-foreground hover:text-foreground hover:bg-surface',
                   )}
                 >
@@ -72,10 +72,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
       {/* Back to site */}
       <div className="p-4 border-t border-border">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
+        <Link href="/" className="brand-button-ghost w-full justify-start gap-2 text-xs tracking-[0.18em]">
           <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
           Ver sitio
         </Link>

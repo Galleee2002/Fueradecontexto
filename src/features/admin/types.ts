@@ -1,5 +1,6 @@
 import type { ProductColor, ProductImage } from '@/entities/product'
 import type { OrderStatus } from '@/shared/config/orders'
+import type { ProductQualityReport } from './lib/product-quality'
 
 export interface CategoryWithSubs {
   name: string
@@ -28,6 +29,7 @@ export interface AdminProduct {
   availableSizes: string[]
   stampSizes: string[]
   stampLocations: string[]
+  quality: ProductQualityReport
 }
 
 export interface AdminStats {

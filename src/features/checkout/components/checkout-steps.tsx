@@ -16,7 +16,7 @@ interface CheckoutStepsProps {
 
 export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
   return (
-    <div className="flex items-start mb-10">
+    <div className="mb-10 flex items-start rounded-[1.35rem] border border-border bg-surface px-4 py-5 sm:px-6">
       {STEPS.map((step, index) => {
         const isCompleted = step.id < currentStep
         const isActive = step.id === currentStep
@@ -27,10 +27,10 @@ export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
             <div className="flex flex-col items-center gap-2">
               <div
                 className={cn(
-                  'w-8 h-8 flex items-center justify-center transition-colors duration-200',
+                  'flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200',
                   isCompleted && 'bg-foreground text-primary-foreground',
                   isActive && 'bg-primary text-primary-foreground',
-                  !isCompleted && !isActive && 'border border-border text-muted-foreground bg-background'
+                  !isCompleted && !isActive && 'border border-border bg-background text-muted-foreground'
                 )}
               >
                 {isCompleted ? (
@@ -41,7 +41,7 @@ export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
               </div>
               <span
                 className={cn(
-                  'text-xs tracking-widest uppercase',
+                  'text-[11px] uppercase tracking-[0.22em]',
                   isActive && 'text-primary font-medium',
                   isCompleted && 'text-foreground',
                   !isCompleted && !isActive && 'text-muted-foreground'

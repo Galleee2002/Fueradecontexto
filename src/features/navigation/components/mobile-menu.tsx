@@ -58,7 +58,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex h-12 w-12 items-center justify-center text-foreground hover:text-primary transition-colors"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-foreground transition-colors hover:border-border hover:bg-surface hover:text-primary"
         aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
         aria-expanded={open}
         aria-controls="mobile-menu-panel"
@@ -72,12 +72,12 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
             type="button"
             aria-label="Cerrar menú"
             onClick={closeMenu}
-            className="fixed inset-0 z-[69] bg-foreground/25"
+            className="fixed inset-0 z-[69] bg-foreground/28 backdrop-blur-sm"
           />
 
           <div
             id="mobile-menu-panel"
-            className="fixed inset-y-0 right-0 z-[70] flex h-svh w-full max-w-md flex-col border-l border-border bg-background"
+            className="fixed inset-y-0 right-0 z-[70] flex h-svh w-full max-w-md flex-col border-l border-border bg-[rgba(245,245,247,0.96)] shadow-[-18px_0_50px_rgba(18,24,32,0.08)] backdrop-blur-xl"
           >
             <div className="border-b border-border px-4 py-4">
               <div className="flex items-center justify-between gap-4">
@@ -88,14 +88,14 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                       closeMenu()
                     }
                   }}
-                  className="text-sm font-semibold uppercase tracking-[0.16em] text-foreground"
+                  className="text-sm font-medium uppercase tracking-[0.26em] text-foreground"
                 >
                   {SITE_NAME}
                 </Link>
                 <button
                   type="button"
                   onClick={closeMenu}
-                  className="inline-flex h-12 w-12 items-center justify-center text-foreground transition-colors hover:text-primary"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-foreground transition-colors hover:border-border hover:bg-surface hover:text-primary"
                   aria-label="Cerrar menú"
                 >
                   <X className="h-5 w-5" />
@@ -106,7 +106,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                 <label htmlFor="mobile-menu-search" className="sr-only">
                   Buscar productos
                 </label>
-                <div className="flex min-h-12 items-center border border-border bg-background px-4">
+                <div className="flex min-h-12 items-center rounded-[1.1rem] border border-border bg-surface px-4">
                   <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
                   <input
                     id="mobile-menu-search"
@@ -122,7 +122,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-5">
-              <p className="mb-3 text-[0.65rem] uppercase tracking-[0.24em] text-muted-foreground">
+              <p className="mb-3 text-[0.65rem] uppercase tracking-[0.28em] text-muted-foreground">
                 Navegación
               </p>
               <ul>
@@ -135,7 +135,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === link.href ? null : link.href)}
-                        className="flex min-h-14 w-full items-center justify-between gap-4 py-3 text-left font-serif text-[1.7rem] font-semibold text-foreground transition-colors hover:text-primary"
+                        className="flex min-h-14 w-full items-center justify-between gap-4 py-3 text-left text-[1.6rem] font-medium tracking-[-0.04em] text-foreground transition-colors hover:text-primary"
                         aria-expanded={expanded === link.href}
                         aria-controls={`mobile-submenu-${link.label.toLowerCase()}`}
                       >
@@ -158,7 +158,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                                     closeMenu()
                                   }
                                 }}
-                                className="flex min-h-12 items-center bg-surface px-4 text-base font-medium text-foreground/80 transition-colors hover:text-foreground"
+                                className="flex min-h-12 items-center rounded-[1rem] bg-surface px-4 text-base font-medium text-foreground/80 transition-colors hover:text-foreground"
                               >
                                 {child.label}
                               </Link>
@@ -176,7 +176,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                             closeMenu()
                           }
                         }}
-                        className="flex min-h-14 items-center py-3 font-serif text-[1.7rem] font-semibold text-foreground transition-colors hover:text-primary"
+                        className="flex min-h-14 items-center py-3 text-[1.6rem] font-medium tracking-[-0.04em] text-foreground transition-colors hover:text-primary"
                       >
                         {link.label}
                       </Link>
@@ -222,8 +222,8 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                       rel="noopener noreferrer"
                       onClick={closeMenu}
                       aria-label={link.label}
-                      className="inline-flex h-12 min-w-12 items-center justify-center border border-border px-3 text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-primary hover:text-primary"
-                    >
+                    className="inline-flex h-12 min-w-12 items-center justify-center rounded-full border border-border px-3 text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-primary hover:text-primary"
+                  >
                       {link.shortLabel}
                     </a>
                   ))}

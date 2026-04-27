@@ -33,7 +33,7 @@ function CategoryFilter({
       <div className="flex gap-1 flex-wrap">
         <Link
           href="/admin/productos"
-          className={`px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 rounded-none ${
+          className={`rounded-full px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 ${
             !current
               ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover focus:ring-primary'
               : 'border-border text-foreground hover:bg-surface hover:border-border focus:border-primary focus:ring-primary'
@@ -45,7 +45,7 @@ function CategoryFilter({
           <Link
             key={cat}
             href={`/admin/productos?category=${encodeURIComponent(cat)}`}
-            className={`px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 rounded-none ${
+            className={`rounded-full px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 ${
               current === cat
                 ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover focus:ring-primary'
                 : 'border-border text-foreground hover:bg-surface hover:border-border focus:border-primary focus:ring-primary'
@@ -71,12 +71,12 @@ function StatusFilter({ current }: { current: AdminProductStatus }) {
       <span className="text-2xs font-medium tracking-widest uppercase text-muted-foreground shrink-0">
         Estado:
       </span>
-      <div className="flex">
+      <div className="flex flex-wrap gap-1">
         {options.map(({ label, value }) => (
           <Link
             key={value}
             href={`/admin/productos?status=${value}`}
-            className={`px-3 py-2.5 text-xs border-y border-r first:border-l transition-colors focus:outline-none focus:ring-1 focus:z-10 relative rounded-none ${
+            className={`rounded-full px-3 py-2.5 text-xs border transition-colors focus:outline-none focus:ring-1 ${
               current === value
                 ? 'bg-primary text-primary-foreground border-primary hover:bg-primary-hover focus:bg-primary-hover focus:ring-primary'
                 : 'border-border text-foreground hover:bg-surface hover:border-border focus:border-primary focus:ring-primary'
@@ -105,6 +105,8 @@ export default async function AdminProductosPage({
     fetchAdminStats(),
     fetchAdminCategories(),
   ])
+  const readyProducts = products.filter((product) => product.quality.status === 'ready').length
+  const productsNeedingAttention = products.filter((product) => product.quality.status !== 'ready').length
 
   return (
     <div className="p-6 lg:p-8 space-y-6">
@@ -118,7 +120,7 @@ export default async function AdminProductosPage({
         </div>
         <Link
           href="/admin/productos/nuevo"
-          className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none shrink-0"
+          className="brand-button-primary shrink-0 gap-2 px-5"
         >
           <Plus className="h-4 w-4" strokeWidth={2} />
           <span className="hidden sm:inline">Nuevo producto</span>
@@ -130,12 +132,12 @@ export default async function AdminProductosPage({
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatsCard label="Total" value={stats.totalProducts} />
         <StatsCard label="Activos" value={stats.activeProducts} accent />
-        <StatsCard label="Inactivos" value={stats.inactiveProducts} />
-        <StatsCard label="Categorías" value={stats.totalCategories} />
+        <StatsCard label="Listos" value={readyProducts} description="Sin bloqueos de publicación en esta página" />
+        <StatsCard label="Revisar" value={productsNeedingAttention} description="Productos con bloqueos o alertas visibles" />
       </div>
 
       {/* Filters */}
-      <div className="bg-background border border-border p-4 space-y-4">
+      <div className="brand-panel-solid space-y-4 p-4">
         <Suspense fallback={null}>
           <ProductSearch defaultValue={search} />
         </Suspense>
