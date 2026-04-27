@@ -82,7 +82,7 @@ export function ProductCard({ slug, name, price, stock, imageUrl, category }: Pr
     <Link href={`/productos/${slug}`}>
       <article
         ref={cardRef}
-        className="group cursor-pointer"
+        className="group cursor-pointer rounded-[1.45rem] border border-transparent bg-transparent p-2 transition-colors hover:border-border hover:bg-surface/55"
         onMouseEnter={animateIn}
         onMouseLeave={animateOut}
         onFocus={animateIn}
@@ -90,7 +90,7 @@ export function ProductCard({ slug, name, price, stock, imageUrl, category }: Pr
         onMouseDown={animatePress}
         onMouseUp={releasePress}
       >
-        <div className="relative h-56 sm:h-auto sm:aspect-[3/4] overflow-hidden bg-surface">
+        <div className="relative h-64 overflow-hidden rounded-[1.25rem] border border-border/70 bg-surface shadow-[0_14px_40px_rgba(18,24,32,0.04)] sm:h-auto sm:aspect-[3/4]">
           <Image
             ref={imageRef}
             src={imageUrl}
@@ -100,21 +100,21 @@ export function ProductCard({ slug, name, price, stock, imageUrl, category }: Pr
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
         </div>
-        <div className="pt-4 space-y-1">
+        <div className="space-y-2 px-1 pb-2 pt-5">
           <div className="flex items-center gap-2">
-            <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
               {category}
             </p>
             {stock <= 0 && (
-              <span className="border border-error-border bg-error-subtle px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-error-foreground">
+              <span className="rounded-full border border-error-border bg-error-subtle px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-error-foreground">
                 Sin stock
               </span>
             )}
           </div>
-          <h3 className="text-base font-medium text-foreground leading-snug">
+          <h3 className="text-lg font-medium leading-snug text-foreground">
             {name}
           </h3>
-          <p className="text-xl font-semibold text-foreground">
+          <p className="text-xl font-semibold tracking-[-0.03em] text-foreground">
             {formatPrice(price)}
           </p>
         </div>

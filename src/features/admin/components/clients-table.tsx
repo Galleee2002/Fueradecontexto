@@ -8,14 +8,14 @@ interface ClientsTableProps {
 export function ClientsTable({ clients }: ClientsTableProps) {
   if (clients.length === 0) {
     return (
-      <div className="border border-border bg-background py-20 text-center">
+      <div className="brand-panel-solid py-20 text-center">
         <p className="text-muted-foreground text-sm">No hay clientes todavía.</p>
       </div>
     )
   }
 
   return (
-    <div className="border border-border bg-background overflow-x-auto">
+    <div className="brand-panel-solid overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border bg-surface">

@@ -16,6 +16,7 @@ import type { ProductColor, ProductImage } from '@/entities/product'
 import { ProductFormField } from '../products/ui/product-form-field'
 import { SIZE_OPTIONS, slugifyProductName, STAMP_SIZE_OPTIONS } from '../products/lib/product-form'
 import { normalizeProductImages } from '@/entities/product/images'
+import { evaluateProductQuality } from '../lib/product-quality'
 
 interface ProductFormProps {
   product?: AdminProduct
@@ -212,6 +213,20 @@ export function ProductForm({
   }
 
   const isEditing = !!product
+  const quality = evaluateProductQuality({
+    name,
+    description,
+    price: Number(price) || 0,
+    stock: Number(stock) || 0,
+    shippingWeightGrams: Number(shippingWeightGrams) || 0,
+    shippingHeightCm: Number(shippingHeightCm) || 0,
+    shippingWidthCm: Number(shippingWidthCm) || 0,
+    shippingLengthCm: Number(shippingLengthCm) || 0,
+    images,
+    category: effectiveCategory,
+    active,
+  })
+  const publishBlocked = quality.blockers.length > 0
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8" noValidate>
@@ -645,7 +660,7 @@ export function ProductForm({
 
         {/* Right column — status + actions */}
         <div className="space-y-4 lg:sticky lg:top-8 lg:self-start">
-          <div className="bg-background border border-border p-6 space-y-4">
+          <div className="bg-background border border-border p-6 space-y-4 rounded-[1.5rem] shadow-[0_20px_50px_rgba(10,15,20,0.06)]">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3">
               Visibilidad
             </p>
@@ -659,21 +674,56 @@ export function ProductForm({
               </div>
               <div
                 onClick={() => setActive(!active)}
-                className={`relative w-10 h-5 transition-colors cursor-pointer ${
-                  active ? 'bg-primary' : 'bg-border'
+                className={`relative h-6 w-11 rounded-full border transition-colors cursor-pointer ${
+                  active ? 'border-primary bg-primary/15' : 'border-border bg-surface'
                 }`}
               >
                 <span
-                  className={`absolute top-0.5 h-4 w-4 bg-background shadow-sm transition-transform ${
-                    active ? 'translate-x-5' : 'translate-x-0.5'
+                  className={`absolute top-0.5 h-4 w-4 rounded-full bg-background shadow-sm transition-transform ${
+                    active ? 'translate-x-6' : 'translate-x-0.5'
                   }`}
                 />
               </div>
             </label>
+
+            <div className={`rounded-[1.15rem] border px-4 py-4 ${
+              quality.status === 'ready'
+                ? 'border-emerald-500/20 bg-emerald-500/10'
+                : quality.status === 'attention'
+                  ? 'border-amber-500/25 bg-amber-500/10'
+                  : 'border-error-border bg-error-subtle'
+            }`}>
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+                Estado de publicación
+              </p>
+              <p className="mt-2 text-sm text-foreground">
+                {quality.status === 'ready'
+                  ? 'Listo para salir a tienda.'
+                  : quality.status === 'attention'
+                    ? 'Publicable, pero conviene mejorar la calidad visual.'
+                    : 'No cumple los mínimos para producción.'}
+              </p>
+
+              {quality.blockers.length > 0 ? (
+                <ul className="mt-3 space-y-2 text-xs leading-relaxed text-error-foreground">
+                  {quality.blockers.map((blocker) => (
+                    <li key={blocker}>• {blocker}</li>
+                  ))}
+                </ul>
+              ) : null}
+
+              {quality.warnings.length > 0 ? (
+                <ul className="mt-3 space-y-2 text-xs leading-relaxed text-foreground/72">
+                  {quality.warnings.map((warning) => (
+                    <li key={warning}>• {warning}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </div>
 
           {/* Summary card */}
-          <div className="bg-surface border border-border p-6 space-y-3">
+          <div className="bg-surface border border-border p-6 space-y-3 rounded-[1.5rem]">
             <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground">
               Resumen
             </p>
@@ -701,7 +751,7 @@ export function ProductForm({
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Estado</span>
                 <span className={active ? 'text-primary font-medium' : 'text-muted-foreground'}>
-                  {active ? 'Activo' : 'Inactivo'}
+                  {active ? 'Activo' : 'Borrador'}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -715,12 +765,12 @@ export function ProductForm({
           <button
             type="submit"
             disabled={isPending || isUploadingImage}
-            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-4 text-xs font-medium tracking-[0.26em] uppercase hover:bg-primary-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isPending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Guardando...
+                Guardando…
               </>
             ) : isEditing ? (
               'Guardar cambios'
@@ -729,12 +779,18 @@ export function ProductForm({
             )}
           </button>
 
+          {publishBlocked ? (
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Si querés dejarlo activo, primero resolvé los bloqueos de publicación marcados arriba.
+            </p>
+          ) : null}
+
           {isEditing && (
             <Link
               href={`/productos/${product.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-center border border-border text-muted-foreground hover:text-foreground hover:border-foreground px-6 py-3 text-xs font-medium tracking-widest uppercase transition-colors"
+              className="block w-full text-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground px-6 py-3 text-xs font-medium tracking-[0.22em] uppercase transition-colors"
             >
               Ver en tienda ↗
             </Link>

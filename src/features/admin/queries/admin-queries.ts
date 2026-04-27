@@ -3,6 +3,7 @@ import { ensureOrderColumnSupport } from '@/shared/infrastructure/db/order-colum
 import type { AdminProduct, AdminStats, AdminProductStatus, AdminOrder, AdminClient } from '../types'
 import type { SizeGuide } from '@/entities/product'
 import { getPrimaryProductImage, normalizeProductImages } from '@/entities/product/images'
+import { evaluateProductQuality } from '../lib/product-quality'
 
 const ADMIN_PAGE_SIZE = 20
 
@@ -13,6 +14,23 @@ function mapAdminProductRow<T extends { imageUrl?: unknown; previewImages?: unkn
     ...row,
     imageUrl: getPrimaryProductImage(images, typeof row.imageUrl === 'string' ? row.imageUrl : ''),
     images,
+    quality: evaluateProductQuality({
+      description: typeof (row as { description?: unknown }).description === 'string'
+        ? (row as { description?: string }).description
+        : undefined,
+      price: Number((row as { price?: unknown }).price ?? 0),
+      stock: Number((row as { stock?: unknown }).stock ?? 0),
+      category: typeof (row as { category?: unknown }).category === 'string'
+        ? (row as { category?: string }).category ?? ''
+        : '',
+      shippingWeightGrams: Number((row as { shippingWeightGrams?: unknown }).shippingWeightGrams ?? 0),
+      shippingHeightCm: Number((row as { shippingHeightCm?: unknown }).shippingHeightCm ?? 0),
+      shippingWidthCm: Number((row as { shippingWidthCm?: unknown }).shippingWidthCm ?? 0),
+      shippingLengthCm: Number((row as { shippingLengthCm?: unknown }).shippingLengthCm ?? 0),
+      active: Boolean((row as { active?: unknown }).active),
+      images,
+      name: typeof (row as { name?: unknown }).name === 'string' ? (row as { name?: string }).name ?? '' : '',
+    }),
   }
 }
 

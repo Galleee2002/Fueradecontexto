@@ -735,5 +735,5 @@ const product = rows[0] as ProductModel  // o mejor: mapear a ProductCard explí
 
 ---
 
-*Para convenciones de UI, paleta de colores y componentes, ver `docs/SYSTEM_DESIGN.md`.*
+*Para convenciones de UI, paleta de colores y componentes, ver `DESIGN.md`.*
 *Para el roadmap de features y fases, ver `docs/PLAN.md`.*

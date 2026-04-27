@@ -10,10 +10,10 @@ export default function AyudaPage() {
           breadcrumb={[{ label: 'Inicio', href: '/' }, { label: 'Ayuda' }]}
         />
 
-        <section className="py-10 md:py-14">
+        <section className="brand-page pt-0">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <section className="rounded-xl border border-border bg-surface p-6 md:p-8">
-              <h2 className="text-2xl md:text-3xl font-serif text-foreground">
+            <section className="brand-panel-solid p-6 md:p-8">
+              <h2 className="text-2xl font-medium tracking-[-0.04em] text-foreground md:text-3xl">
                 Antes de escribirnos, revisá lo esencial
               </h2>
               <div className="mt-6 space-y-5 text-sm leading-relaxed text-muted-foreground">
@@ -49,8 +49,8 @@ export default function AyudaPage() {
               </div>
             </section>
 
-            <aside className="rounded-xl border border-border bg-background p-6 md:p-8">
-              <h2 className="text-xl font-serif text-foreground">Contacto rápido</h2>
+            <aside className="brand-panel p-6 md:p-8">
+              <h2 className="text-xl font-medium tracking-[-0.04em] text-foreground">Contacto rápido</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 Si ya revisaste esta información y sigues con dudas, escríbenos con tu número de
                 orden y la consulta específica para ayudarte más rápido.

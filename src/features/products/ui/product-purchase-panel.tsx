@@ -59,13 +59,13 @@ export function ProductPurchasePanel({
 }: ProductPurchasePanelProps) {
   return (
     <>
-      <div className="space-y-6">
+      <div className="brand-panel-solid space-y-6 px-6 py-7 sm:px-8">
         <div className="space-y-3">
-          <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground">
+          <p className="brand-kicker">
             {product.category}
           </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-serif leading-tight">{product.name}</h1>
-          <p className="text-2xl font-semibold">{formatPrice(product.price)}</p>
+          <h1 className="text-3xl font-medium leading-tight tracking-[-0.05em] sm:text-4xl lg:text-5xl">{product.name}</h1>
+          <p className="text-2xl font-semibold tracking-[-0.03em]">{formatPrice(product.price)}</p>
         </div>
 
         <ColorSelector
@@ -92,9 +92,9 @@ export function ProductPurchasePanel({
                 key={side}
                 type="button"
                 onClick={() => onStampSideChange(side)}
-                className={`px-3 py-1.5 text-xs font-medium tracking-wide border transition-colors ${
+                className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
                   selectedStampSide === side
-                    ? 'bg-foreground text-background border-foreground'
+                    ? 'border-foreground bg-foreground text-background'
                     : 'border-border text-foreground hover:border-foreground'
                 }`}
               >
@@ -119,10 +119,10 @@ export function ProductPurchasePanel({
         />
 
         {product.description && (
-          <p className="text-base text-muted-foreground leading-relaxed">{product.description}</p>
+          <p className="text-base leading-relaxed text-muted-foreground">{product.description}</p>
         )}
 
-        <div className="flex items-center justify-between gap-3 border-y border-border py-3 text-sm">
+        <div className="flex items-center justify-between gap-3 rounded-[1.1rem] border border-border bg-surface-muted/55 px-4 py-3 text-sm">
           <span className="text-muted-foreground">Disponibilidad</span>
           <span className={isPurchasable ? 'font-medium text-foreground' : 'font-medium text-error-foreground'}>
             {isPurchasable

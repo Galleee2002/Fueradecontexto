@@ -3,7 +3,11 @@
 import { useRef, useState } from 'react'
 import { loginAction } from '../actions/auth-actions'
 
-export function LoginForm() {
+interface LoginFormProps {
+  redirectTo?: string
+}
+
+export function LoginForm({ redirectTo = '/cuenta' }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
@@ -25,9 +29,11 @@ export function LoginForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
+    <form ref={formRef} onSubmit={handleSubmit} className="brand-panel-solid space-y-6 px-6 py-7 sm:px-8" noValidate>
+      <input type="hidden" name="redirectTo" value={redirectTo} />
       <div className="space-y-1">
-        <h2 className="text-4xl font-normal font-serif">Iniciar sesión</h2>
+        <p className="brand-kicker">Cuenta</p>
+        <h2 className="text-4xl font-medium tracking-[-0.05em]">Iniciar sesión</h2>
         <p className="text-sm text-muted-foreground">
           Ingresá a tu cuenta para ver tus pedidos.
         </p>
@@ -55,7 +61,7 @@ export function LoginForm() {
             autoComplete="email"
             required
             spellCheck={false}
-            className="w-full border border-border px-4 py-3 text-sm rounded-none focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary placeholder:text-muted-foreground"
+            className="brand-input"
             placeholder="tu@email.com…"
           />
         </div>
@@ -70,7 +76,7 @@ export function LoginForm() {
             type="password"
             autoComplete="current-password"
             required
-            className="w-full border border-border px-4 py-3 text-sm rounded-none focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary placeholder:text-muted-foreground"
+            className="brand-input"
             placeholder="••••••••"
           />
         </div>
@@ -79,9 +85,9 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="bg-primary text-primary-foreground hover:bg-primary-hover disabled:opacity-50 rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full"
+        className="brand-button-primary w-full disabled:opacity-50"
       >
-        {loading ? 'Ingresando...' : 'Ingresar'}
+        {loading ? 'Ingresando…' : 'Ingresar'}
       </button>
     </form>
   )

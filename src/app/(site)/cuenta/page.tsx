@@ -17,7 +17,7 @@ export default async function AccountPage() {
             breadcrumb={[{ label: 'Inicio', href: '/' }, { label: 'Cuenta' }]}
           />
           <div className="max-w-md mx-auto py-12">
-            <LoginForm />
+            <LoginForm redirectTo="/cuenta" />
           </div>
         </Container>
       </main>

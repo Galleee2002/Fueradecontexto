@@ -69,6 +69,28 @@ export async function POST(req: NextRequest) {
         return
       }
 
+      const paidAmount =
+        typeof payment.transaction_amount === 'number'
+          ? payment.transaction_amount
+          : Number(payment.transaction_amount ?? Number.NaN)
+      const expectedAmount = Number(order.total)
+      const amountMatches =
+        Number.isFinite(paidAmount) && Math.abs(paidAmount - expectedAmount) < 0.01
+      const currencyMatches = payment.currency_id === 'ARS'
+
+      if (newStatus === 'paid' && (!amountMatches || !currencyMatches)) {
+        console.error('[mercadopago] payment mismatch detected', {
+          orderId,
+          paymentId,
+          expectedAmount,
+          paidAmount,
+          expectedCurrency: 'ARS',
+          paidCurrency: payment.currency_id ?? null,
+          status: payment.status ?? null,
+        })
+        return
+      }
+
       if (newStatus === 'paid' && order.status !== 'paid') {
         for (const item of order.items) {
           const updated = await tx.product.updateMany({

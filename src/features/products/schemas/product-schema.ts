@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { evaluateProductQuality } from '@/features/admin/lib/product-quality'
 
 const productImageSchema = z.object({
   url: z.string().trim().url('URL de imagen inválida'),
@@ -46,6 +47,30 @@ export const productSchema = z.object({
       })
     }
   })
+
+  if (data.active) {
+    const quality = evaluateProductQuality({
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      stock: data.stock,
+      shippingWeightGrams: data.shippingWeightGrams,
+      shippingHeightCm: data.shippingHeightCm,
+      shippingWidthCm: data.shippingWidthCm,
+      shippingLengthCm: data.shippingLengthCm,
+      images: data.images,
+      category: data.category,
+      active: data.active,
+    })
+
+    quality.blockers.forEach((message) => {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['active'],
+        message,
+      })
+    })
+  }
 })
 
 export type ProductInput = z.infer<typeof productSchema>

@@ -7,6 +7,10 @@ import { gsap } from 'gsap'
 import { formatPrice } from '@/shared/lib/format-price'
 import type { ProductCard as ProductCardProps } from '../types'
 
+interface ProductDetailCardProps extends ProductCardProps {
+  autoSlideDelayMs?: number
+}
+
 function buildMiniDescription(name: string, category: string): string {
   const cleanName = name.replace(/\|/g, ' ').replace(/\s+/g, ' ').trim()
   const base = `Pieza de ${category.toLowerCase()} con diseño contemporaneo y terminaciones cuidadas para uso diario.`
@@ -18,7 +22,17 @@ function buildMiniDescription(name: string, category: string): string {
   return `${cleanName.slice(0, 45)}... ${base}`
 }
 
-export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, images, category }: ProductCardProps) {
+export function ProductDetailCard({
+  id,
+  slug,
+  name,
+  price,
+  stock,
+  imageUrl,
+  images,
+  category,
+  autoSlideDelayMs = 3400,
+}: ProductDetailCardProps) {
   const [activeSlide, setActiveSlide] = useState(0)
   const cardRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -50,10 +64,10 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, imag
 
     const interval = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % slides.length)
-    }, 3400)
+    }, autoSlideDelayMs)
 
     return () => window.clearInterval(interval)
-  }, [slides.length])
+  }, [slides.length, autoSlideDelayMs])
 
   useEffect(() => {
     gsap.to(sliderTrackRef.current, {
@@ -105,7 +119,7 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, imag
   return (
     <article
       ref={cardRef}
-      className="group cursor-pointer rounded-2xl border border-border/80 bg-background p-3 shadow-[0_10px_26px_rgba(26,26,26,0.08)]"
+      className="group cursor-pointer overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_10px_26px_rgba(26,26,26,0.08)]"
       onMouseEnter={animateIn}
       onMouseLeave={animateOut}
       onFocus={animateIn}
@@ -113,11 +127,11 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, imag
       onMouseDown={animatePress}
       onMouseUp={releasePress}
     >
-      <div className="relative overflow-hidden rounded-xl border border-border/70 bg-surface">
+      <div className="relative overflow-hidden bg-surface">
         <Link href={`/productos/${slug}`} className="block">
           <div ref={sliderTrackRef} className="flex">
             {slides.map((slide, index) => (
-              <div key={`${slide}-${index}`} className="relative aspect-square w-full shrink-0">
+              <div key={`${slide}-${index}`} className="relative aspect-[4/5] w-full shrink-0 sm:aspect-[3/4]">
                 <Image
                   ref={index === activeSlide ? imageRef : null}
                   src={slide}
@@ -172,12 +186,16 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, imag
         )}
       </div>
 
-      <div className="space-y-3 px-1 pb-1 pt-4">
+      <div className="space-y-3 px-4 pb-4 pt-4">
         <Link href={`/productos/${slug}`} className="block">
           <div className="mb-2.5 flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
             <span className="rounded-full border border-primary/25 bg-primary/10 px-2 py-1 font-medium text-primary">{category}</span>
-            <span className="h-3.5 w-px bg-border" />
-            <span>{stock > 0 ? 'Disponible' : 'Sin stock'}</span>
+            {stock <= 0 && (
+              <>
+                <span className="h-3.5 w-px bg-border" />
+                <span>Sin stock</span>
+              </>
+            )}
           </div>
           <h3 className="text-[1.35rem] font-medium font-serif leading-[1.1] text-foreground line-clamp-2">
             {name}
@@ -195,7 +213,7 @@ export function ProductDetailCard({ id, slug, name, price, stock, imageUrl, imag
       <Link
         ref={buttonRef}
         href={`/productos/${slug}`}
-        className="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-[0.78rem] font-semibold tracking-[0.08em] uppercase text-primary-foreground transition-colors hover:bg-primary-hover"
+        className="mx-4 mb-4 mt-3 inline-flex min-h-[44px] w-[calc(100%-2rem)] items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-[0.78rem] font-semibold tracking-[0.08em] uppercase text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         Ver producto
       </Link>

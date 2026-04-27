@@ -1,6 +1,6 @@
 # PLAN — Fueradecontexto
 
-> Guía de implementación completa. Complementa `SYSTEM_DESIGN.md`, que sigue siendo la fuente de verdad para todas las decisiones de diseño, estilos y convenciones.
+> Guía de implementación completa. Complementa `DESIGN.md`, que sigue siendo la fuente de verdad para todas las decisiones de diseño, estilos y convenciones.
 >
 > **Actualizado:** 2026-03-19
 
@@ -169,8 +169,8 @@ Envío de emails transaccionales.
 - Componentes de UI en `src/features/<feature>/components/`
 - Tipos en `src/features/<feature>/types.ts`
 - Las rutas de Next.js en `src/app/` son solo puntos de entrada; no contienen lógica
-- Ver `docs/SYSTEM_DESIGN.md` para decisiones de diseño visual y componentes
+- Ver `DESIGN.md` para decisiones de diseño visual y componentes
 
 ---
 
-*Plan actualizado: 2026-03-19 | Complementa docs/SYSTEM_DESIGN.md*
+*Plan actualizado: 2026-03-19 | Complementa DESIGN.md*

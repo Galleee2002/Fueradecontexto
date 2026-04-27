@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Pencil } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Pencil } from 'lucide-react'
 import { ToggleActiveButton } from './toggle-active-button'
 import { DeleteProductButton } from './delete-product-button'
 import { AdminPagination } from './admin-pagination'
@@ -16,7 +16,7 @@ interface ProductsTableProps {
 export function ProductsTable({ products, currentPage, totalPages, total }: ProductsTableProps) {
   if (products.length === 0) {
     return (
-      <div className="border border-border bg-background py-20 text-center">
+      <div className="brand-panel-solid py-20 text-center">
         <p className="text-muted-foreground text-sm">No se encontraron productos.</p>
       </div>
     )
@@ -24,7 +24,7 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
 
   return (
     <div className="space-y-4">
-      <div className="border border-border bg-background overflow-x-auto">
+      <div className="brand-panel-solid overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-surface">
@@ -41,7 +41,7 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
                 Precio
               </th>
               <th className="py-3 px-4 text-left text-2xs font-medium tracking-widest uppercase text-muted-foreground">
-                Estado
+                Publicación
               </th>
               <th className="py-3 px-4 text-right text-2xs font-medium tracking-widest uppercase text-muted-foreground">
                 Acciones
@@ -52,7 +52,7 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
             {products.map((product) => (
               <tr
                 key={product.id}
-                className="hover:bg-surface/60 transition-colors group"
+                className="group border-b border-border/70 transition-colors hover:bg-surface/55"
               >
                 {/* Thumbnail */}
                 <td className="py-3 px-4">
@@ -95,12 +95,32 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
                 </td>
 
                 {/* Toggle active */}
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 align-top">
                   <div className="flex items-center gap-2">
-                    <ToggleActiveButton id={product.id} active={product.active} />
-                    <span className={`text-2xs font-medium tracking-wide uppercase hidden lg:block ${product.active ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {product.active ? 'Activo' : 'Inactivo'}
-                    </span>
+                    <ToggleActiveButton
+                      id={product.id}
+                      active={product.active}
+                      blocker={product.quality.blockers[0] ?? null}
+                    />
+                    <div className="space-y-1">
+                      <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium tracking-[0.18em] uppercase ${
+                        product.quality.status === 'ready'
+                          ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700'
+                          : product.quality.status === 'attention'
+                            ? 'border-amber-500/25 bg-amber-500/10 text-amber-700'
+                            : 'border-error-border bg-error-subtle text-error-foreground'
+                      }`}>
+                        {product.quality.status === 'ready' ? (
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                        ) : (
+                          <AlertCircle className="h-3.5 w-3.5" />
+                        )}
+                        {product.active ? 'Activo' : 'Borrador'}
+                      </span>
+                      <p className="hidden max-w-[15rem] text-[11px] leading-relaxed text-muted-foreground xl:block">
+                        {product.quality.blockers[0] ?? product.quality.warnings[0] ?? 'Listo para publicar y sostener la tienda.'}
+                      </p>
+                    </div>
                   </div>
                 </td>
 

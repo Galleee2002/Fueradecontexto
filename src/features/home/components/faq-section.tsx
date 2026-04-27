@@ -94,27 +94,22 @@ export function FaqSection() {
   }, [prefersReducedMotion])
 
   return (
-    <section className="relative overflow-hidden bg-background pt-20 pb-14 sm:pt-24 sm:pb-18 lg:pt-28 lg:pb-24">
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-foreground/[0.06] via-foreground/[0.025] to-transparent sm:h-28 lg:h-32"
-      />
-
+    <section className="relative overflow-hidden bg-background py-20 sm:py-24 lg:py-28">
       <Container>
-        <div className="relative rounded-[1.75rem] border border-foreground/[0.06] bg-[#f7f2ea]/70 px-5 py-8 shadow-[0_28px_70px_rgba(26,26,26,0.05)] backdrop-blur-[3px] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+        <div className="brand-panel px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
           <div className="space-y-8 sm:space-y-10">
             <div className="max-w-3xl space-y-4">
-              <p className="text-2xs font-medium uppercase tracking-[0.32em] text-muted-foreground">
+              <p className="brand-kicker">
                 Preguntas frecuentes
               </p>
               <div className="space-y-2">
-                <h2 className="font-serif text-3xl font-normal tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                <h2 className="text-3xl font-medium tracking-[-0.05em] text-foreground sm:text-4xl lg:text-5xl">
                   Todo lo que necesitás saber antes de pedir.
                 </h2>
               </div>
             </div>
 
-            <div className="border-y border-foreground/[0.1]">
+            <div className="border-y border-border">
               {FAQ_ITEMS.map((item, index) => {
                 const isOpen = openItem === index
                 const isVisible = visibleSet.has(index)
@@ -158,7 +153,7 @@ export function FaqSection() {
 
                         <span
                           className={cn(
-                            'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-foreground/[0.12] bg-background/55 text-foreground transition-[transform,background-color,border-color] duration-300',
+                            'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-background text-foreground transition-[transform,background-color,border-color] duration-300',
                             isOpen && 'scale-[0.96] border-foreground bg-foreground text-background',
                           )}
                           aria-hidden="true"
@@ -178,7 +173,7 @@ export function FaqSection() {
                       )}
                     >
                       <div className="overflow-hidden">
-                        <p className="pb-6 pl-9 pr-14 text-sm leading-relaxed text-foreground/70 sm:pb-8 sm:pl-10 sm:text-base">
+                        <p className="pb-6 pl-9 pr-14 text-sm leading-relaxed text-foreground/72 sm:pb-8 sm:pl-10 sm:text-base">
                           {item.answer}
                         </p>
                       </div>

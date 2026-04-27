@@ -8,11 +8,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-surface overflow-hidden">
+    <div className="brand-shell admin-ui flex min-h-dvh overflow-hidden">
       {/* Backdrop for mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-foreground/40 z-30 lg:hidden"
+          className="fixed inset-0 z-30 bg-foreground/28 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -22,9 +22,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col">
         <AdminHeader onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto brand-page">
           {children}
         </main>
       </div>

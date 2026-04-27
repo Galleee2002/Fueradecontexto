@@ -10,30 +10,32 @@ export function CartDrawer() {
 
   if (isEmpty) {
     return (
-      <EmptyState
-        title="Tu carrito está vacío"
-        description="Explorá nuestra colección y encontrá algo que te guste."
-        action={
-          <Link
-            href="/productos"
-            className="border border-foreground text-foreground hover:bg-foreground hover:text-primary-foreground rounded-none px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors"
-          >
-            Ver colección
-          </Link>
-        }
-      />
+      <div className="pb-16 sm:pb-20">
+        <EmptyState
+          title="Tu carrito está vacío"
+          description="Explorá nuestra colección y encontrá algo que te guste."
+          action={
+            <Link
+              href="/productos"
+              className="brand-button-secondary"
+            >
+              Ver colección
+            </Link>
+          }
+        />
+      </div>
     )
   }
 
   return (
-    <div className="py-8">
+    <div className="brand-panel-solid py-8 px-5 sm:px-8">
       <div className="space-y-0">
         {items.map((item) => (
           <CartItem key={item.id} item={item} />
         ))}
       </div>
 
-      <div className="pt-8 space-y-4 border-t border-border mt-4">
+      <div className="mt-6 space-y-4 border-t border-border pt-8">
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Subtotal</span>
           <span className="font-semibold">{formattedTotal}</span>
@@ -43,7 +45,7 @@ export function CartDrawer() {
         </p>
         <Link
           href="/checkout"
-          className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-none px-8 py-4 text-sm font-medium tracking-widest uppercase transition-colors w-full text-center block"
+          className="brand-button-primary w-full"
         >
           Proceder al pago
         </Link>

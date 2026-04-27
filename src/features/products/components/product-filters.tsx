@@ -12,10 +12,10 @@ export function ProductFilters({ categories }: { categories: string[] }) {
   const { category, sort, setCategory, setSort, resetFilters, hasFilters } = useProductFilters()
 
   return (
-    <div className="space-y-8">
+    <div className="brand-panel-solid space-y-8 px-5 py-6">
       {/* Categoría */}
       <div>
-        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="mb-4 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
           Categoría
         </h3>
         <ul className="space-y-2">
@@ -60,13 +60,13 @@ export function ProductFilters({ categories }: { categories: string[] }) {
 
       {/* Ordenar */}
       <div>
-        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="mb-4 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
           Ordenar
         </h3>
         <select
           value={sort ?? 'newest'}
           onChange={(e) => setSort(e.target.value === 'newest' ? undefined : e.target.value)}
-          className="w-full text-sm border border-border bg-background text-foreground rounded-none px-3 py-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+          className="brand-select"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -79,7 +79,7 @@ export function ProductFilters({ categories }: { categories: string[] }) {
       {hasFilters && (
         <button
           onClick={resetFilters}
-          className="text-xs underline text-muted-foreground hover:text-foreground transition-colors"
+          className="text-xs text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
         >
           Limpiar filtros
         </button>

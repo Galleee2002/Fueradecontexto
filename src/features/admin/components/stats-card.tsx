@@ -9,11 +9,11 @@ interface StatsCardProps {
 
 export function StatsCard({ label, value, description, accent = false }: StatsCardProps) {
   return (
-    <div className="bg-background border border-border p-5">
-      <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground mb-3">
+    <div className="admin-panel p-5">
+      <p className="mb-3 text-2xs font-medium uppercase tracking-widest text-muted-foreground">
         {label}
       </p>
-      <p className={cn('text-3xl font-light tabular-nums', accent ? 'text-primary' : 'text-foreground')}>
+      <p className={cn('text-3xl font-light tabular-nums tracking-[-0.04em]', accent ? 'text-primary' : 'text-foreground')}>
         {value}
       </p>
       {description && (

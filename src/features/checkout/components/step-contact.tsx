@@ -21,9 +21,9 @@ interface StepContactProps {
 }
 
 const inputBase =
-  'w-full border border-border bg-background px-4 py-3 text-base sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 rounded-none transition-colors'
+  'brand-input text-base sm:text-sm'
 
-const labelBase = 'block text-xs tracking-widest uppercase text-muted-foreground mb-2'
+const labelBase = 'mb-2 block text-[11px] uppercase tracking-[0.22em] text-muted-foreground'
 
 export function StepContact({ defaultValues, onNext }: StepContactProps) {
   const formRef = useRef<HTMLFormElement>(null)
@@ -62,7 +62,10 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate>
-      <h2 className="font-serif text-2xl mb-8">Datos de contacto</h2>
+      <div className="mb-8 space-y-2">
+        <p className="brand-kicker">Paso 1</p>
+        <h2 className="text-3xl font-medium tracking-[-0.05em]">Datos de contacto</h2>
+      </div>
 
       <div className="space-y-6">
         {/* Email */}
@@ -148,10 +151,10 @@ export function StepContact({ defaultValues, onNext }: StepContactProps) {
         </div>
       </div>
 
-      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 mt-10">
+      <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
         <button
           type="submit"
-          className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground px-10 py-4 text-xs font-medium tracking-widest uppercase rounded-none transition-colors"
+          className="brand-button-primary w-full sm:w-auto"
         >
           Continuar
         </button>

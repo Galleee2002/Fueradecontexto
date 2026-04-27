@@ -14,8 +14,8 @@ export function CartItem({ item }: CartItemProps) {
   const { removeItem, updateQuantity } = useCart()
 
   return (
-    <div className="flex gap-4 py-4 border-b border-border">
-      <div className="relative w-20 aspect-[3/4] shrink-0 bg-surface overflow-hidden">
+    <div className="flex gap-4 border-b border-border py-5">
+      <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-[1rem] border border-border bg-surface">
         <Image
           src={item.productImageUrl}
           alt={item.productName}
@@ -30,7 +30,7 @@ export function CartItem({ item }: CartItemProps) {
           <h4 className="text-sm font-medium leading-snug">{item.productName}</h4>
           <button
             onClick={() => removeItem(item.id)}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             aria-label="Eliminar producto"
           >
             <X className="h-4 w-4 stroke-[1.5]" />
@@ -53,15 +53,15 @@ export function CartItem({ item }: CartItemProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-            className="h-11 w-11 sm:h-7 sm:w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors touch-manipulation"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-border transition-colors hover:bg-surface touch-manipulation sm:h-9 sm:w-9"
             aria-label="Disminuir cantidad"
           >
             <Minus className="h-3 w-3" />
           </button>
-          <span className="text-sm w-4 text-center">{item.quantity}</span>
+          <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
           <button
             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-            className="h-11 w-11 sm:h-7 sm:w-7 border border-border flex items-center justify-center hover:bg-surface transition-colors touch-manipulation"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-border transition-colors hover:bg-surface touch-manipulation sm:h-9 sm:w-9"
             aria-label="Aumentar cantidad"
           >
             <Plus className="h-3 w-3" />

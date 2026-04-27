@@ -90,17 +90,17 @@ export function Navbar({ categories }: { categories: string[] }) {
   }, [productsOpen])
 
   return (
-    <header className="border-b border-border bg-background sticky top-0 z-50">
+    <header className="sticky top-0 z-50 border-b border-border/80 bg-[rgba(245,245,247,0.82)] backdrop-blur-xl">
       <Container>
-        <nav className="flex items-center justify-between h-14 sm:h-16">
+        <nav className="flex h-16 items-center justify-between gap-4 sm:h-[4.6rem]">
           <Link
             href="/"
-            className="text-base sm:text-xl font-medium tracking-[0.12em] sm:tracking-widest uppercase text-foreground"
+            className="min-w-0 text-sm font-medium uppercase tracking-[0.34em] text-foreground transition-opacity hover:opacity-75 sm:text-[0.95rem]"
           >
             {SITE_NAME}
           </Link>
 
-          <ul className="hidden md:flex items-center gap-8">
+          <ul className="hidden items-center gap-7 lg:flex">
             {/* Productos con dropdown de categorías */}
             <li
               ref={menuRef}
@@ -111,7 +111,7 @@ export function Navbar({ categories }: { categories: string[] }) {
               <div className="flex items-center">
                 <Link
                   href="/productos"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
+                  className="text-sm tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Explorar
                 </Link>
@@ -132,7 +132,7 @@ export function Navbar({ categories }: { categories: string[] }) {
                       setProductsOpen(false)
                     }
                   }}
-                  className="ml-1 inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  className="ml-1 inline-flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <ChevronDown
                     aria-hidden="true"
@@ -146,7 +146,7 @@ export function Navbar({ categories }: { categories: string[] }) {
                   <ul
                     id={dropdownId}
                     role="menu"
-                    className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden"
+                    className="overflow-hidden rounded-[1.15rem] border border-border bg-[rgba(255,255,255,0.88)] py-1.5 shadow-[0_16px_34px_rgba(18,24,32,0.08)] backdrop-blur-xl"
                   >
                     {CATEGORIES.map((cat) => (
                       <li key={cat.href}>
@@ -154,7 +154,7 @@ export function Navbar({ categories }: { categories: string[] }) {
                           href={cat.href}
                           role="menuitem"
                           onClick={() => setProductsOpen(false)}
-                          className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-surface transition-colors tracking-wide"
+                          className="block px-4 py-2.5 text-sm tracking-[0.05em] text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
                         >
                           {cat.label}
                         </Link>
@@ -168,7 +168,7 @@ export function Navbar({ categories }: { categories: string[] }) {
             <li>
               <Link
                 href="/talles"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
+                className="text-sm tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
               >
                 Talles
               </Link>
@@ -176,14 +176,14 @@ export function Navbar({ categories }: { categories: string[] }) {
             <li>
               <Link
                 href="/ayuda"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide"
+                className="text-sm tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
               >
                 Ayuda
               </Link>
             </li>
           </ul>
 
-          <div className="flex items-center gap-3 sm:gap-5">
+          <div className="flex items-center gap-2 sm:gap-3">
             <UserMenu />
             <div ref={cartAreaRef} data-cart-icon-target="true" className="will-change-transform">
               <CartIcon />

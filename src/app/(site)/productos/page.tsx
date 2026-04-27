@@ -6,7 +6,6 @@ import {
   ProductGrid,
   ProductPagination,
 } from '@/features/products'
-import { ServicesStrip } from '@/features/home/components/services-strip'
 import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
 import { SearchBar } from '@/features/navigation/components/search-bar'
@@ -54,7 +53,6 @@ export default async function ProductsPage({
           </div>
         </div>
       </Container>
-      <ServicesStrip />
     </main>
   )
 }

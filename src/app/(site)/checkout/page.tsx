@@ -130,17 +130,23 @@ export default function CheckoutPage() {
   if (isEmpty && items.length === 0) return null
 
   return (
-    <main className="py-12 min-h-screen">
+    <main className="brand-page min-h-screen">
       <Container>
-        <div className="mb-10 pb-8 border-b border-border">
-          <h1 className="font-serif text-3xl md:text-4xl">Checkout</h1>
+        <div className="mb-10">
+          <div className="brand-panel px-6 py-7 sm:px-8 sm:py-8">
+            <p className="brand-kicker">Checkout</p>
+            <h1 className="mt-3 text-4xl font-medium tracking-[-0.05em] md:text-5xl">Finalizá tu compra</h1>
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+              Revisión de contacto, envío y pago en un flujo único, claro y consistente con el resto de la tienda.
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12">
-          <div>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_390px]">
+          <div className="brand-panel-solid px-6 py-7 sm:px-8">
             {error && (
               <div
-                className="mb-6 border border-error-border bg-error-subtle text-error-foreground px-4 py-3 text-sm"
+                className="mb-6 rounded-[1.15rem] border border-error-border bg-error-subtle px-4 py-3 text-sm text-error-foreground"
                 role="alert"
                 aria-live="polite"
               >

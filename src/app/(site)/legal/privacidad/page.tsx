@@ -13,8 +13,8 @@ export default function PrivacidadPage() {
           ]}
         />
 
-        <section className="py-10 md:py-14">
-          <div className="rounded-xl border border-border bg-surface p-6 md:p-8 space-y-6 text-sm leading-relaxed text-muted-foreground">
+        <section className="brand-page pt-0">
+          <div className="brand-panel-solid space-y-6 p-6 text-sm leading-relaxed text-muted-foreground md:p-8">
             <p>
               Usamos los datos que compartís en checkout o cuenta para procesar pedidos, coordinar
               envíos y responder consultas. No pedimos más información de la necesaria para operar la tienda.

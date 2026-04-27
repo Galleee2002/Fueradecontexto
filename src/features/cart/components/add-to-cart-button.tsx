@@ -197,12 +197,12 @@ export function AddToCartButton({
       ref={buttonRef}
       onClick={handleAddToCart}
       disabled={loading || disabled}
-      className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-none bg-primary px-8 py-4 text-sm font-medium tracking-widest uppercase text-primary-foreground transition-[background-color,transform] hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+      className="brand-button-primary relative flex min-h-14 w-full items-center justify-center gap-3 overflow-hidden px-8 text-sm tracking-[0.24em] disabled:cursor-not-allowed disabled:opacity-50"
     >
       <span
         ref={pulseRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-none border border-primary-foreground/35 opacity-0"
+        className="pointer-events-none absolute inset-[1px] rounded-full border border-primary-foreground/35 opacity-0"
       />
       <span ref={iconRef} className="relative z-10 inline-flex">
         <ShoppingBag className="h-4 w-4 stroke-[1.5]" />

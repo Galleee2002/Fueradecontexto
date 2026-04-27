@@ -16,14 +16,14 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
   const envio = shippingQuote?.price ?? 0
 
   return (
-    <div>
-      <h3 className="font-serif text-lg mb-6">Tu pedido</h3>
+    <div className="brand-panel-solid px-5 py-6 sm:px-6">
+      <h3 className="mb-6 text-lg font-medium tracking-[-0.03em]">Tu pedido</h3>
 
       {/* Items */}
       <ul className="space-y-5">
         {items.map((item) => (
           <li key={item.id} className="flex gap-4">
-            <div className="relative w-16 h-16 bg-surface shrink-0 border border-border overflow-hidden">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[1rem] border border-border bg-surface">
               <Image
                 src={item.productImageUrl}
                 alt={item.productName}
@@ -32,7 +32,7 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
                 className="object-cover"
               />
               {/* Badge de cantidad */}
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-foreground text-primary-foreground text-2xs font-medium flex items-center justify-center rounded-full">
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-2xs font-medium text-primary-foreground">
                 {item.quantity}
               </span>
             </div>
@@ -51,7 +51,7 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
         ))}
       </ul>
 
-      <div className="mt-6 pt-6 border-t border-border space-y-3">
+      <div className="mt-6 space-y-3 border-t border-border pt-6">
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Subtotal</span>
           <span>{formatPrice(totalPrice)}</span>
@@ -65,7 +65,7 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-border flex justify-between">
+      <div className="mt-4 flex justify-between border-t border-border pt-4">
         <span className="font-medium">Total</span>
         <span className="font-semibold text-lg">{formatPrice(totalPrice + envio)}</span>
       </div>

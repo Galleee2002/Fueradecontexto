@@ -13,8 +13,8 @@ export default function TerminosPage() {
           ]}
         />
 
-        <section className="py-10 md:py-14">
-          <div className="rounded-xl border border-border bg-surface p-6 md:p-8 space-y-6 text-sm leading-relaxed text-muted-foreground">
+        <section className="brand-page pt-0">
+          <div className="brand-panel-solid space-y-6 p-6 text-sm leading-relaxed text-muted-foreground md:p-8">
             <p>
               Al comprar en Fueradecontexto aceptás que los productos, precios y disponibilidad
               pueden actualizarse sin previo aviso. La confirmación final del pedido ocurre una vez
