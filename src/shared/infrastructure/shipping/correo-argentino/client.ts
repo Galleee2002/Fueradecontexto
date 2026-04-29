@@ -10,6 +10,7 @@ import type {
   CorreoArgentinoShippingImportResponse,
   CorreoArgentinoTokenResponse,
   CorreoArgentinoTrackingResponse,
+  CorreoArgentinoAgency,
 } from './types'
 
 type CachedToken = {
@@ -177,4 +178,18 @@ export async function getCorreoArgentinoTracking(shippingId: string) {
       method: 'GET',
     },
   )
+}
+
+export async function getCorreoArgentinoAgencies(input: {
+  customerId: string
+  provinceCode: string
+}) {
+  const query = new URLSearchParams({
+    customerId: input.customerId,
+    provinceCode: input.provinceCode,
+  })
+
+  return authorizedJsonRequest<CorreoArgentinoAgency[]>(`/agencies?${query.toString()}`, {
+    method: 'GET',
+  })
 }

@@ -31,10 +31,6 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
                 sizes="64px"
                 className="object-cover"
               />
-              {/* Badge de cantidad */}
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-2xs font-medium text-primary-foreground">
-                {item.quantity}
-              </span>
             </div>
 
             <div className="flex-1 min-w-0">

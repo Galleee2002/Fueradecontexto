@@ -10,12 +10,15 @@ export interface ContactData {
 }
 
 export interface ShippingData {
+  deliveryType: 'D' | 'S'
   calle: string
   numero: string
   pisoDpto: string
   ciudad: string
   provincia: string
   codigoPostal: string
+  agencyCode: string
+  agencyName: string
 }
 
 export type ShippingFormErrors = Partial<Record<keyof ShippingData, string>>
@@ -35,10 +38,12 @@ export interface ShippingDimensions {
 
 export interface ShippingQuote {
   carrier: 'correo_argentino'
-  method: 'correo_argentino_home'
+  method: 'correo_argentino_home' | 'correo_argentino_branch'
   productType: string
   productName: string
-  deliveryType: 'D'
+  deliveryType: 'D' | 'S'
+  agencyCode: string | null
+  agencyName: string | null
   price: number
   deliveryTimeMin: string
   deliveryTimeMax: string

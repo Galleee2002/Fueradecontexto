@@ -63,6 +63,8 @@ export async function createOrder({
         productType: shippingQuote.productType,
         productName: shippingQuote.productName,
         deliveryType: shippingQuote.deliveryType,
+        agencyCode: shippingQuote.agencyCode,
+        agencyName: shippingQuote.agencyName,
         deliveryTimeMin: shippingQuote.deliveryTimeMin,
         deliveryTimeMax: shippingQuote.deliveryTimeMax,
         validTo: shippingQuote.validTo,
@@ -76,12 +78,14 @@ export async function createOrder({
       },
       shippingStatus: 'not_imported',
       shippingAddress: {
+        deliveryType: shipping.deliveryType,
         calle: shipping.calle,
         numero: shipping.numero,
         pisoDpto: shipping.pisoDpto,
         ciudad: shipping.ciudad,
         provincia: shipping.provincia,
         codigoPostal: shipping.codigoPostal,
+        agencyCode: shipping.agencyCode,
       },
       items: {
         create: items,

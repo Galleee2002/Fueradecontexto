@@ -131,7 +131,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                   const hasChildren = children.length > 0
 
                   return hasChildren ? (
-                    <li key={link.href} className="border-b border-border">
+                    <li key={`${link.href}-${link.label}`} className="border-b border-border">
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === link.href ? null : link.href)}
@@ -150,7 +150,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                           className="space-y-2 border-t border-border py-3"
                         >
                           {children.map((child) => (
-                            <li key={child.href}>
+                            <li key={`${child.href}-${child.label}`}>
                               <Link
                                 href={child.href}
                                 onClick={() => {
@@ -168,7 +168,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                       )}
                     </li>
                   ) : (
-                    <li key={link.href} className="border-b border-border">
+                    <li key={`${link.href}-${link.label}`} className="border-b border-border">
                       <Link
                         href={link.href}
                         onClick={() => {

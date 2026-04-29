@@ -8,6 +8,7 @@ import { formatPrice } from '@/shared/lib/format-price'
 import type { ProductCard as ProductCardProps } from '../types'
 
 interface ProductDetailCardProps extends ProductCardProps {
+  autoSlide?: boolean
   autoSlideDelayMs?: number
 }
 
@@ -31,6 +32,7 @@ export function ProductDetailCard({
   imageUrl,
   images,
   category,
+  autoSlide = true,
   autoSlideDelayMs = 3400,
 }: ProductDetailCardProps) {
   const [activeSlide, setActiveSlide] = useState(0)
@@ -54,8 +56,10 @@ export function ProductDetailCard({
     gsap.set(buttonRef.current, { y: 4 })
   }, [])
 
+  const autoSlideKey = autoSlide ? autoSlideDelayMs : -1
+
   useEffect(() => {
-    if (slides.length <= 1) return
+    if (!autoSlide || slides.length <= 1) return
 
     const reducedMotion =
       typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -67,7 +71,7 @@ export function ProductDetailCard({
     }, autoSlideDelayMs)
 
     return () => window.clearInterval(interval)
-  }, [slides.length, autoSlideDelayMs])
+  }, [slides.length, autoSlideKey])
 
   useEffect(() => {
     gsap.to(sliderTrackRef.current, {
@@ -119,7 +123,7 @@ export function ProductDetailCard({
   return (
     <article
       ref={cardRef}
-      className="group cursor-pointer overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_10px_26px_rgba(26,26,26,0.08)]"
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-3xl border border-border/80 bg-background shadow-[0_8px_22px_rgba(20,20,20,0.06)] transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-[0_14px_30px_rgba(20,20,20,0.1)]"
       onMouseEnter={animateIn}
       onMouseLeave={animateOut}
       onFocus={animateIn}
@@ -140,11 +144,22 @@ export function ProductDetailCard({
                   className="object-cover"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/25 to-transparent" />
               </div>
             ))}
           </div>
         </Link>
+
+        <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between gap-2">
+          <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-foreground">
+            {category}
+          </span>
+          {stock <= 0 && (
+            <span className="rounded-full border border-foreground/25 bg-background px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-foreground">
+              Sin stock
+            </span>
+          )}
+        </div>
 
         {slides.length > 1 && (
           <>
@@ -152,7 +167,7 @@ export function ProductDetailCard({
               type="button"
               onClick={goToPreviousSlide}
               aria-label="Imagen anterior"
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
+              className="absolute left-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full border border-border bg-background text-[0.8rem] text-foreground opacity-0 shadow-sm transition-all duration-200 hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
             >
               {'‹'}
             </button>
@@ -160,7 +175,7 @@ export function ProductDetailCard({
               type="button"
               onClick={goToNextSlide}
               aria-label="Imagen siguiente"
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full border border-border/70 bg-background/80 text-[0.7rem] text-foreground shadow-sm backdrop-blur-sm transition hover:bg-background"
+              className="absolute right-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full border border-border bg-background text-[0.8rem] text-foreground opacity-0 shadow-sm transition-all duration-200 hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
             >
               {'›'}
             </button>
@@ -168,7 +183,7 @@ export function ProductDetailCard({
         )}
 
         {slides.length > 1 && (
-          <div className="absolute inset-x-0 bottom-3 flex justify-center gap-2">
+          <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
             {slides.map((_, index) => (
               <button
                 key={index}
@@ -177,8 +192,8 @@ export function ProductDetailCard({
                 aria-label={`Ir a imagen ${index + 1}`}
                 className={
                   index === activeSlide
-                    ? 'h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,0.75)]'
-                    : 'h-2.5 w-2.5 rounded-full bg-background/75'
+                    ? 'h-1.5 w-5 rounded-full bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
+                    : 'h-1.5 w-1.5 rounded-full bg-white/70'
                 }
               />
             ))}
@@ -186,36 +201,31 @@ export function ProductDetailCard({
         )}
       </div>
 
-      <div className="space-y-3 px-4 pb-4 pt-4">
+      <div className="flex flex-1 flex-col space-y-4 px-5 pb-5 pt-4">
         <Link href={`/productos/${slug}`} className="block">
-          <div className="mb-2.5 flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
-            <span className="rounded-full border border-primary/25 bg-primary/10 px-2 py-1 font-medium text-primary">{category}</span>
-            {stock <= 0 && (
-              <>
-                <span className="h-3.5 w-px bg-border" />
-                <span>Sin stock</span>
-              </>
-            )}
-          </div>
-          <h3 className="text-[1.35rem] font-medium font-serif leading-[1.1] text-foreground line-clamp-2">
+          <h3 className="text-[1.22rem] font-medium leading-tight tracking-[-0.02em] text-foreground line-clamp-2">
             {name}
           </h3>
-          <p className="mt-2 text-[0.92rem] leading-relaxed text-muted-foreground line-clamp-2">
+          <p className="mt-2 text-[0.88rem] leading-relaxed text-muted-foreground line-clamp-2">
             {miniDescription}
           </p>
         </Link>
 
-        <div className="border-t border-border/70 pt-3">
-          <p className="text-[1.5rem] font-semibold tracking-tight text-foreground">{formatPrice(price)}</p>
+        <div className="mt-auto flex items-end justify-between border-t border-border/60 pt-3">
+          <div>
+            <p className="text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground">Precio</p>
+            <p className="mt-1 text-[1.42rem] font-semibold tracking-tight text-primary">{formatPrice(price)}</p>
+          </div>
+          <p className="text-xs text-foreground/65">Envio a todo el pais</p>
         </div>
       </div>
 
       <Link
         ref={buttonRef}
         href={`/productos/${slug}`}
-        className="mx-4 mb-4 mt-3 inline-flex min-h-[44px] w-[calc(100%-2rem)] items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-[0.78rem] font-semibold tracking-[0.08em] uppercase text-primary-foreground transition-colors hover:bg-primary-hover"
+        className="mx-5 mb-5 mt-1 inline-flex min-h-[44px] w-[calc(100%-2.5rem)] items-center justify-center rounded-xl border border-neutral-900 bg-neutral-900 px-4 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,transform] duration-300 hover:border-blue-700 hover:bg-blue-700"
       >
-        Ver producto
+        Ver detalle
       </Link>
     </article>
   )

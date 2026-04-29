@@ -100,12 +100,14 @@ export function sanitizeFloorOrApartment(value: string) {
 }
 
 export function buildAddressFingerprint(input: {
+  deliveryType?: 'D' | 'S'
   calle: string
   numero: string
   pisoDpto: string
   ciudad: string
   provincia: string
   codigoPostal: string
+  agencyCode?: string
 }) {
   const provinceCode = PROVINCE_CODE_BY_NORMALIZED_NAME[normalizeProvincia(input.provincia)]
   const normalizedPostalCode = provinceCode
@@ -113,11 +115,13 @@ export function buildAddressFingerprint(input: {
     : normalizePostalCode(input.codigoPostal)
 
   return [
+    input.deliveryType ?? 'D',
     input.calle.trim().toLowerCase(),
     input.numero.trim().toLowerCase(),
     input.pisoDpto.trim().toLowerCase(),
     input.ciudad.trim().toLowerCase(),
     normalizeProvincia(input.provincia),
     normalizedPostalCode,
+    (input.agencyCode ?? '').trim().toLowerCase(),
   ].join('|')
 }

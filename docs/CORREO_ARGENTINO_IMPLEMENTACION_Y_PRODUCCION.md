@@ -2,15 +2,15 @@
 
 ## Resumen
 
-Se implementó la integración de Correo Argentino MiCorreo para cotizar envíos a domicilio en checkout, persistir el snapshot logístico en la orden, cobrar el envío junto con los productos en Mercado Pago e importar el envío a MiCorreo cuando el pago queda `approved`.
+Se implementó la integración de Correo Argentino MiCorreo para cotizar envíos a domicilio y sucursal en checkout, persistir el snapshot logístico en la orden, cobrar el envío junto con los productos en Mercado Pago e importar el envío a MiCorreo cuando el pago queda `approved`.
 
 La integración está pensada para:
 
-- `deliveryType = "D"` únicamente
+- `deliveryType = "D"` (domicilio) y `deliveryType = "S"` (sucursal)
 - una cuenta única del comercio en MiCorreo
-- un remitente/origen fijo configurado por variables de entorno
+- credenciales (`BASE_URL/USERNAME/PASSWORD`) por variables de entorno y configuración operativa (remitente/origen) en `/admin/envios`
 - importación automática post-pago
-- tracking consultable desde backoffice cuando la orden ya tiene `trackingNumber` o `shippingExternalId`
+- tracking consultable desde backoffice con fallback por `trackingNumber`, `shippingExternalId` y `order.id`
 
 ## Qué quedó implementado
 
@@ -30,6 +30,7 @@ Comportamiento:
 - reutiliza JWT en memoria hasta su expiración
 - reintenta una vez si recibe `401`
 - consume:
+  - `GET /agencies`
   - `POST /rates`
   - `POST /shipping/import`
   - `GET /shipping/tracking`
@@ -49,6 +50,8 @@ Se modificó el flujo de checkout en:
 Comportamiento:
 
 - al llegar al paso de pago se cotiza el envío con Correo Argentino
+- el checkout permite elegir tipo de entrega (`D` o `S`)
+- para `S` se valida la sucursal contra `GET /agencies`
 - la cotización se invalida si cambia el carrito o la dirección
 - el usuario ve:
   - nombre del servicio
@@ -332,9 +335,9 @@ Hay una limitación importante del contrato actual de MiCorreo:
 Impacto:
 
 - la orden puede quedar `imported` sin tracking persistido
-- la acción manual de sync de tracking desde admin sólo funciona si la orden ya tiene `trackingNumber` o `shippingExternalId`
+- la acción manual de sync de tracking desde admin intenta `trackingNumber`, luego `shippingExternalId` y luego `order.id`
 
-Esto no rompe checkout ni importación, pero sí limita el tracking end-to-end si MiCorreo no devuelve o no expone ese identificador por otra vía.
+Esto no rompe checkout ni importación, pero puede limitar el tracking end-to-end si MiCorreo no devuelve eventos para ninguno de esos identificadores.
 
 ## Rollback operativo
 

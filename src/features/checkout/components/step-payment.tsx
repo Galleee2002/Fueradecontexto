@@ -52,6 +52,10 @@ export function StepPayment({
           <p className="text-sm text-muted-foreground">
             {shippingData.ciudad}, {shippingData.provincia} ({shippingData.codigoPostal})
           </p>
+          <p className="text-sm text-muted-foreground">
+            Entrega: {shippingData.deliveryType === 'S' ? 'Retiro en sucursal' : 'Domicilio'}
+            {shippingData.deliveryType === 'S' && shippingData.agencyCode ? ` (${shippingData.agencyCode})` : ''}
+          </p>
           <div className="mt-3 border-t border-border pt-3 space-y-1.5">
             {isShippingQuoteLoading ? (
               <p className="text-sm text-muted-foreground">Cotizando envío con Correo Argentino…</p>
@@ -62,6 +66,12 @@ export function StepPayment({
                 <p className="text-sm font-medium text-foreground">
                   {shippingQuote.productName} · {formatPrice(shippingQuote.price)}
                 </p>
+                {shippingQuote.deliveryType === 'S' && shippingQuote.agencyCode ? (
+                  <p className="text-xs text-muted-foreground">
+                    Retiro en sucursal {shippingQuote.agencyCode}
+                    {shippingQuote.agencyName ? ` · ${shippingQuote.agencyName}` : ''}.
+                  </p>
+                ) : null}
                 <p className="text-xs text-muted-foreground">
                   Entrega estimada entre {shippingQuote.deliveryTimeMin} y {shippingQuote.deliveryTimeMax} días hábiles.
                 </p>

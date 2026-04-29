@@ -16,9 +16,13 @@ import {
   postalCodeMatchesProvinceCode,
 } from '@/shared/infrastructure/shipping/correo-argentino/utils'
 import { getCorreoArgentinoConfig } from '@/shared/infrastructure/shipping/correo-argentino/config'
-import { quoteCorreoArgentinoRates } from '@/shared/infrastructure/shipping/correo-argentino/client'
+import {
+  getCorreoArgentinoAgencies,
+  quoteCorreoArgentinoRates,
+} from '@/shared/infrastructure/shipping/correo-argentino/client'
 import {
   SHIPPING_CARRIER_CORREO_ARGENTINO,
+  SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH,
   SHIPPING_CORREO_ARGENTINO_ENABLED,
   SHIPPING_METHOD_CORREO_ARGENTINO_HOME,
 } from '@/shared/config/shipping'
@@ -79,12 +83,32 @@ export async function buildShippingQuote(
   )
   const dimensions = buildShippingDimensions(validatedCart, products)
   const originPostalCode = buildPostalCodeForProvinceCode(config.originPostalCode, originProvinceCode)
+  let selectedAgency: { code: string; name: string } | null = null
+
+  if (sanitizedShipping.deliveryType === 'S') {
+    const agencies = await getCorreoArgentinoAgencies({
+      customerId: config.customerId,
+      provinceCode: destinationProvinceCode,
+    })
+
+    selectedAgency =
+      agencies.find((agency) => agency.code.toUpperCase() === sanitizedShipping.agencyCode.toUpperCase()) ??
+      null
+
+    if (!selectedAgency) {
+      throw new ShippingQuoteError(
+        'La sucursal seleccionada no es válida para la provincia indicada.',
+        'invalid_address',
+        { agencyCode: 'Sucursal inválida para la provincia seleccionada.' },
+      )
+    }
+  }
 
   const response = await quoteCorreoArgentinoRates({
     customerId: config.customerId,
     postalCodeOrigin: originPostalCode,
     postalCodeDestination: destinationPostalCode,
-    deliveredType: 'D',
+    deliveredType: sanitizedShipping.deliveryType,
     dimensions: {
       weight: dimensions.weightGrams,
       height: dimensions.heightCm,
@@ -93,7 +117,7 @@ export async function buildShippingQuote(
     },
   })
 
-  const selectedRate = response.rates.find((rate) => rate.deliveredType === 'D')
+  const selectedRate = response.rates.find((rate) => rate.deliveredType === sanitizedShipping.deliveryType)
 
   if (!selectedRate) {
     console.warn('[correo-argentino] no valid home rate returned', {
@@ -112,7 +136,7 @@ export async function buildShippingQuote(
       )
     }
 
-    if (response.rates.some((rate) => rate.deliveredType === 'S')) {
+    if (sanitizedShipping.deliveryType === 'D' && response.rates.some((rate) => rate.deliveredType === 'S')) {
       throw new ShippingQuoteError(
         'Correo Argentino no ofrece envío a domicilio para este destino, solo retiro en sucursal.',
         'no_coverage',
@@ -128,10 +152,15 @@ export async function buildShippingQuote(
 
   return {
     carrier: SHIPPING_CARRIER_CORREO_ARGENTINO,
-    method: SHIPPING_METHOD_CORREO_ARGENTINO_HOME,
+    method:
+      sanitizedShipping.deliveryType === 'S'
+        ? SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH
+        : SHIPPING_METHOD_CORREO_ARGENTINO_HOME,
     productType: selectedRate.productType,
     productName: selectedRate.productName,
-    deliveryType: 'D',
+    deliveryType: sanitizedShipping.deliveryType,
+    agencyCode: selectedAgency?.code ?? null,
+    agencyName: selectedAgency?.name ?? null,
     price: Number(selectedRate.price),
     deliveryTimeMin: selectedRate.deliveryTimeMin,
     deliveryTimeMax: selectedRate.deliveryTimeMax,

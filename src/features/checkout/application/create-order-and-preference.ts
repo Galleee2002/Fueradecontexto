@@ -82,6 +82,8 @@ export async function createOrderAndPreferenceUseCase(
     shippingSelection.cartFingerprint === shippingQuote.cartFingerprint &&
     shippingSelection.addressFingerprint === shippingQuote.addressFingerprint &&
     shippingSelection.price === shippingQuote.price &&
+    shippingSelection.deliveryType === shippingQuote.deliveryType &&
+    shippingSelection.agencyCode === shippingQuote.agencyCode &&
     shippingSelection.productType === shippingQuote.productType &&
     shippingSelection.productName === shippingQuote.productName
 

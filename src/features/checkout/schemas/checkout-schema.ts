@@ -8,6 +8,7 @@ export const cartItemSchema = z.object({
 export const checkoutCartSchema = z.array(cartItemSchema).min(1)
 
 export const shippingSchema = z.object({
+  deliveryType: z.enum(['D', 'S']),
   calle: z.string().trim().min(2, 'Ingresá una calle válida'),
   numero: z
     .string()
@@ -22,6 +23,23 @@ export const shippingSchema = z.object({
     .string()
     .trim()
     .regex(/^(\d{4}|[A-Za-z]\d{4}[A-Za-z]{0,3})$/, 'Ingresá un código postal válido, por ejemplo 1414 o C1414ABC'),
+  agencyCode: z.string().trim(),
+  agencyName: z.string().trim(),
+}).superRefine((value, ctx) => {
+  if (value.deliveryType === 'S' && value.agencyCode.length < 3) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['agencyCode'],
+      message: 'Ingresá un código de sucursal válido.',
+    })
+  }
+  if (value.deliveryType === 'S' && value.agencyName.length < 2) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['agencyName'],
+      message: 'Seleccioná una sucursal de la lista.',
+    })
+  }
 })
 
 export type CheckoutCartItem = z.infer<typeof cartItemSchema>

@@ -65,8 +65,8 @@ export interface CorreoArgentinoShippingImportRequest {
     email: string
   }
   shipping: {
-    deliveryType: 'D'
-    agency: null
+    deliveryType: 'D' | 'S'
+    agency: string | null
     address: {
       streetName: string
       streetNumber: string
@@ -102,4 +102,22 @@ export interface CorreoArgentinoTrackingResponse {
   productId: string | null
   trackingNumber: string | null
   events: CorreoArgentinoTrackingEvent[]
+}
+
+export interface CorreoArgentinoAgency {
+  code: string
+  name: string
+  location?: {
+    address?: {
+      locality?: string | null
+      city?: string | null
+      province?: string | null
+      postalCode?: string | null
+    }
+  }
+  hours?: Record<string, unknown> | null
+  services?: {
+    packageReception?: boolean
+    pickupAvailability?: boolean
+  }
 }

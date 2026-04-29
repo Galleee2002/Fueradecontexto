@@ -2,6 +2,7 @@ export const SHIPPING_CORREO_ARGENTINO_ENABLED =
   process.env.SHIPPING_CORREO_ARGENTINO_ENABLED !== 'false'
 
 export const SHIPPING_METHOD_CORREO_ARGENTINO_HOME = 'correo_argentino_home'
+export const SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH = 'correo_argentino_branch'
 export const SHIPPING_CARRIER_CORREO_ARGENTINO = 'correo_argentino'
 
 export const ORDER_SHIPPING_STATUSES = [

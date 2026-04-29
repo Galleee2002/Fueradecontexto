@@ -10,6 +10,7 @@ import {
 } from '@/shared/infrastructure/shipping/correo-argentino/utils'
 import {
   SHIPPING_CARRIER_CORREO_ARGENTINO,
+  SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH,
   SHIPPING_METHOD_CORREO_ARGENTINO_HOME,
 } from '@/shared/config/shipping'
 import { updateOrderShippingState } from '../infrastructure/order-repository'
@@ -43,9 +44,13 @@ function getQuotePayload(value: unknown) {
   if (!isRecord(value)) return null
 
   const productType = typeof value.productType === 'string' ? value.productType : null
-  if (!productType) return null
+  const deliveryType: 'D' | 'S' | null =
+    value.deliveryType === 'S' ? 'S' : value.deliveryType === 'D' ? 'D' : null
+  const agencyCode = typeof value.agencyCode === 'string' ? value.agencyCode : null
+  if (!productType || !deliveryType) return null
+  if (deliveryType === 'S' && !agencyCode) return null
 
-  return { productType }
+  return { productType, deliveryType, agencyCode }
 }
 
 function getShippingAddress(value: unknown) {
@@ -57,12 +62,14 @@ function getShippingAddress(value: unknown) {
   const ciudad = typeof value.ciudad === 'string' ? value.ciudad : null
   const provincia = typeof value.provincia === 'string' ? value.provincia : null
   const codigoPostal = typeof value.codigoPostal === 'string' ? value.codigoPostal : null
+  const deliveryType = value.deliveryType === 'S' ? 'S' : value.deliveryType === 'D' ? 'D' : 'D'
+  const agencyCode = typeof value.agencyCode === 'string' ? value.agencyCode : ''
 
   if (!calle || !numero || !ciudad || !provincia || !codigoPostal) {
     return null
   }
 
-  return { calle, numero, pisoDpto, ciudad, provincia, codigoPostal }
+  return { calle, numero, pisoDpto, ciudad, provincia, codigoPostal, deliveryType, agencyCode }
 }
 
 function extractLastTrackingPayload(
@@ -101,7 +108,12 @@ export async function importOrderShipment(orderId: string) {
   if (!order || order.deletedAt) return
   if (order.status !== 'paid') return
   if (order.shippingCarrier !== SHIPPING_CARRIER_CORREO_ARGENTINO) return
-  if (order.shippingMethod !== SHIPPING_METHOD_CORREO_ARGENTINO_HOME) return
+  if (
+    order.shippingMethod !== SHIPPING_METHOD_CORREO_ARGENTINO_HOME &&
+    order.shippingMethod !== SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH
+  ) {
+    return
+  }
   if (order.shippingStatus === 'imported' || order.shippingStatus === 'in_transit' || order.shippingStatus === 'delivered') {
     return
   }
@@ -151,8 +163,8 @@ export async function importOrderShipment(orderId: string) {
         email: order.customerEmail,
       },
       shipping: {
-        deliveryType: 'D',
-        agency: null,
+        deliveryType: quotePayload.deliveryType,
+        agency: quotePayload.deliveryType === 'S' ? quotePayload.agencyCode : null,
         address: {
           streetName: shippingAddress.calle,
           streetNumber: shippingAddress.numero,
@@ -175,6 +187,7 @@ export async function importOrderShipment(orderId: string) {
       shippingStatus: 'imported',
       shippingImportedAt: response.createdAt ? new Date(response.createdAt) : new Date(),
       shippingLastSyncAt: new Date(),
+      shippingExternalId: order.shippingExternalId ?? order.id,
       shippingError: null,
     })
   } catch (error) {
@@ -183,6 +196,7 @@ export async function importOrderShipment(orderId: string) {
         shippingStatus: 'imported',
         shippingImportedAt: new Date(),
         shippingLastSyncAt: new Date(),
+        shippingExternalId: order.shippingExternalId ?? order.id,
         shippingError: null,
       })
       return
@@ -210,14 +224,25 @@ export async function syncOrderTracking(orderId: string) {
     return { ok: false, error: 'Orden no encontrada.' }
   }
 
-  const shippingId = order.trackingNumber ?? order.shippingExternalId
-  if (!shippingId) {
+  const shippingCandidates = [order.trackingNumber, order.shippingExternalId, order.id].filter(
+    (value): value is string => typeof value === 'string' && value.trim().length > 0,
+  )
+
+  if (shippingCandidates.length === 0) {
     return { ok: false, error: 'La orden todavía no tiene tracking para consultar.' }
   }
 
   try {
-    const payload = await getCorreoArgentinoTracking(shippingId)
-    const normalized = extractLastTrackingPayload(payload)
+    let normalized: ReturnType<typeof extractLastTrackingPayload> = null
+
+    for (const shippingId of shippingCandidates) {
+      const payload = await getCorreoArgentinoTracking(shippingId)
+      normalized = extractLastTrackingPayload(payload)
+      if (normalized?.events?.length || normalized?.trackingNumber || normalized?.id) {
+        break
+      }
+    }
+
     const lastEvent = normalized?.events?.[0]?.event ?? null
     const mapped = mapTrackingEventToStatuses(lastEvent)
 

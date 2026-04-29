@@ -107,11 +107,14 @@ export function buildRecipientName(contact: { nombre: string; apellido: string }
 
 export function sanitizeShippingAddress(data: ShippingData) {
   return {
+    deliveryType: data.deliveryType,
     calle: data.calle.trim(),
     numero: data.numero.trim(),
     pisoDpto: data.pisoDpto.trim(),
     ciudad: data.ciudad.trim(),
     provincia: data.provincia.trim(),
     codigoPostal: data.codigoPostal.trim(),
+    agencyCode: data.agencyCode.trim().toUpperCase(),
+    agencyName: data.agencyName.trim(),
   }
 }

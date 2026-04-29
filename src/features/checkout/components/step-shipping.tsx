@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
+import { loadNearbyAgencies, type NearbyAgencyOption } from '../actions/checkout-actions'
 import type { ShippingData, ShippingFormErrors } from '../types'
 import { shippingSchema } from '../schemas/checkout-schema'
 
@@ -48,15 +49,21 @@ const labelBase = 'mb-2 block text-[11px] uppercase tracking-[0.22em] text-muted
 export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: StepShippingProps) {
   const formRef = useRef<HTMLFormElement>(null)
   const [values, setValues] = useState<ShippingData>({
+    deliveryType: defaultValues?.deliveryType ?? 'D',
     calle: defaultValues?.calle ?? '',
     numero: defaultValues?.numero ?? '',
     pisoDpto: defaultValues?.pisoDpto ?? '',
     ciudad: defaultValues?.ciudad ?? '',
     provincia: defaultValues?.provincia ?? '',
     codigoPostal: defaultValues?.codigoPostal ?? '',
+    agencyCode: defaultValues?.agencyCode ?? '',
+    agencyName: defaultValues?.agencyName ?? '',
   })
   const [clientErrors, setClientErrors] = useState<ShippingFormErrors>({})
   const [dismissedServerErrors, setDismissedServerErrors] = useState<Partial<Record<keyof ShippingData, true>>>({})
+  const [isLoadingAgencies, setIsLoadingAgencies] = useState(false)
+  const [agencyOptions, setAgencyOptions] = useState<NearbyAgencyOption[]>([])
+  const [suggestedAgencyOptions, setSuggestedAgencyOptions] = useState<NearbyAgencyOption[]>([])
 
   useEffect(() => {
     if (!serverErrors || Object.keys(serverErrors).length === 0) {
@@ -75,13 +82,73 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
     ...clientErrors,
   }
 
+  const visibleAgencyOptions = [
+    ...suggestedAgencyOptions,
+    ...agencyOptions.filter(
+      (agency) => !suggestedAgencyOptions.some((suggested) => suggested.code === agency.code),
+    ),
+  ]
+
   function handleChange(field: keyof ShippingData, value: string) {
-    setValues((prev) => ({ ...prev, [field]: value }))
+    setValues((prev) => {
+      if (field === 'deliveryType') {
+        return {
+          ...prev,
+          deliveryType: value as ShippingData['deliveryType'],
+          agencyCode: '',
+          agencyName: '',
+        }
+      }
+
+      if (field === 'provincia' || field === 'codigoPostal' || field === 'ciudad') {
+        return {
+          ...prev,
+          [field]: value,
+          agencyCode: '',
+          agencyName: '',
+        }
+      }
+
+      return { ...prev, [field]: value }
+    })
     if (errors[field]) {
       setClientErrors((prev) => ({ ...prev, [field]: undefined }))
       setDismissedServerErrors((prev) => ({ ...prev, [field]: true }))
     }
   }
+
+  useEffect(() => {
+    if (values.deliveryType !== 'S' || !values.provincia.trim()) return
+
+    let cancelled = false
+
+    async function loadAgencies() {
+      setIsLoadingAgencies(true)
+      try {
+        const result = await loadNearbyAgencies({
+          provincia: values.provincia,
+          codigoPostal: values.codigoPostal,
+          ciudad: values.ciudad,
+        })
+        if (cancelled) return
+        setAgencyOptions(result.all)
+        setSuggestedAgencyOptions(result.suggested)
+      } catch {
+        if (cancelled) return
+        setAgencyOptions([])
+        setSuggestedAgencyOptions([])
+      } finally {
+        if (cancelled) return
+        setIsLoadingAgencies(false)
+      }
+    }
+
+    void loadAgencies()
+
+    return () => {
+      cancelled = true
+    }
+  }, [values.deliveryType, values.provincia, values.codigoPostal, values.ciudad])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -111,6 +178,23 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
       </div>
 
       <div className="space-y-6">
+        {/* Calle + Número */}
+        <div>
+          <label htmlFor="deliveryType" className={labelBase}>
+            Tipo de entrega
+          </label>
+          <select
+            id="deliveryType"
+            name="deliveryType"
+            value={values.deliveryType}
+            onChange={(e) => handleChange('deliveryType', e.target.value as ShippingData['deliveryType'])}
+            className={cn(inputBase, 'cursor-pointer appearance-none')}
+          >
+            <option value="D">Domicilio</option>
+            <option value="S">Sucursal</option>
+          </select>
+        </div>
+
         {/* Calle + Número */}
         <div className="grid grid-cols-[1fr_120px] gap-4">
           <div>
@@ -242,6 +326,53 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
           </select>
           {errors.provincia && <p id="shipping-provincia-error" className="mt-1.5 text-xs text-error" role="alert">{errors.provincia}</p>}
         </div>
+
+        {values.deliveryType === 'S' ? (
+          <div className="space-y-3">
+            <div>
+              <label htmlFor="agencyCode" className={labelBase}>
+                Sucursal de retiro
+              </label>
+              <select
+                id="agencyCode"
+                name="agencyCode"
+                value={values.agencyCode}
+                onChange={(e) => {
+                  const selected = visibleAgencyOptions.find((agency) => agency.code === e.target.value) ?? null
+                  handleChange('agencyCode', selected?.code ?? '')
+                  handleChange('agencyName', selected?.name ?? '')
+                }}
+                aria-invalid={Boolean(errors.agencyCode || errors.agencyName)}
+                aria-describedby={errors.agencyCode ? 'shipping-agency-error' : undefined}
+                className={cn(
+                  inputBase,
+                  'cursor-pointer appearance-none',
+                  errors.agencyCode && 'border-error focus-visible:ring-error',
+                )}
+              >
+                <option value="" disabled>
+                  {isLoadingAgencies ? 'Cargando sucursales…' : 'Seleccioná una sucursal sugerida…'}
+                </option>
+                {visibleAgencyOptions.map((agency) => (
+                  <option key={agency.code} value={agency.code}>
+                    {agency.code} · {agency.name}
+                    {agency.city ? ` · ${agency.city}` : ''}
+                    {agency.province ? ` · ${agency.province}` : ''}
+                  </option>
+                ))}
+              </select>
+              {errors.agencyCode || errors.agencyName ? (
+                <p id="shipping-agency-error" className="mt-1.5 text-xs text-error" role="alert">
+                  {errors.agencyCode ?? errors.agencyName}
+                </p>
+              ) : (
+                <p className="mt-1.5 text-xs text-muted-foreground">
+                  Mostramos primero hasta 10 sugerencias por cercanía estimada y luego el resto de sucursales de la provincia.
+                </p>
+              )}
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
