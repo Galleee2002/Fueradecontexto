@@ -5,6 +5,7 @@ import { prisma } from '@/shared/infrastructure/db/prisma'
 import { ensureOrderColumnSupport } from '@/shared/infrastructure/db/order-column-support'
 import { mapMercadoPagoStatus, verifyMercadoPagoWebhookSignature } from '@/shared/infrastructure/payments/mercadopago/webhook'
 import { importOrderShipment } from '@/features/checkout/application/sync-order-shipping'
+import { sendOrderEmailsForPaidOrder } from '@/features/checkout/application/send-order-emails'
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,6 +44,20 @@ export async function POST(req: NextRequest) {
 
     const newStatus = mapMercadoPagoStatus(payment.status)
     let shouldImportShipment = false
+    let paidOrderEmailPayload:
+      | {
+          orderId: string
+          customerEmail: string
+          customerName: string
+          customerPhone: string
+          total: number
+          shippingMethod: string | null
+          shippingCarrier: string | null
+          shippingCost: number | null
+          shippingAddress: unknown
+          items: { productName: string; quantity: number; unitPrice: number }[]
+        }
+      | null = null
 
     await prisma.$transaction(async (tx) => {
       const order = await tx.order.findUnique({
@@ -51,7 +66,13 @@ export async function POST(req: NextRequest) {
           items: {
             select: {
               productId: true,
+              unitPrice: true,
               quantity: true,
+              product: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -115,6 +136,22 @@ export async function POST(req: NextRequest) {
         }
 
         shouldImportShipment = true
+        paidOrderEmailPayload = {
+          orderId: order.id,
+          customerEmail: order.customerEmail,
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          total: Number(order.total),
+          shippingMethod: order.shippingMethod,
+          shippingCarrier: order.shippingCarrier,
+          shippingCost: order.shippingCost ? Number(order.shippingCost) : null,
+          shippingAddress: order.shippingAddress,
+          items: order.items.map((item) => ({
+            productName: item.product.name,
+            quantity: item.quantity,
+            unitPrice: Number(item.unitPrice),
+          })),
+        }
       }
 
       const statusToPersist =
@@ -133,6 +170,17 @@ export async function POST(req: NextRequest) {
 
     if (shouldImportShipment) {
       await importOrderShipment(orderId)
+    }
+
+    if (paidOrderEmailPayload) {
+      try {
+        await sendOrderEmailsForPaidOrder(paidOrderEmailPayload)
+      } catch (emailError) {
+        console.error('[checkout] paid order emails failed', {
+          orderId,
+          error: emailError,
+        })
+      }
     }
 
     return NextResponse.json({ ok: true })
