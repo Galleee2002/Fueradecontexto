@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useCart } from '@/features/cart'
 import { formatPrice } from '@/shared/lib/format-price'
+import { SHIPPING_METHOD_SELLER_PICKUP } from '@/shared/config/shipping'
 import type { ShippingQuote } from '../types'
 
 interface OrderSummaryProps {
@@ -14,6 +15,7 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
   const { items, totalPrice } = useCart()
 
   const envio = shippingQuote?.price ?? 0
+  const isSellerPickup = shippingQuote?.method === SHIPPING_METHOD_SELLER_PICKUP
 
   return (
     <div className="brand-panel-solid px-5 py-6 sm:px-6">
@@ -56,7 +58,13 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Envío</span>
           <span className="text-muted-foreground">
-            {isShippingQuoteLoading ? 'Cotizando…' : envio === 0 ? 'A calcular' : formatPrice(envio)}
+            {isShippingQuoteLoading
+              ? 'Cotizando…'
+              : isSellerPickup
+                ? 'Gratis'
+                : envio === 0
+                  ? 'A calcular'
+                  : formatPrice(envio)}
           </span>
         </div>
       </div>
@@ -67,7 +75,9 @@ export function OrderSummary({ shippingQuote, isShippingQuoteLoading = false }: 
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        El envío se cotiza con Correo Argentino antes de generar el pago.
+        {isSellerPickup
+          ? 'Retiro en domicilio sin costo de envío.'
+          : 'El envío se cotiza con Correo Argentino antes de generar el pago.'}
       </p>
     </div>
   )

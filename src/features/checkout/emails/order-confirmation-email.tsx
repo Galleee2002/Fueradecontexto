@@ -11,12 +11,23 @@ import {
 } from '@react-email/components'
 import type { CSSProperties } from 'react'
 import type { PaidOrderEmailPayload } from './types'
+import {
+  customerShippingModeLabel,
+  formatCorreoBranchNote,
+  formatShippingAddressLines,
+  isSellerPickupFromPayload,
+} from './shipping-email-copy'
 
 interface OrderConfirmationEmailProps {
   payload: PaidOrderEmailPayload
 }
 
 export function OrderConfirmationEmail({ payload }: OrderConfirmationEmailProps) {
+  const isPickup = isSellerPickupFromPayload(payload.shippingMethod, payload.shippingAddress)
+  const addressText = formatShippingAddressLines(payload.shippingAddress)
+  const branchNote = formatCorreoBranchNote(payload.shippingAddress)
+  const modeLabel = customerShippingModeLabel(payload.shippingMethod, payload.shippingAddress)
+
   return (
     <Html>
       <Head />
@@ -55,9 +66,38 @@ export function OrderConfirmationEmail({ payload }: OrderConfirmationEmailProps)
             <Text style={styles.total}>
               Total: <strong>{formatArs(payload.total)}</strong>
             </Text>
-            <Text style={styles.shipping}>
-              Envio: {payload.shippingMethod ?? 'No informado'} ({payload.shippingCarrier ?? 'No informado'})
+          </Section>
+
+          <Section style={styles.panel}>
+            <Text style={styles.sectionTitle}>Entrega o retiro</Text>
+            <Text style={styles.row}>
+              <strong>Modalidad:</strong> {modeLabel}
             </Text>
+            {isPickup ? (
+              <>
+                <Text style={styles.rowMuted}>
+                  Retirás tu pedido en nuestro domicilio (no hay envío por Correo Argentino). Te avisamos por mail
+                  cuando esté listo para retirar.
+                </Text>
+                <Text style={styles.row}>
+                  <strong>Dirección de retiro:</strong> {addressText}
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.row}>
+                  <strong>Dirección de entrega:</strong> {addressText}
+                </Text>
+                {branchNote ? (
+                  <Text style={styles.rowMuted}>{branchNote}</Text>
+                ) : null}
+                {payload.shippingCost != null && payload.shippingCost > 0 ? (
+                  <Text style={styles.row}>
+                    <strong>Costo de envío:</strong> {formatArs(payload.shippingCost)}
+                  </Text>
+                ) : null}
+              </>
+            )}
           </Section>
 
           <Text style={styles.footer}>
@@ -147,10 +187,11 @@ const styles: Record<string, CSSProperties> = {
     margin: 0,
     fontSize: '16px',
   },
-  shipping: {
-    margin: '8px 0 0',
-    fontSize: '13px',
-    color: 'rgba(29,29,31,0.62)',
+  rowMuted: {
+    margin: '0 0 10px',
+    fontSize: '14px',
+    lineHeight: 1.55,
+    color: 'rgba(29,29,31,0.72)',
   },
   footer: {
     margin: '18px 0 0',

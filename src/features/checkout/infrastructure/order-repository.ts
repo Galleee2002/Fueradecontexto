@@ -78,6 +78,7 @@ export async function createOrder({
       },
       shippingStatus: 'not_imported',
       shippingAddress: {
+        fulfillmentMethod: shipping.fulfillmentMethod,
         deliveryType: shipping.deliveryType,
         calle: shipping.calle,
         numero: shipping.numero,

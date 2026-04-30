@@ -45,36 +45,59 @@ export function StepPayment({
 
         <div className="brand-panel-solid p-4">
           <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">Envío</p>
-          <p className="text-sm">
-            {shippingData.calle} {shippingData.numero}
-            {shippingData.pisoDpto ? `, ${shippingData.pisoDpto}` : ''}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {shippingData.ciudad}, {shippingData.provincia} ({shippingData.codigoPostal})
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Entrega: {shippingData.deliveryType === 'S' ? 'Retiro en sucursal' : 'Domicilio'}
-            {shippingData.deliveryType === 'S' && shippingData.agencyCode ? ` (${shippingData.agencyCode})` : ''}
-          </p>
+          {shippingData.fulfillmentMethod === 'seller_pickup' ? (
+            <>
+              <p className="text-sm font-medium text-foreground">Retiro en domicilio (Domicilio)</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {shippingData.calle} {shippingData.numero}, {shippingData.ciudad}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm">
+                {shippingData.calle} {shippingData.numero}
+                {shippingData.pisoDpto ? `, ${shippingData.pisoDpto}` : ''}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {shippingData.ciudad}, {shippingData.provincia} ({shippingData.codigoPostal})
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Entrega: {shippingData.deliveryType === 'S' ? 'Retiro en sucursal (Correo)' : 'Envío a tu domicilio'}
+                {shippingData.deliveryType === 'S' && shippingData.agencyCode ? ` (${shippingData.agencyCode})` : ''}
+              </p>
+            </>
+          )}
           <div className="mt-3 border-t border-border pt-3 space-y-1.5">
             {isShippingQuoteLoading ? (
-              <p className="text-sm text-muted-foreground">Cotizando envío con Correo Argentino…</p>
+              <p className="text-sm text-muted-foreground">
+                {shippingData.fulfillmentMethod === 'seller_pickup'
+                  ? 'Confirmando retiro…'
+                  : 'Cotizando envío con Correo Argentino…'}
+              </p>
             ) : shippingQuoteError ? (
               <p className="text-sm text-error">{shippingQuoteError}</p>
             ) : shippingQuote ? (
               <>
                 <p className="text-sm font-medium text-foreground">
-                  {shippingQuote.productName} · {formatPrice(shippingQuote.price)}
+                  {shippingQuote.productName}
+                  {shippingQuote.price > 0 ? ` · ${formatPrice(shippingQuote.price)}` : ' · Sin cargo'}
                 </p>
+                {shippingQuote.method === 'seller_pickup' ? (
+                  <p className="text-xs text-muted-foreground">
+                    Retirás el pedido en el domicilio indicado; no aplica envío por Correo Argentino.
+                  </p>
+                ) : null}
                 {shippingQuote.deliveryType === 'S' && shippingQuote.agencyCode ? (
                   <p className="text-xs text-muted-foreground">
                     Retiro en sucursal {shippingQuote.agencyCode}
                     {shippingQuote.agencyName ? ` · ${shippingQuote.agencyName}` : ''}.
                   </p>
                 ) : null}
-                <p className="text-xs text-muted-foreground">
-                  Entrega estimada entre {shippingQuote.deliveryTimeMin} y {shippingQuote.deliveryTimeMax} días hábiles.
-                </p>
+                {shippingQuote.method !== 'seller_pickup' ? (
+                  <p className="text-xs text-muted-foreground">
+                    Entrega estimada entre {shippingQuote.deliveryTimeMin} y {shippingQuote.deliveryTimeMax} días hábiles.
+                  </p>
+                ) : null}
               </>
             ) : (
               <p className="text-sm text-muted-foreground">Todavía no hay una cotización válida.</p>

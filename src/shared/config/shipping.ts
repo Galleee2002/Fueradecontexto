@@ -5,6 +5,9 @@ export const SHIPPING_METHOD_CORREO_ARGENTINO_HOME = 'correo_argentino_home'
 export const SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH = 'correo_argentino_branch'
 export const SHIPPING_CARRIER_CORREO_ARGENTINO = 'correo_argentino'
 
+export const SHIPPING_METHOD_SELLER_PICKUP = 'seller_pickup'
+export const SHIPPING_CARRIER_SELLER = 'seller'
+
 export const ORDER_SHIPPING_STATUSES = [
   'not_imported',
   'import_pending',

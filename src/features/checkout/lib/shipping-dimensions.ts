@@ -1,4 +1,5 @@
 import type { CartItemInput, ShippingData, ShippingDimensions } from '../types'
+import { getCanonicalSellerPickupShipping } from './seller-pickup'
 
 interface ProductShippingRow {
   id: string
@@ -20,6 +21,7 @@ export function buildCartFingerprint(cartItems: CartItemInput[]) {
 export function buildShippingDimensions(
   cartItems: CartItemInput[],
   products: ProductShippingRow[],
+  options?: { enforceCorreoLimits?: boolean },
 ): ShippingDimensions {
   const productMap = new Map(products.map((product) => [product.id, product]))
 
@@ -59,17 +61,18 @@ export function buildShippingDimensions(
     lengthCm: maxLength,
   }
 
-  if (dimensions.weightGrams < 1 || dimensions.weightGrams > 25000) {
+  const enforceCorreoLimits = options?.enforceCorreoLimits !== false
+
+  if (dimensions.weightGrams < 1 || (enforceCorreoLimits && dimensions.weightGrams > 25000)) {
     throw new Error('El carrito excede el peso permitido por Correo Argentino.')
   }
 
   if (
     dimensions.heightCm < 1 ||
-    dimensions.heightCm > 150 ||
     dimensions.widthCm < 1 ||
-    dimensions.widthCm > 150 ||
     dimensions.lengthCm < 1 ||
-    dimensions.lengthCm > 150
+    (enforceCorreoLimits &&
+      (dimensions.heightCm > 150 || dimensions.widthCm > 150 || dimensions.lengthCm > 150))
   ) {
     throw new Error('El carrito excede las dimensiones permitidas por Correo Argentino.')
   }
@@ -105,8 +108,13 @@ export function buildRecipientName(contact: { nombre: string; apellido: string }
   return `${contact.nombre} ${contact.apellido}`.trim()
 }
 
-export function sanitizeShippingAddress(data: ShippingData) {
+export function sanitizeShippingAddress(data: ShippingData): ShippingData {
+  if (data.fulfillmentMethod === 'seller_pickup') {
+    return getCanonicalSellerPickupShipping()
+  }
+
   return {
+    fulfillmentMethod: 'correo_argentino',
     deliveryType: data.deliveryType,
     calle: data.calle.trim(),
     numero: data.numero.trim(),

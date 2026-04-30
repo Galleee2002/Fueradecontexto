@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MapPin, Package } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 import { loadNearbyAgencies, type NearbyAgencyOption } from '../actions/checkout-actions'
-import type { ShippingData, ShippingFormErrors } from '../types'
+import type { FulfillmentMethod, ShippingData, ShippingFormErrors } from '../types'
 import { shippingSchema } from '../schemas/checkout-schema'
+import { SELLER_PICKUP_STREET_LINE, SELLER_PICKUP_CITY } from '../lib/seller-pickup'
 
 const PROVINCIAS = [
   'Buenos Aires',
@@ -49,6 +50,7 @@ const labelBase = 'mb-2 block text-[11px] uppercase tracking-[0.22em] text-muted
 export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: StepShippingProps) {
   const formRef = useRef<HTMLFormElement>(null)
   const [values, setValues] = useState<ShippingData>({
+    fulfillmentMethod: defaultValues?.fulfillmentMethod ?? 'correo_argentino',
     deliveryType: defaultValues?.deliveryType ?? 'D',
     calle: defaultValues?.calle ?? '',
     numero: defaultValues?.numero ?? '',
@@ -89,6 +91,21 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
     ),
   ]
 
+  function setFulfillmentMethod(method: FulfillmentMethod) {
+    setValues((prev) => ({
+      ...prev,
+      fulfillmentMethod: method,
+      ...(method === 'seller_pickup'
+        ? { deliveryType: 'D' as const, agencyCode: '', agencyName: '' }
+        : {}),
+    }))
+    setClientErrors((prev) => {
+      const next = { ...prev }
+      delete next.fulfillmentMethod
+      return next
+    })
+  }
+
   function handleChange(field: keyof ShippingData, value: string) {
     setValues((prev) => {
       if (field === 'deliveryType') {
@@ -118,6 +135,7 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
   }
 
   useEffect(() => {
+    if (values.fulfillmentMethod !== 'correo_argentino') return
     if (values.deliveryType !== 'S' || !values.provincia.trim()) return
 
     let cancelled = false
@@ -148,7 +166,7 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
     return () => {
       cancelled = true
     }
-  }, [values.deliveryType, values.provincia, values.codigoPostal, values.ciudad])
+  }, [values.fulfillmentMethod, values.deliveryType, values.provincia, values.codigoPostal, values.ciudad])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -170,18 +188,104 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
     onNext(result.data)
   }
 
+  const isCorreo = values.fulfillmentMethod === 'correo_argentino'
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate>
       <div className="mb-8 space-y-2">
         <p className="brand-kicker">Paso 2</p>
-        <h2 className="text-3xl font-medium tracking-[-0.05em]">Dirección de envío</h2>
+        <h2 className="text-3xl font-medium tracking-[-0.05em]">Envío o retiro</h2>
+        <p className="max-w-xl text-[17px] leading-relaxed text-muted-foreground">
+          Elegí si preferís que te lo enviemos con Correo Argentino o si pasás a retirarlo por nuestro domicilio.
+        </p>
       </div>
 
+      <fieldset className="mb-8 space-y-3">
+        <legend id="fulfillment-legend" className={labelBase}>
+          Cómo recibís tu pedido
+        </legend>
+        <div
+          role="radiogroup"
+          aria-labelledby="fulfillment-legend"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        >
+          <label
+            className={cn(
+              'relative flex min-h-[min(100%,11rem)] cursor-pointer flex-col gap-3 rounded-[1.125rem] border bg-background p-5 sm:p-6 transition-[border-color,box-shadow] duration-200',
+              'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-primary',
+              values.fulfillmentMethod === 'correo_argentino'
+                ? 'border-primary shadow-[0_0_0_1px_hsl(var(--primary))]'
+                : 'border-border hover:border-foreground/20',
+            )}
+          >
+            <input
+              type="radio"
+              name="fulfillmentMethod"
+              value="correo_argentino"
+              checked={values.fulfillmentMethod === 'correo_argentino'}
+              onChange={() => setFulfillmentMethod('correo_argentino')}
+              className="sr-only"
+            />
+            <div className="flex items-start gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-foreground">
+                <Package className="h-5 w-5" aria-hidden />
+              </span>
+              <span className="min-w-0 text-left">
+                <span className="block text-[17px] font-semibold leading-snug tracking-[-0.02em] text-foreground">
+                  Correo Argentino
+                </span>
+                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                  Envío a tu domicilio o retiro en sucursal del Correo. El costo se cotiza en el siguiente paso.
+                </span>
+              </span>
+            </div>
+          </label>
+
+          <label
+            className={cn(
+              'relative flex min-h-[min(100%,11rem)] cursor-pointer flex-col gap-3 rounded-[1.125rem] border bg-background p-5 sm:p-6 transition-[border-color,box-shadow] duration-200',
+              'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-primary',
+              values.fulfillmentMethod === 'seller_pickup'
+                ? 'border-primary shadow-[0_0_0_1px_hsl(var(--primary))]'
+                : 'border-border hover:border-foreground/20',
+            )}
+          >
+            <input
+              type="radio"
+              name="fulfillmentMethod"
+              value="seller_pickup"
+              checked={values.fulfillmentMethod === 'seller_pickup'}
+              onChange={() => setFulfillmentMethod('seller_pickup')}
+              className="sr-only"
+            />
+            <div className="flex items-start gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-foreground">
+                <MapPin className="h-5 w-5" aria-hidden />
+              </span>
+              <span className="min-w-0 text-left">
+                <span className="block text-[17px] font-semibold leading-snug tracking-[-0.02em] text-foreground">
+                  Retiro en domicilio <span className="font-normal text-muted-foreground">(Domicilio)</span>
+                </span>
+                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                  {SELLER_PICKUP_STREET_LINE}, {SELLER_PICKUP_CITY}. Sin costo de envío.
+                </span>
+              </span>
+            </div>
+          </label>
+        </div>
+        {errors.fulfillmentMethod ? (
+          <p className="text-xs text-error" role="alert">
+            {errors.fulfillmentMethod}
+          </p>
+        ) : null}
+      </fieldset>
+
       <div className="space-y-6">
-        {/* Calle + Número */}
+        {isCorreo ? (
+          <>
         <div>
           <label htmlFor="deliveryType" className={labelBase}>
-            Tipo de entrega
+            Modalidad con Correo Argentino
           </label>
           <select
             id="deliveryType"
@@ -190,13 +294,12 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
             onChange={(e) => handleChange('deliveryType', e.target.value as ShippingData['deliveryType'])}
             className={cn(inputBase, 'cursor-pointer appearance-none')}
           >
-            <option value="D">Domicilio</option>
-            <option value="S">Sucursal</option>
+            <option value="D">Envío a tu domicilio</option>
+            <option value="S">Retiro en sucursal (Correo Argentino)</option>
           </select>
         </div>
 
-        {/* Calle + Número */}
-        <div className="grid grid-cols-[1fr_120px] gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_120px]">
           <div>
             <label htmlFor="calle" className={labelBase}>
               Calle
@@ -373,6 +476,19 @@ export function StepShipping({ defaultValues, serverErrors, onNext, onBack }: St
             </div>
           </div>
         ) : null}
+          </>
+        ) : (
+          <div className="rounded-[1.125rem] border border-border bg-surface px-5 py-6 sm:px-7">
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">Punto de retiro</p>
+            <p className="mt-3 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-foreground">
+              {SELLER_PICKUP_STREET_LINE}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{SELLER_PICKUP_CITY}</p>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Te avisamos por mail cuando el pedido esté listo para retirar. Coordinamos horario si hace falta.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">

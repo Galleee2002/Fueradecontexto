@@ -13,14 +13,15 @@ interface PaymentItem {
 export async function createMercadoPagoPreference(
   contact: ContactData,
   items: PaymentItem[],
-  shippingItem: PaymentItem,
+  shippingItem: PaymentItem | null,
   orderId: string,
 ) {
   const preference = new Preference(mpClient)
+  const lineItems = shippingItem && shippingItem.price > 0 ? [...items, shippingItem] : items
 
   return preference.create({
     body: {
-      items: [...items, shippingItem].map((item) => ({
+      items: lineItems.map((item) => ({
         id: item.productId,
         title: item.name,
         quantity: item.quantity,

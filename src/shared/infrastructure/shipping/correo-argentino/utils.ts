@@ -100,6 +100,7 @@ export function sanitizeFloorOrApartment(value: string) {
 }
 
 export function buildAddressFingerprint(input: {
+  fulfillmentMethod?: 'correo_argentino' | 'seller_pickup'
   deliveryType?: 'D' | 'S'
   calle: string
   numero: string
@@ -109,6 +110,10 @@ export function buildAddressFingerprint(input: {
   codigoPostal: string
   agencyCode?: string
 }) {
+  if (input.fulfillmentMethod === 'seller_pickup') {
+    return 'seller_pickup|luis-viale|711|caba|v1'
+  }
+
   const provinceCode = PROVINCE_CODE_BY_NORMALIZED_NAME[normalizeProvincia(input.provincia)]
   const normalizedPostalCode = provinceCode
     ? buildPostalCodeForProvinceCode(input.codigoPostal, provinceCode)

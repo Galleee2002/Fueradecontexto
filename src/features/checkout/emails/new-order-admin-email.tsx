@@ -11,13 +11,22 @@ import {
 } from '@react-email/components'
 import type { CSSProperties } from 'react'
 import type { PaidOrderEmailPayload } from './types'
+import {
+  customerShippingModeLabel,
+  formatCorreoBranchNote,
+  formatShippingAddressLines,
+  isSellerPickupFromPayload,
+} from './shipping-email-copy'
 
 interface NewOrderAdminEmailProps {
   payload: PaidOrderEmailPayload
 }
 
 export function NewOrderAdminEmail({ payload }: NewOrderAdminEmailProps) {
-  const shippingAddress = formatShippingAddress(payload.shippingAddress)
+  const isPickup = isSellerPickupFromPayload(payload.shippingMethod, payload.shippingAddress)
+  const addressText = formatShippingAddressLines(payload.shippingAddress)
+  const branchNote = formatCorreoBranchNote(payload.shippingAddress)
+  const modeLabel = customerShippingModeLabel(payload.shippingMethod, payload.shippingAddress)
 
   return (
     <Html>
@@ -45,14 +54,35 @@ export function NewOrderAdminEmail({ payload }: NewOrderAdminEmailProps) {
               <strong>Total:</strong> {formatArs(payload.total)}
             </Text>
             <Text style={styles.row}>
-              <strong>Costo envio:</strong> {formatArs(payload.shippingCost ?? 0)}
+              <strong>Costo envio:</strong>{' '}
+              {isPickup ? 'Sin cargo (retiro en domicilio)' : formatArs(payload.shippingCost ?? 0)}
             </Text>
             <Text style={styles.row}>
-              <strong>Metodo envio:</strong> {payload.shippingMethod ?? 'No informado'} ({payload.shippingCarrier ?? 'No informado'})
+              <strong>Modalidad:</strong> {modeLabel}
             </Text>
-            <Text style={styles.row}>
-              <strong>Direccion:</strong> {shippingAddress}
+            <Text style={styles.rowMuted}>
+              Referencia interna: metodo {payload.shippingMethod ?? '—'}, carrier{' '}
+              {payload.shippingCarrier ?? '—'}
             </Text>
+            {isPickup ? (
+              <>
+                <Text style={styles.row}>
+                  <strong>Punto de retiro (cliente pasa a buscar):</strong> {addressText}
+                </Text>
+                <Text style={styles.rowMuted}>
+                  No importar envío a Correo Argentino: el cliente retira en el domicilio del vendedor.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.row}>
+                  <strong>Direccion de entrega (destino Correo):</strong> {addressText}
+                </Text>
+                {branchNote ? (
+                  <Text style={styles.rowMuted}>{branchNote}</Text>
+                ) : null}
+              </>
+            )}
           </Section>
 
           <Section style={styles.panel}>
@@ -81,26 +111,6 @@ function formatArs(value: number) {
     style: 'currency',
     currency: 'ARS',
   }).format(value)
-}
-
-function formatShippingAddress(shippingAddress: unknown): string {
-  if (!shippingAddress || typeof shippingAddress !== 'object') {
-    return 'No disponible'
-  }
-
-  const addr = shippingAddress as Record<string, unknown>
-  const parts = [
-    addr.calle,
-    addr.numero,
-    addr.pisoDpto,
-    addr.ciudad,
-    addr.provincia,
-    addr.codigoPostal,
-  ]
-    .filter((part) => typeof part === 'string' && part.trim().length > 0)
-    .map((part) => String(part).trim())
-
-  return parts.length > 0 ? parts.join(', ') : 'No disponible'
 }
 
 const styles: Record<string, CSSProperties> = {
@@ -141,6 +151,12 @@ const styles: Record<string, CSSProperties> = {
     margin: '0 0 8px',
     fontSize: '14px',
     lineHeight: 1.5,
+  },
+  rowMuted: {
+    margin: '0 0 8px',
+    fontSize: '13px',
+    lineHeight: 1.5,
+    color: 'rgba(29,29,31,0.62)',
   },
   sectionTitle: {
     margin: '0 0 12px',

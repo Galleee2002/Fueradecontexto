@@ -160,6 +160,8 @@ export async function fetchAdminOrders(
            COALESCE(
              CASE
                WHEN o."shippingMethod" = 'correo_argentino_home' THEN 'Correo Argentino a domicilio'
+               WHEN o."shippingMethod" = 'correo_argentino_branch' THEN 'Correo Argentino sucursal'
+               WHEN o."shippingMethod" = 'seller_pickup' THEN 'Retiro en domicilio'
                ELSE NULL
              END,
              'Sin envío cotizado'

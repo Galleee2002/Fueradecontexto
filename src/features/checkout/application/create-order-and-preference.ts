@@ -10,6 +10,7 @@ import { createMercadoPagoPreference } from '../infrastructure/payment-gateway'
 import { buildShippingQuote } from './build-shipping-quote'
 import { checkoutCartSchema } from '../schemas/checkout-schema'
 import type { CartItemInput, ContactData, ShippingData, ShippingSelection } from '../types'
+import { SHIPPING_METHOD_SELLER_PICKUP } from '@/shared/config/shipping'
 import { buildQuoteSelectionMismatchError } from '../lib/shipping-dimensions'
 
 export interface CreatePreferenceResult {
@@ -82,6 +83,8 @@ export async function createOrderAndPreferenceUseCase(
     shippingSelection.cartFingerprint === shippingQuote.cartFingerprint &&
     shippingSelection.addressFingerprint === shippingQuote.addressFingerprint &&
     shippingSelection.price === shippingQuote.price &&
+    shippingSelection.method === shippingQuote.method &&
+    shippingSelection.carrier === shippingQuote.carrier &&
     shippingSelection.deliveryType === shippingQuote.deliveryType &&
     shippingSelection.agencyCode === shippingQuote.agencyCode &&
     shippingSelection.productType === shippingQuote.productType &&
@@ -116,6 +119,16 @@ export async function createOrderAndPreferenceUseCase(
 
     orderId = order.id
 
+    const shippingLineItem =
+      shippingQuote.method === SHIPPING_METHOD_SELLER_PICKUP
+        ? null
+        : {
+            productId: 'shipping-correo-argentino',
+            quantity: 1,
+            price: shippingQuote.price,
+            name: 'Envio Correo Argentino',
+          }
+
     const mpResponse = await createMercadoPagoPreference(
       contact,
       validatedCart.map((item) => {
@@ -127,12 +140,7 @@ export async function createOrderAndPreferenceUseCase(
           name: product.name,
         }
       }),
-      {
-        productId: 'shipping-correo-argentino',
-        quantity: 1,
-        price: shippingQuote.price,
-        name: 'Envio Correo Argentino',
-      },
+      shippingLineItem,
       order.id,
     )
 

@@ -9,7 +9,10 @@ export interface ContactData {
   telefono: string
 }
 
+export type FulfillmentMethod = 'correo_argentino' | 'seller_pickup'
+
 export interface ShippingData {
+  fulfillmentMethod: FulfillmentMethod
   deliveryType: 'D' | 'S'
   calle: string
   numero: string
@@ -37,8 +40,8 @@ export interface ShippingDimensions {
 }
 
 export interface ShippingQuote {
-  carrier: 'correo_argentino'
-  method: 'correo_argentino_home' | 'correo_argentino_branch'
+  carrier: 'correo_argentino' | 'seller'
+  method: 'correo_argentino_home' | 'correo_argentino_branch' | 'seller_pickup'
   productType: string
   productName: string
   deliveryType: 'D' | 'S'

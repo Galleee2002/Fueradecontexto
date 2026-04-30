@@ -22,19 +22,17 @@ import {
 } from '@/shared/infrastructure/shipping/correo-argentino/client'
 import {
   SHIPPING_CARRIER_CORREO_ARGENTINO,
+  SHIPPING_CARRIER_SELLER,
   SHIPPING_METHOD_CORREO_ARGENTINO_BRANCH,
   SHIPPING_CORREO_ARGENTINO_ENABLED,
   SHIPPING_METHOD_CORREO_ARGENTINO_HOME,
+  SHIPPING_METHOD_SELLER_PICKUP,
 } from '@/shared/config/shipping'
 
 export async function buildShippingQuote(
   shipping: ShippingData,
   cartItems: CartItemInput[],
 ): Promise<ShippingQuote> {
-  if (!SHIPPING_CORREO_ARGENTINO_ENABLED) {
-    throw new Error('El cálculo de envío está deshabilitado temporalmente.')
-  }
-
   const cartParsed = checkoutCartSchema.safeParse(cartItems)
   if (!cartParsed.success) {
     throw new Error('Carrito inválido')
@@ -49,6 +47,49 @@ export async function buildShippingQuote(
   }
 
   validateStockForCheckout(validatedCart, products)
+
+  if (shipping.fulfillmentMethod === 'seller_pickup') {
+    const shippingParsed = shippingSchema.safeParse(shipping)
+
+    if (!shippingParsed.success) {
+      const fieldErrors = Object.fromEntries(
+        shippingParsed.error.issues.map((issue) => [issue.path[0], issue.message]),
+      )
+
+      throw new ShippingQuoteError('Revisá los datos de envío ingresados.', 'invalid_address', fieldErrors)
+    }
+
+    const sanitizedShipping = sanitizeShippingAddress(shippingParsed.data)
+    const dimensions = buildShippingDimensions(validatedCart, products, { enforceCorreoLimits: false })
+    const destinationProvinceCode = getProvinceCodeForShipping(sanitizedShipping.provincia)
+    const destinationPostalCode = buildPostalCodeForProvinceCode(
+      sanitizedShipping.codigoPostal,
+      destinationProvinceCode,
+    )
+
+    return {
+      carrier: SHIPPING_CARRIER_SELLER,
+      method: SHIPPING_METHOD_SELLER_PICKUP,
+      productType: 'pickup',
+      productName: 'Retiro en domicilio',
+      deliveryType: 'D',
+      agencyCode: null,
+      agencyName: null,
+      price: 0,
+      deliveryTimeMin: '0',
+      deliveryTimeMax: '0',
+      validTo: '',
+      destinationPostalCode,
+      destinationProvinceCode,
+      dimensions,
+      cartFingerprint: buildCartFingerprint(validatedCart),
+      addressFingerprint: buildAddressFingerprint(sanitizedShipping),
+    }
+  }
+
+  if (!SHIPPING_CORREO_ARGENTINO_ENABLED) {
+    throw new Error('El cálculo de envío está deshabilitado temporalmente.')
+  }
 
   const shippingParsed = shippingSchema.safeParse(shipping)
 
