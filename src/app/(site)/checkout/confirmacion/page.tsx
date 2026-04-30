@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { CheckCircle } from 'lucide-react'
+import { SITE_CONTACT_EMAIL } from '@/shared/config/site'
 import { Container } from '@/shared/ui/layout/container'
 
 interface Props {
@@ -62,7 +63,12 @@ export default async function ConfirmacionPage({ searchParams }: Props) {
 
           <p className="mt-10 text-xs text-muted-foreground">
             ¿Tenés alguna consulta? Escribinos a{' '}
-            <span className="underline underline-offset-2">hola@fueradecontexto.com</span>
+            <a
+              href={`mailto:${SITE_CONTACT_EMAIL}`}
+              className="underline underline-offset-2"
+            >
+              {SITE_CONTACT_EMAIL}
+            </a>
           </p>
         </div>
       </Container>

@@ -1,4 +1,5 @@
 export const SITE_NAME = 'Fueradecontexto'
+export const SITE_CONTACT_EMAIL = 'fueradecontexto04@gmail.com'
 export const SITE_DESCRIPTION = 'Indumentaria & Accesorios — Minimalismo elevado'
 export const MAX_CART_ITEMS = 10
 export const MAX_PRODUCTS_PER_PAGE = 12
