@@ -1,7 +1,7 @@
 import { Truck, RefreshCw, ShieldCheck } from 'lucide-react'
 
 const BADGES = [
-  { icon: Truck,       label: 'Envío gratis',   sublabel: 'en compras +$50.000' },
+  { icon: Truck,       label: 'Envío',          sublabel: 'entre 4 y 7 días hábiles' },
   { icon: RefreshCw,   label: 'Cambios gratis', sublabel: '30 días sin cargo'   },
   { icon: ShieldCheck, label: 'Pago seguro',    sublabel: 'encriptado SSL'      },
 ] as const

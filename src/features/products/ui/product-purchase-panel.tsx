@@ -57,6 +57,9 @@ export function ProductPurchasePanel({
   onOpenSizeGuide,
   onCloseSizeGuide,
 }: ProductPurchasePanelProps) {
+  const isCapCategory = product.category.toLowerCase().includes('gorra')
+  const availableStampSides = isCapCategory ? [STAMP_SIDES[0]] : STAMP_SIDES
+
   return (
     <>
       <div className="brand-panel-solid space-y-6 px-6 py-7 sm:px-8">
@@ -87,7 +90,7 @@ export function ProductPurchasePanel({
             {selectedStampSide ? <> — <span className="text-foreground">{selectedStampSide}</span></> : null}
           </p>
           <div className="flex flex-wrap gap-2">
-            {STAMP_SIDES.map((side) => (
+            {availableStampSides.map((side) => (
               <button
                 key={side}
                 type="button"

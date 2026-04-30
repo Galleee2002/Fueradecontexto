@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Loader2, MapPin, Plus, X } from 'lucide-react'
@@ -155,7 +155,13 @@ export function ProductForm({
   }
 
   const effectiveCategory = useCustomCategory ? customCategory : category
+  const isCapCategory = effectiveCategory.toLowerCase().includes('gorra')
   const selectedCategorySubs = categories.find(c => c.name === effectiveCategory)?.subcategories ?? []
+
+  useEffect(() => {
+    if (!isCapCategory) return
+    setSelectedStampLocations((prev) => prev.filter((loc) => !loc.toLowerCase().includes('dorso')))
+  }, [isCapCategory])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -578,21 +584,29 @@ export function ProductForm({
 
               {allStampLocations.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
-                  {allStampLocations.map((loc) => (
-                    <label key={loc} className="flex items-center gap-1.5 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedStampLocations.includes(loc)}
-                        onChange={() =>
-                          setSelectedStampLocations((prev) =>
-                            prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc],
-                          )
-                        }
-                        className="h-3.5 w-3.5 accent-primary"
-                      />
-                      <span className="text-xs text-foreground">{loc}</span>
-                    </label>
-                  ))}
+                  {allStampLocations.map((loc) => {
+                    const isBackLocation = loc.toLowerCase().includes('dorso')
+                    const isDisabledForCaps = isCapCategory && isBackLocation
+
+                    return (
+                      <label key={loc} className="flex items-center gap-1.5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedStampLocations.includes(loc)}
+                          disabled={isDisabledForCaps}
+                          onChange={() =>
+                            setSelectedStampLocations((prev) =>
+                              prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc],
+                            )
+                          }
+                          className="h-3.5 w-3.5 accent-primary"
+                        />
+                        <span className={cn('text-xs', isDisabledForCaps ? 'text-muted-foreground' : 'text-foreground')}>
+                          {loc}
+                        </span>
+                      </label>
+                    )
+                  })}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border py-5 px-4 text-center">
