@@ -33,7 +33,9 @@ export function MultiStampSelector({ label, options, selected, onChange }: Multi
         {options.map((option) => (
           <button
             key={option}
+            type="button"
             onClick={() => handleToggle(option)}
+            aria-pressed={selected.includes(option)}
             className={`min-h-[44px] rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
               selected.includes(option)
                 ? 'border-foreground bg-foreground text-background'

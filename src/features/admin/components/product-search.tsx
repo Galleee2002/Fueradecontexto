@@ -39,10 +39,9 @@ export function ProductSearch({ defaultValue }: ProductSearchProps) {
 
   return (
     <div className="relative">
-      <Search
-        className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
-        strokeWidth={1.5}
-      />
+      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+        <Search className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+      </span>
       <input
         key={defaultValue}
         type="text"
@@ -54,7 +53,7 @@ export function ProductSearch({ defaultValue }: ProductSearchProps) {
       {defaultValue && (
         <button
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Limpiar búsqueda"
         >
           <X className="h-4 w-4" strokeWidth={1.5} />

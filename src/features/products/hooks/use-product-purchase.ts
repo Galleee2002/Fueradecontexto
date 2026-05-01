@@ -9,14 +9,15 @@ import {
   STAMP_SIDES,
   type StampSide,
 } from '../lib/product-purchase'
+import { isCapCategory } from '../lib/stamp-pricing'
 
 export function useProductPurchase(product: ProductFull) {
-  const isCapCategory = product.category.toLowerCase().includes('gorra')
+  const isCap = isCapCategory(product.category)
   const [quantity, setQuantity] = useState(1)
   const [selectedColor, setSelectedColor] = useState<string | null>(null)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  const [selectedStampSide, setSelectedStampSide] = useState<StampSide>(
-    isCapCategory ? STAMP_SIDES[0] : STAMP_SIDES[1],
+  const [selectedStampSide, setSelectedStampSide] = useState<StampSide | null>(
+    isCap ? STAMP_SIDES[0] : STAMP_SIDES[1],
   )
   const [selectedStampSize, setSelectedStampSize] = useState<string | null>(null)
   const [selectedStampLocations, setSelectedStampLocations] = useState<string[]>([])
@@ -34,10 +35,19 @@ export function useProductPurchase(product: ProductFull) {
   const isPurchasable = product.active && product.stock > 0
 
   useEffect(() => {
-    if (isCapCategory && selectedStampSide !== STAMP_SIDES[0]) {
+    if (isCap && selectedStampSide && selectedStampSide !== STAMP_SIDES[0]) {
       setSelectedStampSide(STAMP_SIDES[0])
     }
-  }, [isCapCategory, selectedStampSide])
+  }, [isCap, selectedStampSide])
+
+  useEffect(() => {
+    if (!selectedStampSide) {
+      setSelectedStampSize(null)
+      if (selectedStampLocations.length > 0) {
+        setSelectedStampLocations([])
+      }
+    }
+  }, [selectedStampSide, selectedStampLocations.length])
 
   return {
     quantity,

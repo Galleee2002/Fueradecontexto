@@ -10,7 +10,11 @@ export function getOrderedSizes(product: ProductFull) {
   return SIZE_ORDER.filter((size) => product.availableSizes.includes(size))
 }
 
-export function getFilteredStampSizes(product: ProductFull, stampSide: StampSide) {
+export function getFilteredStampSizes(product: ProductFull, stampSide: StampSide | null) {
+  if (!stampSide) {
+    return []
+  }
+
   const orderedStampSizes = STAMP_SIZE_ORDER.filter((size) => product.stampSizes.includes(size))
 
   return stampSide === 'FRENTE'

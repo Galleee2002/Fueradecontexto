@@ -1,10 +1,33 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { AlertCircle, CheckCircle2, Pencil } from 'lucide-react'
+import { formatPrice } from '@/shared/lib/format-price'
+import { STAMP_UPCHARGES, isCapCategory } from '@/features/products/lib/stamp-pricing'
 import { ToggleActiveButton } from './toggle-active-button'
 import { DeleteProductButton } from './delete-product-button'
 import { AdminPagination } from './admin-pagination'
 import type { AdminProduct } from '../types'
+
+const STAMP_UPCHARGE_ORDER = ['Hasta 10 cm', '20x30', '30x40', '40x50'] as const
+
+function formatUpchargeShort(value: number) {
+  if (value >= 1000 && value % 1000 === 0) {
+    return `+$${value / 1000}k`
+  }
+  return `+${formatPrice(value)}`
+}
+
+function buildUpchargeSummary(stampSizes: string[]) {
+  const available = STAMP_UPCHARGE_ORDER.filter((size) => stampSizes.includes(size))
+  if (available.length === 0) return null
+
+  const short = available.map((size) => formatUpchargeShort(STAMP_UPCHARGES[size] ?? 0)).join(' / ')
+  const detailed = available
+    .map((size) => `${size}: +${formatPrice(STAMP_UPCHARGES[size] ?? 0)}`)
+    .join(' · ')
+
+  return { short, detailed }
+}
 
 interface ProductsTableProps {
   products: AdminProduct[]
@@ -88,10 +111,27 @@ export function ProductsTable({ products, currentPage, totalPages, total }: Prod
                 </td>
 
                 {/* Price */}
-                <td className="py-3 px-4 hidden sm:table-cell">
-                  <span className="font-semibold text-foreground tabular-nums">
-                    ${product.price.toLocaleString('es-AR')}
-                  </span>
+                <td className="py-3 px-4 hidden sm:table-cell align-top">
+                  {(() => {
+                    const upchargeSummary = isCapCategory(product.category)
+                      ? null
+                      : buildUpchargeSummary(product.stampSizes)
+                    return (
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-semibold text-foreground tabular-nums">
+                          ${product.price.toLocaleString('es-AR')}
+                        </span>
+                        {upchargeSummary && (
+                          <span
+                            title={`Recargos por estampa — ${upchargeSummary.detailed}`}
+                            className="text-2xs text-muted-foreground tabular-nums truncate"
+                          >
+                            Estampa: {upchargeSummary.short}
+                          </span>
+                        )}
+                      </div>
+                    )
+                  })()}
                 </td>
 
                 {/* Toggle active */}
