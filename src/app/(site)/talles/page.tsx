@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
@@ -8,6 +9,12 @@ const PREFERRED_COLUMNS = [
   { label: 'Ancho', aliases: ['ancho', 'pecho'] },
   { label: 'Largo', aliases: ['largo'] },
 ] as const
+
+export const metadata: Metadata = {
+  title: 'Guia de talles',
+  description: 'Consulta la guia de talles por categoria para elegir la medida correcta.',
+  alternates: { canonical: '/talles' },
+}
 
 export default async function TallesPage() {
   const [categories, guides] = await Promise.all([getProductCategories(), getSizeGuides()])

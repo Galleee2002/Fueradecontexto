@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import {
   getProductCategories,
   getProducts,
@@ -10,6 +11,12 @@ import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
 import { SearchBar } from '@/features/navigation/components/search-bar'
 import type { ProductFilters as ProductFiltersType } from '@/features/products/types'
+
+export const metadata: Metadata = {
+  title: 'Productos',
+  description: 'Explora todos los productos de Fueradecontexto: prendas, accesorios y lanzamientos.',
+  alternates: { canonical: '/productos' },
+}
 
 export default async function ProductsPage({
   searchParams,

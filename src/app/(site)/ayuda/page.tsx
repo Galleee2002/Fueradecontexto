@@ -1,5 +1,12 @@
+import type { Metadata } from 'next'
 import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
+
+export const metadata: Metadata = {
+  title: 'Ayuda',
+  description: 'Resuelve dudas sobre envios, pagos, cambios y recomendaciones antes de tu compra.',
+  alternates: { canonical: '/ayuda' },
+}
 
 export default function AyudaPage() {
   return (

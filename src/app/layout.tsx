@@ -19,10 +19,25 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Fueradecontexto — Indumentaria & Accesorios',
+  title: {
+    default: 'Fueradecontexto — Indumentaria & Accesorios',
+    template: '%s | Fueradecontexto',
+  },
   description: 'Minimalismo elevado, editorial, sofisticación moderna.',
-  alternates: {
-    canonical: '/',
+  openGraph: {
+    type: 'website',
+    locale: 'es_AR',
+    url: SITE_URL,
+    siteName: 'Fueradecontexto',
+    title: 'Fueradecontexto — Indumentaria & Accesorios',
+    description: 'Minimalismo elevado, editorial, sofisticación moderna.',
+    images: [{ url: '/opengraph-image' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fueradecontexto — Indumentaria & Accesorios',
+    description: 'Minimalismo elevado, editorial, sofisticación moderna.',
+    images: ['/twitter-image'],
   },
   robots: {
     index: true,

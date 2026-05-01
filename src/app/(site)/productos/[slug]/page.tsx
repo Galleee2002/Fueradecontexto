@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getProductDetail, getProducts, ProductDetail, RelatedProducts } from '@/features/products'
 import { Container } from '@/shared/ui/layout/container'
-import { SITE_NAME } from '@/shared/config/site'
+import { SITE_NAME, SITE_URL } from '@/shared/config/site'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -19,13 +19,31 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const detail = await getProductDetail(slug)
   if (!detail) return { title: 'Producto no encontrado' }
   const { product } = detail
+  const canonicalPath = `/productos/${product.slug}`
+  const imageUrl = product.imageUrl
+    ? product.imageUrl.startsWith('http')
+      ? product.imageUrl
+      : `${SITE_URL}${product.imageUrl.startsWith('/') ? '' : '/'}${product.imageUrl}`
+    : '/opengraph-image'
+
   return {
     title: `${product.name} — ${SITE_NAME}`,
     description: product.description ?? `${product.name} en ${SITE_NAME}. Indumentaria de autor.`,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
+      type: 'website',
+      url: canonicalPath,
       title: `${product.name} — ${SITE_NAME}`,
       description: product.description ?? '',
-      images: product.imageUrl ? [{ url: product.imageUrl }] : [],
+      images: [{ url: imageUrl }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} — ${SITE_NAME}`,
+      description: product.description ?? '',
+      images: [imageUrl],
     },
   }
 }
