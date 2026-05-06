@@ -16,8 +16,13 @@ export const metadata: Metadata = {
   alternates: { canonical: '/talles' },
 }
 
+const CATEGORIES_WITHOUT_SIZE_GUIDE = new Set(['gorras'])
+
 export default async function TallesPage() {
-  const [categories, guides] = await Promise.all([getProductCategories(), getSizeGuides()])
+  const [categoriesRaw, guides] = await Promise.all([getProductCategories(), getSizeGuides()])
+  const categories = categoriesRaw.filter(
+    (category) => !CATEGORIES_WITHOUT_SIZE_GUIDE.has(category.trim().toLowerCase()),
+  )
 
   const guideByCategory = new Map(guides.map((guide) => [guide.category, guide]))
 
@@ -51,7 +56,7 @@ export default async function TallesPage() {
 
                   {!guide ? (
                     <p className="mt-3 text-sm text-muted-foreground">
-                      Todavia no hay tabla para esta categoria. Se cargara desde admin.
+                      Todavía no hay tabla para esta categoría.
                     </p>
                   ) : previewRows.length === 0 ? (
                     <p className="mt-3 text-sm text-muted-foreground">

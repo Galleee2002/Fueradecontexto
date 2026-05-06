@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SITE_CONTACT_EMAIL } from '@/shared/config/site'
 import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
 
@@ -65,11 +66,11 @@ export default function AyudaPage() {
               <div className="mt-6 space-y-4 text-sm">
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">Email</p>
-                  <p className="mt-1 text-foreground">hola@fueradecontexto.com</p>
+                  <p className="mt-1 text-foreground">{SITE_CONTACT_EMAIL}</p>
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">Horarios</p>
-                  <p className="mt-1 text-foreground">Lunes a viernes, 10:00 a 18:00 hs</p>
+                  <p className="mt-1 text-foreground">Lunes a viernes, 08:00 a 20:00 hs</p>
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">Recomendación</p>

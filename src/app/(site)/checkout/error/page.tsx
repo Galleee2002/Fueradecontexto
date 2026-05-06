@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { XCircle } from 'lucide-react'
+import { SITE_CONTACT_EMAIL } from '@/shared/config/site'
 import { Container } from '@/shared/ui/layout/container'
 
 export default function ErrorPagoPage() {
@@ -38,7 +39,7 @@ export default function ErrorPagoPage() {
 
           <p className="mt-10 text-xs text-muted-foreground">
             ¿Tenés problemas? Escribinos a{' '}
-            <span className="underline underline-offset-2">hola@fueradecontexto.com</span>
+            <span className="underline underline-offset-2">{SITE_CONTACT_EMAIL}</span>
           </p>
         </div>
       </Container>
