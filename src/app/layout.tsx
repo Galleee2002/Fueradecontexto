@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import { Cormorant_Garamond, Inter } from 'next/font/google'
 import { auth } from '@/auth'
+import { SiteJsonLd } from '@/shared/seo/site-json-ld'
 import { Providers } from '@/shared/ui/providers'
 import { SITE_URL } from '@/shared/config/site'
 import './globals.css'
+
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -44,6 +47,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
 }
 
 export default async function RootLayout({
@@ -54,8 +60,9 @@ export default async function RootLayout({
   const session = await auth()
 
   return (
-    <html lang="es" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="es-AR" className={`${cormorant.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
+        <SiteJsonLd />
         <Providers session={session}>{children}</Providers>
       </body>
     </html>

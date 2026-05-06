@@ -6,6 +6,12 @@ import { SITE_CONTACT_EMAIL, SITE_NAME } from '@/shared/config/site'
 export const metadata: Metadata = {
   title: 'Política de privacidad',
   description: `Cómo ${SITE_NAME} trata tus datos personales conforme a la normativa argentina.`,
+  alternates: { canonical: '/legal/privacidad' },
+  openGraph: {
+    title: 'Política de privacidad',
+    description: `Cómo ${SITE_NAME} trata tus datos personales conforme a la normativa argentina.`,
+    url: '/legal/privacidad',
+  },
 }
 
 const sectionTitle = 'text-base font-semibold tracking-[-0.02em] text-foreground'

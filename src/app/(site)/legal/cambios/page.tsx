@@ -6,6 +6,12 @@ import { SITE_CONTACT_EMAIL, SITE_NAME } from '@/shared/config/site'
 export const metadata: Metadata = {
   title: 'Cambios y devoluciones',
   description: `Política de cambios, devoluciones y arrepentimiento en compras online en ${SITE_NAME}.`,
+  alternates: { canonical: '/legal/cambios' },
+  openGraph: {
+    title: 'Cambios y devoluciones',
+    description: `Política de cambios, devoluciones y arrepentimiento en compras online en ${SITE_NAME}.`,
+    url: '/legal/cambios',
+  },
 }
 
 const sectionTitle = 'text-base font-semibold tracking-[-0.02em] text-foreground'

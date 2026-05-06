@@ -6,6 +6,12 @@ import { SITE_CONTACT_EMAIL, SITE_NAME } from '@/shared/config/site'
 export const metadata: Metadata = {
   title: 'Términos y condiciones',
   description: `Condiciones generales de uso y compra en ${SITE_NAME}.`,
+  alternates: { canonical: '/legal/terminos' },
+  openGraph: {
+    title: 'Términos y condiciones',
+    description: `Condiciones generales de uso y compra en ${SITE_NAME}.`,
+    url: '/legal/terminos',
+  },
 }
 
 const sectionTitle = 'text-base font-semibold tracking-[-0.02em] text-foreground'
