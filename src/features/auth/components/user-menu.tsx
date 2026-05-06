@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { User, ChevronDown } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { isAdminRole } from '@/shared/infrastructure/auth/user-role'
 
 export function UserMenu() {
   const { data: session, status } = useSession()
@@ -44,14 +45,17 @@ export function UserMenu() {
     )
   }
 
-  const isAdmin = session.user.role === 'ADMIN'
+  const isAdmin = isAdminRole(session.user.role)
 
   return (
     <div className="relative z-[60]" ref={ref}>
       <button
+        type="button"
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-0.5 text-foreground hover:text-primary transition-colors sm:gap-1"
         aria-label="Mi cuenta"
+        aria-expanded={open}
+        aria-haspopup="menu"
       >
         <User className="h-5 w-5 shrink-0 stroke-[1.5]" />
         <ChevronDown
@@ -60,28 +64,34 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full pt-2 z-[70] min-w-[160px]">
-          <ul className="bg-background border border-border shadow-lg rounded-xl py-1.5 overflow-hidden">
+        <div
+          className="absolute right-0 top-full z-[100] min-w-[200px] pt-2"
+          role="menu"
+          aria-label="Cuenta"
+        >
+          <ul className="overflow-hidden rounded-xl border border-border bg-background py-1.5 shadow-lg">
             <li>
               <Link
                 href="/cuenta"
+                role="menuitem"
                 onClick={() => setOpen(false)}
-                className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-surface transition-colors tracking-wide"
+                className="block px-4 py-2.5 text-sm text-muted-foreground transition-colors tracking-wide hover:bg-surface hover:text-foreground"
               >
                 Mi cuenta
               </Link>
             </li>
-            {isAdmin && (
+            {isAdmin ? (
               <li>
                 <Link
                   href="/admin"
+                  role="menuitem"
                   onClick={() => setOpen(false)}
-                  className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-surface transition-colors tracking-wide"
+                  className="block px-4 py-2.5 text-sm text-muted-foreground transition-colors tracking-wide hover:bg-surface hover:text-foreground"
                 >
-                  Admin
+                  Administrador
                 </Link>
               </li>
-            )}
+            ) : null}
           </ul>
         </div>
       )}

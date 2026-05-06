@@ -16,7 +16,8 @@ export function HeroSection() {
                 presencia propia.
               </h1>
               <p className="mx-auto max-w-2xl text-base leading-relaxed text-foreground/72 sm:text-xl">
-                Una tienda pensada como editorial de producto: piezas reales, navegación limpia y una compra sin fricción.
+                Prendas personalizadas que convierten ideas en identidad: diseño cuidado, detalles reales y piezas hechas
+                para destacar.
               </p>
             </div>
 

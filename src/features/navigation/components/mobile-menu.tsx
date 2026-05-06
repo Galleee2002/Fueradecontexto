@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, Menu, Search, X } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { SITE_NAME } from '@/shared/config/site'
 import { SOCIAL_LINKS, WHATSAPP_NUMBER } from '@/features/navigation/constants/external-links'
+import { isAdminRole } from '@/shared/infrastructure/auth/user-role'
 
 export type NavLink = { label: string; href: string; children?: NavLink[] }
 
@@ -19,6 +21,9 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
   const [query, setQuery] = useState('')
   const pathname = usePathname()
   const router = useRouter()
+  const { data: session, status: sessionStatus } = useSession()
+  const isAuthenticated = sessionStatus === 'authenticated' && Boolean(session?.user)
+  const isAdmin = isAdminRole(session?.user?.role)
 
   const whatsappHref = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}` : ''
 
@@ -218,6 +223,46 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
 
             <div className="shrink-0 border-t border-border px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
               <div className="space-y-1">
+                {sessionStatus === 'loading' ? null : isAuthenticated ? (
+                  <>
+                    <Link
+                      href="/cuenta"
+                      onClick={() => {
+                        if (pathname !== '/cuenta') {
+                          closeMenu()
+                        }
+                      }}
+                      className="flex min-h-12 items-center text-sm font-medium tracking-wide text-foreground transition-colors hover:text-primary"
+                    >
+                      Mi cuenta
+                    </Link>
+                    {isAdmin ? (
+                      <Link
+                        href="/admin"
+                        onClick={() => {
+                          if (!pathname.startsWith('/admin')) {
+                            closeMenu()
+                          }
+                        }}
+                        className="flex min-h-12 items-center text-sm font-medium tracking-wide text-foreground transition-colors hover:text-primary"
+                      >
+                        Administrador
+                      </Link>
+                    ) : null}
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={() => {
+                      if (pathname !== '/login') {
+                        closeMenu()
+                      }
+                    }}
+                    className="flex min-h-12 items-center text-sm font-medium tracking-wide text-foreground transition-colors hover:text-primary"
+                  >
+                    Iniciar sesión
+                  </Link>
+                )}
                 <Link
                   href="/ayuda"
                   onClick={() => {

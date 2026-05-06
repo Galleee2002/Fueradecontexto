@@ -11,7 +11,24 @@ interface OrderHistorySectionProps {
 const PANEL =
   'brand-panel-solid px-6 py-7 sm:px-8 sm:py-8 lg:px-10'
 
+/** Nombre guardado en cuenta, o parte local del email si no hay nombre. */
+function resolveAccountDisplayName(user: { name?: string | null; email?: string | null }): string {
+  const name = user.name?.trim()
+  if (name && name.length > 0) return name
+
+  const email = user.email?.trim().toLowerCase()
+  if (email?.includes('@')) {
+    const local = email.split('@')[0]?.trim()
+    if (local && local.length > 0) {
+      return local.replace(/[._]+/g, ' ').replace(/\s+/g, ' ').trim()
+    }
+  }
+
+  return ''
+}
+
 export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) {
+  const displayName = resolveAccountDisplayName(user)
   return (
     <div className="pb-12">
       <nav
@@ -26,35 +43,39 @@ export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) 
       </nav>
 
       <div className={PANEL}>
-        <div className="flex flex-col gap-6 border-b border-border pb-8 lg:flex-row lg:items-start lg:justify-between">
-          <div className="min-w-0 space-y-3">
-            <p className="brand-kicker">Fueradecontexto</p>
-            <h1 className="max-w-4xl text-4xl font-medium tracking-[-0.05em] sm:text-5xl lg:text-[3.6rem]">
-              Mi Cuenta
-            </h1>
-            <p className="text-lg font-medium tracking-[-0.02em] text-foreground">
-              {user.name?.trim() || 'Tu perfil'}
-            </p>
-            {user.email ? (
-              <p className="text-sm text-muted-foreground">{user.email}</p>
-            ) : null}
-          </div>
-          <div className="shrink-0 lg:pt-1">
-            <LogoutButton />
-          </div>
-        </div>
+        <header className="border-b border-border pb-6 text-center sm:pb-7">
+          <h1 className="min-w-0 text-3xl font-medium tracking-[-0.05em] sm:text-4xl lg:text-[2.75rem] lg:leading-tight">
+            Mi Cuenta
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-base leading-snug text-muted-foreground">
+            {displayName ? (
+              <>
+                Bienvenido/a,{' '}
+                <span className="font-medium text-foreground">{displayName}</span>
+              </>
+            ) : (
+              'Bienvenido/a'
+            )}
+          </p>
+        </header>
 
-        <div className="pt-8">
-          <h2 className="border-b border-border pb-3 text-2xs font-medium uppercase tracking-widest text-muted-foreground">
+        <div className="pt-6 sm:pt-8">
+          <h2 className="border-b border-border pb-3 text-center text-2xs font-medium uppercase tracking-widest text-muted-foreground">
             Historial de órdenes
           </h2>
 
           {orders.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              Todavía no realizaste ninguna compra.
-            </p>
+            <div
+              className="mt-4 rounded-[18px] border border-border bg-surface/60 px-5 py-10 sm:px-8 sm:py-12"
+              role="status"
+              aria-live="polite"
+            >
+              <p className="text-center text-sm leading-relaxed text-muted-foreground">
+                Todavía no realizaste ninguna compra.
+              </p>
+            </div>
           ) : (
-            <div className="mt-4 divide-y divide-border rounded-[1.25rem] border border-border bg-surface">
+            <div className="mt-4 divide-y divide-border rounded-[18px] border border-border bg-surface">
               {orders.map((order) => {
                 const statusClass =
                   ORDER_STATUS_STYLES[order.status] ?? 'bg-surface text-muted-foreground border-border'
@@ -84,6 +105,10 @@ export function OrderHistorySection({ user, orders }: OrderHistorySectionProps) 
               })}
             </div>
           )}
+        </div>
+
+        <div className="mt-6 w-full sm:mt-8">
+          <LogoutButton />
         </div>
       </div>
     </div>

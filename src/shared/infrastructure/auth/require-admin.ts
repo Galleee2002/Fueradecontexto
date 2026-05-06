@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
+import { isAdminRole } from '@/shared/infrastructure/auth/user-role'
 
 export async function requireAdminSession() {
   const session = await auth()
@@ -8,7 +9,7 @@ export async function requireAdminSession() {
     redirect('/login')
   }
 
-  if (session.user.role !== 'ADMIN') {
+  if (!isAdminRole(session.user.role)) {
     redirect('/cuenta')
   }
 
@@ -18,7 +19,7 @@ export async function requireAdminSession() {
 export async function assertAdminSession() {
   const session = await auth()
 
-  if (!session?.user || session.user.role !== 'ADMIN') {
+  if (!session?.user || !isAdminRole(session.user.role)) {
     throw new Error('Unauthorized')
   }
 
