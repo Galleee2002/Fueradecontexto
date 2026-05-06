@@ -34,7 +34,7 @@ const FAQ_ITEMS = [
 ] as const
 
 export function FaqSection() {
-  const [openItem, setOpenItem] = useState(0)
+  const [openItem, setOpenItem] = useState(-1)
   const [visibleItems, setVisibleItems] = useState<number[]>([])
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const itemRefs = useRef<Array<HTMLElement | null>>([])
