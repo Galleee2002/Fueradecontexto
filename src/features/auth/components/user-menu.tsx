@@ -6,7 +6,7 @@ import { User, ChevronDown } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
 export function UserMenu() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -20,7 +20,19 @@ export function UserMenu() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  if (!session) {
+  if (status === 'loading') {
+    return (
+      <span
+        className="inline-flex text-foreground opacity-60"
+        aria-busy="true"
+        aria-label="Cargando sesión"
+      >
+        <User className="h-5 w-5 stroke-[1.5]" />
+      </span>
+    )
+  }
+
+  if (status !== 'authenticated' || !session?.user) {
     return (
       <Link
         href="/login"
@@ -38,12 +50,12 @@ export function UserMenu() {
     <div className="relative z-[60]" ref={ref}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center gap-1 text-foreground hover:text-primary transition-colors"
+        className="flex items-center gap-0.5 text-foreground hover:text-primary transition-colors sm:gap-1"
         aria-label="Mi cuenta"
       >
-        <User className="h-5 w-5 stroke-[1.5]" />
+        <User className="h-5 w-5 shrink-0 stroke-[1.5]" />
         <ChevronDown
-          className={`h-3 w-3 transition-transform duration-200${open ? ' rotate-180' : ''}`}
+          className={`hidden h-3 w-3 shrink-0 transition-transform duration-200 sm:block${open ? ' rotate-180' : ''}`}
         />
       </button>
 

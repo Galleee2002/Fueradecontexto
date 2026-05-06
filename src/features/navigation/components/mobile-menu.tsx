@@ -53,6 +53,36 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [open])
 
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    const html = document.documentElement
+    const body = document.body
+    const prevHtmlOverflow = html.style.overflow
+    const prevBodyOverflow = body.style.overflow
+    const prevBodyPosition = body.style.position
+    const prevBodyTop = body.style.top
+    const prevBodyWidth = body.style.width
+    const scrollY = window.scrollY
+
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.width = '100%'
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow
+      body.style.overflow = prevBodyOverflow
+      body.style.position = prevBodyPosition
+      body.style.top = prevBodyTop
+      body.style.width = prevBodyWidth
+      window.scrollTo(0, scrollY)
+    }
+  }, [open])
+
   return (
     <div className="md:hidden">
       <button
@@ -72,14 +102,14 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
             type="button"
             aria-label="Cerrar menú"
             onClick={closeMenu}
-            className="fixed inset-0 z-[69] bg-foreground/28 backdrop-blur-sm"
+            className="fixed inset-0 z-[69] h-dvh max-h-dvh w-full touch-none bg-foreground/28 backdrop-blur-sm"
           />
 
           <div
             id="mobile-menu-panel"
-            className="fixed inset-y-0 right-0 z-[70] flex h-svh w-full max-w-md flex-col border-l border-border bg-[rgba(245,245,247,0.96)] shadow-[-18px_0_50px_rgba(18,24,32,0.08)] backdrop-blur-xl"
+            className="fixed top-0 right-0 z-[70] flex h-dvh max-h-dvh w-full max-w-md min-w-0 touch-none flex-col overflow-hidden border-l border-border bg-[rgba(245,245,247,0.96)] pt-[env(safe-area-inset-top)] shadow-[-18px_0_50px_rgba(18,24,32,0.08)] backdrop-blur-xl"
           >
-            <div className="border-b border-border px-4 py-4">
+            <div className="shrink-0 border-b border-border px-4 py-4">
               <div className="flex items-center justify-between gap-4">
                 <Link
                   href="/"
@@ -121,7 +151,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
               </form>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 py-5">
+            <div className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-y-contain px-4 py-5">
               <p className="mb-3 text-[0.65rem] uppercase tracking-[0.28em] text-muted-foreground">
                 Navegación
               </p>
@@ -186,7 +216,7 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
               </ul>
             </div>
 
-            <div className="border-t border-border px-4 py-4">
+            <div className="shrink-0 border-t border-border px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
               <div className="space-y-1">
                 <Link
                   href="/ayuda"
@@ -222,8 +252,8 @@ export function MobileMenuTrigger({ links }: MobileMenuTriggerProps) {
                       rel="noopener noreferrer"
                       onClick={closeMenu}
                       aria-label={link.label}
-                    className="inline-flex h-12 min-w-12 items-center justify-center rounded-full border border-border px-3 text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-primary hover:text-primary"
-                  >
+                      className="inline-flex h-12 min-w-12 items-center justify-center rounded-full border border-border px-3 text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-primary hover:text-primary"
+                    >
                       {link.shortLabel}
                     </a>
                   ))}

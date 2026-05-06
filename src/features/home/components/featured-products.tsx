@@ -96,10 +96,10 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
             </div>
           </div>
 
-          <div className="brand-panel-solid px-6 py-7 sm:px-8">
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="brand-panel-solid px-4 py-6 sm:px-8 sm:py-7">
+            <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
               {cards.map((product) => (
-                <div key={product.id} id={`featured-product-${product.id}`} className="h-full">
+                <div key={product.id} id={`featured-product-${product.id}`} className="h-full min-w-0">
                   <ProductDetailCard {...product} autoSlide={false} />
                 </div>
               ))}

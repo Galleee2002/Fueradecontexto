@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Cormorant_Garamond, Inter } from 'next/font/google'
+import { auth } from '@/auth'
 import { Providers } from '@/shared/ui/providers'
 import { SITE_URL } from '@/shared/config/site'
 import './globals.css'
@@ -45,15 +46,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await auth()
+
   return (
     <html lang="es" className={`${cormorant.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
-        <Providers>{children}</Providers>
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   )

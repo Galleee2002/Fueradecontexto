@@ -92,10 +92,10 @@ export function Navbar({ categories }: { categories: string[] }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-[rgba(245,245,247,0.82)] backdrop-blur-xl">
       <Container>
-        <nav className="flex h-16 items-center justify-between gap-4 sm:h-[4.6rem]">
+        <nav className="flex h-16 min-h-16 items-center justify-between gap-2 sm:h-[4.6rem] sm:min-h-0 sm:gap-4">
           <Link
             href="/"
-            className="min-w-0 text-sm font-medium uppercase tracking-[0.34em] text-foreground transition-opacity hover:opacity-75 sm:text-[0.95rem]"
+            className="min-w-0 flex-1 truncate text-xs font-medium uppercase tracking-[0.18em] text-foreground transition-opacity hover:opacity-75 sm:flex-none sm:text-sm sm:tracking-[0.34em] md:text-[0.95rem]"
           >
             {SITE_NAME}
           </Link>
@@ -183,7 +183,7 @@ export function Navbar({ categories }: { categories: string[] }) {
             </li>
           </ul>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2 md:gap-3">
             <UserMenu />
             <div ref={cartAreaRef} data-cart-icon-target="true" className="will-change-transform">
               <CartIcon />

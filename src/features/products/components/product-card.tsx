@@ -79,10 +79,13 @@ export function ProductCard({ slug, name, price, stock, imageUrl, category }: Pr
   }, [])
 
   return (
-    <Link href={`/productos/${slug}`}>
+    <Link
+      href={`/productos/${slug}`}
+      className="block h-full rounded-[1.35rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    >
       <article
         ref={cardRef}
-        className="group cursor-pointer rounded-[1.45rem] border border-transparent bg-transparent p-2 transition-colors hover:border-border hover:bg-surface/55"
+        className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-[1.35rem] border border-border/80 bg-surface shadow-[0_14px_40px_rgba(18,24,32,0.05)] transition-[border-color,box-shadow] duration-300 hover:border-foreground/20 hover:shadow-[0_18px_44px_rgba(18,24,32,0.09)]"
         onMouseEnter={animateIn}
         onMouseLeave={animateOut}
         onFocus={animateIn}
@@ -90,18 +93,18 @@ export function ProductCard({ slug, name, price, stock, imageUrl, category }: Pr
         onMouseDown={animatePress}
         onMouseUp={releasePress}
       >
-        <div className="relative h-64 overflow-hidden rounded-[1.25rem] border border-border/70 bg-surface shadow-[0_14px_40px_rgba(18,24,32,0.04)] sm:h-auto sm:aspect-[3/4]">
+        <div className="relative aspect-[3/4] w-full shrink-0 overflow-hidden bg-background/40">
           <Image
             ref={imageRef}
             src={imageUrl}
             alt={`${name} — Fueradecontexto`}
             fill
-            className="object-cover"
+            className="object-contain object-center sm:object-cover"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
         </div>
-        <div className="space-y-2 px-1 pb-2 pt-5">
-          <div className="flex items-center gap-2">
+        <div className="flex min-h-0 flex-1 flex-col space-y-2 border-t border-border/70 px-4 pb-4 pt-4 sm:px-5 sm:pb-5 sm:pt-5">
+          <div className="flex flex-wrap items-center gap-2">
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
               {category}
             </p>
@@ -111,12 +114,8 @@ export function ProductCard({ slug, name, price, stock, imageUrl, category }: Pr
               </span>
             )}
           </div>
-          <h3 className="text-lg font-medium leading-snug text-foreground">
-            {name}
-          </h3>
-          <p className="text-xl font-semibold tracking-[-0.03em] text-foreground">
-            {formatPrice(price)}
-          </p>
+          <h3 className="text-lg font-medium leading-snug text-foreground">{name}</h3>
+          <p className="mt-auto text-xl font-semibold tracking-[-0.03em] text-foreground">{formatPrice(price)}</p>
         </div>
       </article>
     </Link>

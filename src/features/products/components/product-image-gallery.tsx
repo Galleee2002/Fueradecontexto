@@ -63,52 +63,53 @@ export function ProductImageGallery({ images, selectedColor, productName }: Prod
       
       </div>
 
-      <div className="relative overflow-hidden rounded-[1.8rem] border border-border bg-surface shadow-[0_30px_60px_rgba(18,24,32,0.06)]">
-        <div className="relative aspect-[4/5] min-h-[420px] sm:min-h-[520px] lg:min-h-[680px]">
-          {canSlide && (
-            <>
-              <button
-                type="button"
-                onClick={goToPrevious}
-                aria-label="Ver imagen anterior"
-                className="absolute left-4 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/25 text-white backdrop-blur-sm transition-colors hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={goToNext}
-                aria-label="Ver imagen siguiente"
-                className="absolute right-4 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/25 text-white backdrop-blur-sm transition-colors hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              >
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </>
-          )}
-
-          <div
-            className="flex h-full transition-transform duration-300 ease-out"
-            style={{ transform: `translateX(-${resolvedActiveIndex * 100}%)` }}
-          >
-            {galleryImages.map((image, index) => (
-              <div
-                key={`${image.url}-${image.colorName ?? 'general'}-${index}`}
-                className="relative h-full min-w-full"
-                aria-hidden={index !== resolvedActiveIndex}
-              >
-                <Image
-                  src={image.url}
-                  alt={image.colorName ? `${productName} ${image.colorName}` : `${productName} imagen ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                  priority={index === 0}
-                />
-              </div>
-            ))}
+      <div className="relative isolate">
+        <div className="overflow-hidden rounded-[1.8rem] border border-border bg-surface shadow-[0_30px_60px_rgba(18,24,32,0.06)]">
+          <div className="relative aspect-[3/4] w-full sm:min-h-[520px] lg:min-h-[680px]">
+            <div
+              className="relative z-0 flex h-full transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(-${resolvedActiveIndex * 100}%)` }}
+            >
+              {galleryImages.map((image, index) => (
+                <div
+                  key={`${image.url}-${image.colorName ?? 'general'}-${index}`}
+                  className="relative h-full min-w-full shrink-0"
+                  aria-hidden={index !== resolvedActiveIndex}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.colorName ? `${productName} ${image.colorName}` : `${productName} imagen ${index + 1}`}
+                    fill
+                    className="object-contain object-center sm:object-cover"
+                    sizes="(max-width: 1024px) 100vw, 55vw"
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
+        {canSlide ? (
+          <>
+            <button
+              type="button"
+              onClick={goToPrevious}
+              aria-label="Ver imagen anterior"
+              className="absolute left-2 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:left-4 sm:h-11 sm:w-11"
+            >
+              <ArrowLeft className="h-4 w-4 shrink-0" strokeWidth={2} />
+            </button>
+            <button
+              type="button"
+              onClick={goToNext}
+              aria-label="Ver imagen siguiente"
+              className="absolute right-2 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:right-4 sm:h-11 sm:w-11"
+            >
+              <ArrowRight className="h-4 w-4 shrink-0" strokeWidth={2} />
+            </button>
+          </>
+        ) : null}
       </div>
 
       {canSlide ? (

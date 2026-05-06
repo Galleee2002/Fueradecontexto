@@ -1,66 +1,42 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Search } from 'lucide-react'
 
 export function SearchBar() {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
   const router = useRouter()
-  const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    if (open) {
-      inputRef.current?.focus()
-    }
-  }, [open])
-
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (query.trim()) {
-      router.push(`/productos?search=${encodeURIComponent(query.trim())}`)
-      setOpen(false)
-      setQuery('')
+    const form = e.currentTarget
+    const data = new FormData(form)
+    const raw = String(data.get('search') ?? '').trim()
+    if (raw) {
+      router.push(`/productos?search=${encodeURIComponent(raw)}`)
+      form.reset()
     }
   }
 
   return (
-    <div className="relative">
-      {open ? (
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="site-search" className="sr-only">
-            Buscar productos
-          </label>
-          <input
-            ref={inputRef}
-            id="site-search"
-            name="search"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Escape') {
-                setOpen(false)
-              }
-            }}
-            onBlur={() => {
-              if (!query) setOpen(false)
-            }}
-            placeholder="Buscar productos…"
-            className="brand-input h-11 w-52 pr-10"
-          />
-        </form>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-foreground transition-colors hover:border-border hover:bg-surface hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Buscar"
-        >
-          <Search className="h-5 w-5 stroke-[1.5]" />
-        </button>
-      )}
-    </div>
+    <form onSubmit={handleSubmit} className="relative w-full">
+      <label htmlFor="site-search" className="sr-only">
+        Buscar productos
+      </label>
+      <span
+        className="pointer-events-none absolute inset-y-0 left-4 z-10 flex w-10 items-center justify-center"
+        aria-hidden="true"
+      >
+        <Search className="h-4 w-4 shrink-0 text-muted-foreground" strokeWidth={1.5} />
+      </span>
+      <input
+        id="site-search"
+        name="search"
+        type="search"
+        enterKeyHint="search"
+        autoComplete="off"
+        placeholder="Buscar productos…"
+        className="brand-input box-border h-11 w-full !py-0 !pl-14 !pr-4 leading-[2.75rem]"
+      />
+    </form>
   )
 }

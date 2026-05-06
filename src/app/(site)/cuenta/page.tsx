@@ -27,13 +27,9 @@ export default async function AccountPage() {
   const orders = await fetchUserOrders(session.user.id!)
 
   return (
-    <main>
+    <main className="brand-page">
       <Container>
-        <PageHeader
-          title="Mi Cuenta"
-          breadcrumb={[{ label: 'Inicio', href: '/' }, { label: 'Cuenta' }]}
-        />
-        <div className="max-w-2xl mx-auto">
+        <div className="mx-auto max-w-2xl">
           <OrderHistorySection user={session.user} orders={orders} />
         </div>
       </Container>

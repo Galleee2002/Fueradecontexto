@@ -74,13 +74,14 @@ export function ProductDetailCard({
   }, [slides.length, autoSlideKey])
 
   useEffect(() => {
+    const pct = slides.length > 0 ? -(activeSlide * (100 / slides.length)) : 0
     gsap.to(sliderTrackRef.current, {
-      xPercent: -(activeSlide * 100),
+      xPercent: pct,
       duration: 0.45,
       ease: 'power3.out',
       overwrite: 'auto',
     })
-  }, [activeSlide])
+  }, [activeSlide, slides.length])
 
   const animateIn = useCallback(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -123,7 +124,7 @@ export function ProductDetailCard({
   return (
     <article
       ref={cardRef}
-      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-3xl border border-border/80 bg-background shadow-[0_8px_22px_rgba(20,20,20,0.06)] transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-[0_14px_30px_rgba(20,20,20,0.1)]"
+      className="group flex h-full min-w-0 cursor-pointer flex-col rounded-3xl border border-border/80 bg-background shadow-[0_8px_22px_rgba(20,20,20,0.06)] transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-[0_14px_30px_rgba(20,20,20,0.1)]"
       onMouseEnter={animateIn}
       onMouseLeave={animateOut}
       onFocus={animateIn}
@@ -131,33 +132,53 @@ export function ProductDetailCard({
       onMouseDown={animatePress}
       onMouseUp={releasePress}
     >
-      <div className="relative overflow-hidden bg-surface">
-        <Link href={`/productos/${slug}`} className="block">
-          <div ref={sliderTrackRef} className="flex">
-            {slides.map((slide, index) => (
-              <div key={`${slide}-${index}`} className="relative aspect-[4/5] w-full shrink-0 sm:aspect-[3/4]">
-                <Image
-                  ref={index === activeSlide ? imageRef : null}
-                  src={slide}
-                  alt={`${name} — Fueradecontexto`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/25 to-transparent" />
-              </div>
-            ))}
-          </div>
-        </Link>
+      <div className="relative isolate">
+        <div className="relative overflow-hidden rounded-t-3xl bg-surface">
+          <Link href={`/productos/${slug}`} className="block min-w-0 max-w-full">
+            <div ref={sliderTrackRef} className="relative z-0 flex w-full min-w-0">
+              {slides.map((slide, index) => (
+                <div key={`${slide}-${index}`} className="relative aspect-[3/4] w-full min-w-0 shrink-0">
+                  <Image
+                    ref={index === activeSlide ? imageRef : null}
+                    src={slide}
+                    alt={`${name} — Fueradecontexto`}
+                    fill
+                    className="object-contain object-center sm:object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/25 to-transparent" />
+                </div>
+              ))}
+            </div>
+          </Link>
 
-        <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between gap-2">
-          <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-foreground">
-            {category}
-          </span>
-          {stock <= 0 && (
-            <span className="rounded-full border border-foreground/25 bg-background px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-foreground">
-              Sin stock
+          <div className="pointer-events-none absolute inset-x-3 top-3 z-[1] flex items-center justify-between gap-2">
+            <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-foreground">
+              {category}
             </span>
+            {stock <= 0 && (
+              <span className="rounded-full border border-foreground/25 bg-background px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-foreground">
+                Sin stock
+              </span>
+            )}
+          </div>
+
+          {slides.length > 1 && (
+            <div className="absolute inset-x-0 bottom-3 z-[1] flex justify-center gap-1.5">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Ir a imagen ${index + 1}`}
+                  className={
+                    index === activeSlide
+                      ? 'h-1.5 w-5 rounded-full bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
+                      : 'h-1.5 w-1.5 rounded-full bg-white/70'
+                  }
+                />
+              ))}
+            </div>
           )}
         </div>
 
@@ -167,7 +188,7 @@ export function ProductDetailCard({
               type="button"
               onClick={goToPreviousSlide}
               aria-label="Imagen anterior"
-              className="absolute left-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full border border-border bg-background text-[0.8rem] text-foreground opacity-0 shadow-sm transition-all duration-200 hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
+              className="absolute left-1.5 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-base leading-none text-foreground opacity-100 shadow-sm transition-all duration-200 hover:bg-surface sm:left-3 sm:h-8 sm:w-8 sm:opacity-0 sm:text-[0.8rem] sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
             >
               {'‹'}
             </button>
@@ -175,55 +196,41 @@ export function ProductDetailCard({
               type="button"
               onClick={goToNextSlide}
               aria-label="Imagen siguiente"
-              className="absolute right-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full border border-border bg-background text-[0.8rem] text-foreground opacity-0 shadow-sm transition-all duration-200 hover:bg-surface group-hover:opacity-100 focus-visible:opacity-100"
+              className="absolute right-1.5 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-base leading-none text-foreground opacity-100 shadow-sm transition-all duration-200 hover:bg-surface sm:right-3 sm:h-8 sm:w-8 sm:opacity-0 sm:text-[0.8rem] sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
             >
               {'›'}
             </button>
           </>
         )}
-
-        {slides.length > 1 && (
-          <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setActiveSlide(index)}
-                aria-label={`Ir a imagen ${index + 1}`}
-                className={
-                  index === activeSlide
-                    ? 'h-1.5 w-5 rounded-full bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                    : 'h-1.5 w-1.5 rounded-full bg-white/70'
-                }
-              />
-            ))}
-          </div>
-        )}
       </div>
 
-      <div className="flex flex-1 flex-col space-y-4 px-5 pb-5 pt-4">
-        <Link href={`/productos/${slug}`} className="block">
-          <h3 className="text-[1.22rem] font-medium leading-tight tracking-[-0.02em] text-foreground line-clamp-2">
+      <div className="flex flex-1 flex-col space-y-4 rounded-b-3xl px-4 pb-4 pt-4 sm:px-5 sm:pb-5">
+        <Link href={`/productos/${slug}`} className="block min-w-0">
+          <h3 className="text-[1.05rem] font-medium leading-tight tracking-[-0.02em] text-foreground line-clamp-2 sm:text-[1.22rem]">
             {name}
           </h3>
-          <p className="mt-2 text-[0.88rem] leading-relaxed text-muted-foreground line-clamp-2">
+          <p className="mt-2 text-[0.85rem] leading-relaxed text-muted-foreground line-clamp-3 sm:text-[0.88rem] sm:line-clamp-2">
             {miniDescription}
           </p>
         </Link>
 
-        <div className="mt-auto flex items-end justify-between border-t border-border/60 pt-3">
-          <div>
+        <div className="mt-auto flex flex-col gap-2 border-t border-border/60 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
+          <div className="min-w-0">
             <p className="text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground">Precio</p>
-            <p className="mt-1 text-[1.42rem] font-semibold tracking-tight text-primary">{formatPrice(price)}</p>
+            <p className="mt-1 text-[1.28rem] font-semibold tracking-tight text-primary sm:text-[1.42rem]">
+              {formatPrice(price)}
+            </p>
           </div>
-          <p className="text-xs text-foreground/65">Envio a todo el pais</p>
+          <p className="text-[0.7rem] leading-snug text-foreground/65 sm:max-w-[11rem] sm:text-right sm:text-xs">
+            Envio a todo el pais
+          </p>
         </div>
       </div>
 
       <Link
         ref={buttonRef}
         href={`/productos/${slug}`}
-        className="mx-5 mb-5 mt-1 inline-flex min-h-[44px] w-[calc(100%-2.5rem)] items-center justify-center rounded-xl border border-neutral-900 bg-neutral-900 px-4 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,transform] duration-300 hover:border-blue-700 hover:bg-blue-700"
+        className="mx-4 mb-4 mt-1 inline-flex min-h-[44px] w-[calc(100%-2rem)] max-w-full items-center justify-center rounded-xl border border-neutral-900 bg-neutral-900 px-4 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,transform] duration-300 hover:border-blue-700 hover:bg-blue-700 sm:mx-5 sm:mb-5 sm:w-[calc(100%-2.5rem)]"
       >
         Ver detalle
       </Link>

@@ -39,7 +39,9 @@ export function PageHeader({ title, breadcrumb, right }: PageHeaderProps) {
               {title}
             </h1>
           </div>
-          {right ? <div className="lg:min-w-[15rem] lg:max-w-sm">{right}</div> : null}
+          {right ? (
+            <div className="w-full min-w-0 lg:max-w-sm lg:shrink-0">{right}</div>
+          ) : null}
         </div>
       </div>
     </header>

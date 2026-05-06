@@ -262,12 +262,15 @@ export function ColorsManager({ colors }: { colors: ColorRow[] }) {
   return (
     <div className="space-y-6">
       {/* Add form */}
-      <div className="bg-background border border-border p-6">
+      <div className="bg-background border border-border p-4 sm:p-6">
         <p className="text-2xs font-medium tracking-widest uppercase text-muted-foreground border-b border-border pb-3 mb-5">
           Nuevo color
         </p>
-        <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-3 items-end">
-          <div className="flex-1 space-y-1.5">
+        <form
+          onSubmit={handleAdd}
+          className="flex flex-col gap-3 items-stretch sm:flex-row sm:items-end"
+        >
+          <div className="min-w-0 flex-1 space-y-1.5">
             <label
               htmlFor="color-name"
               className="block text-2xs font-medium tracking-widest uppercase text-muted-foreground"
@@ -291,15 +294,15 @@ export function ColorsManager({ colors }: { colors: ColorRow[] }) {
               )}
             />
           </div>
-          <div className="space-y-1.5 shrink-0">
+          <div className="min-w-0 space-y-1.5 sm:shrink-0">
             <label
               htmlFor="color-hex"
               className="block text-2xs font-medium tracking-widest uppercase text-muted-foreground"
             >
               Color HEX
             </label>
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1 sm:w-36">
+            <div className="flex w-full min-w-0 items-center gap-2">
+              <div className="relative min-w-0 flex-1 sm:w-36 sm:flex-none">
                 <HexInput
                   id="color-hex"
                   value={hexValue}
@@ -330,7 +333,7 @@ export function ColorsManager({ colors }: { colors: ColorRow[] }) {
           <button
             type="submit"
             disabled={isPending}
-            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs font-medium tracking-widest uppercase hover:bg-primary-hover transition-colors rounded-none disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+            className="flex w-full items-center justify-center gap-2 bg-primary px-4 py-2.5 text-xs font-medium uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-hover sm:w-auto sm:shrink-0 rounded-none disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" strokeWidth={2} />}
             Agregar

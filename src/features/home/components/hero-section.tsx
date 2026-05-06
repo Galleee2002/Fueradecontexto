@@ -6,11 +6,11 @@ export function HeroSection() {
     <section className="relative overflow-hidden border-b border-border/80 bg-[#ece9e3]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.92),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0))]" />
       <Container className="relative">
-        <div className="flex min-h-[calc(100dvh-4.6rem)] items-center justify-center py-14 sm:py-20">
-          <div className="mx-auto flex max-w-4xl flex-col items-center space-y-9 text-center sm:space-y-11">
+        <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center py-12 sm:min-h-[calc(100dvh-4.6rem)] sm:py-20">
+          <div className="mx-auto flex w-full min-w-0 max-w-4xl flex-col items-center space-y-8 text-center sm:space-y-11">
             <p className="brand-kicker">Colección 2026</p>
-            <div className="space-y-6 sm:space-y-7">
-              <h1 className="text-balance text-[clamp(3.8rem,10vw,8rem)] font-semibold leading-[0.88] tracking-[-0.075em] text-hero-ink">
+            <div className="w-full min-w-0 space-y-5 sm:space-y-7">
+              <h1 className="text-balance text-[clamp(2.35rem,9.2vw,8rem)] font-semibold leading-[0.92] tracking-[-0.06em] text-hero-ink sm:leading-[0.88] sm:tracking-[-0.075em]">
                 Prendas con
                 <br />
                 presencia propia.

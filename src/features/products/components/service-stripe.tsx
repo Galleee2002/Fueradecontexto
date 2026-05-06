@@ -8,16 +8,24 @@ const BADGES = [
 
 export function ServiceStripe() {
   return (
-    <div className="grid grid-cols-3 divide-x divide-border border border-border bg-surface">
-      {BADGES.map((badge) => (
-        <div key={badge.label} className="flex flex-col items-center gap-2 py-4 px-3 text-center">
-          <badge.icon className="h-5 w-5 text-muted-foreground stroke-[1.5]" aria-hidden="true" />
-          <div>
-            <p className="text-xs font-medium text-foreground leading-snug">{badge.label}</p>
-            <p className="text-2xs text-muted-foreground leading-snug">{badge.sublabel}</p>
+    <div className="overflow-hidden rounded-2xl border border-border bg-surface sm:rounded-[1.1rem]">
+      <div className="grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {BADGES.map((badge) => (
+          <div
+            key={badge.label}
+            className="flex flex-row items-start gap-3 px-4 py-3.5 sm:flex-col sm:items-center sm:gap-2 sm:px-3 sm:py-4 sm:text-center"
+          >
+            <badge.icon
+              className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground stroke-[1.5] sm:mt-0 sm:h-5 sm:w-5"
+              aria-hidden="true"
+            />
+            <div className="min-w-0 flex-1 space-y-1 sm:flex-none">
+              <p className="text-xs font-medium leading-snug text-foreground">{badge.label}</p>
+              <p className="text-xs font-normal leading-snug text-muted-foreground">{badge.sublabel}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }
