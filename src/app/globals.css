@@ -13,6 +13,10 @@
   --color-primary: #0066cc;
   --color-primary-hover: #004f9e;
   --color-primary-subtle: rgba(0, 102, 204, 0.1);
+  /* Accent = Action Blue (DESIGN.md, paleta) — alias de primary para CTAs de marca */
+  --color-accent: var(--color-primary);
+  --color-accent-foreground: #ffffff;
+  --color-accent-hover: var(--color-primary-hover);
   --color-hero-ink: #121820;
   /* Footer: fondo oscuro (no negro puro) y texto claro — ver `Footer` */
   --color-footer-bg: #16181c;

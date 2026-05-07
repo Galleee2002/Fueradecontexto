@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Loader2, MapPin, Plus, X } from 'lucide-react'
@@ -15,6 +15,10 @@ import type { AdminProduct } from '../types'
 import type { ProductColor, ProductImage } from '@/entities/product'
 import { ProductFormField } from '../products/ui/product-form-field'
 import { SIZE_OPTIONS, slugifyProductName, STAMP_SIZE_OPTIONS } from '../products/lib/product-form'
+
+function stripDorsoStampLocations(locations: string[]) {
+  return locations.filter((loc) => !loc.toLowerCase().includes('dorso'))
+}
 import { normalizeProductImages } from '@/entities/product/images'
 import { evaluateProductQuality } from '../lib/product-quality'
 
@@ -158,11 +162,6 @@ export function ProductForm({
   const isCapCategory = effectiveCategory.toLowerCase().includes('gorra')
   const selectedCategorySubs = categories.find(c => c.name === effectiveCategory)?.subcategories ?? []
 
-  useEffect(() => {
-    if (!isCapCategory) return
-    setSelectedStampLocations((prev) => prev.filter((loc) => !loc.toLowerCase().includes('dorso')))
-  }, [isCapCategory])
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setErrors({})
@@ -197,7 +196,7 @@ export function ProductForm({
       availableColors,
       availableSizes,
       stampSizes,
-      stampLocations: selectedStampLocations,
+      stampLocations: isCapCategory ? stripDorsoStampLocations(selectedStampLocations) : selectedStampLocations,
     }
 
     startTransition(async () => {
@@ -359,7 +358,15 @@ export function ProductForm({
                   <div className="space-y-2">
                     <select
                       value={category}
-                      onChange={(e) => { setCategory(e.target.value); setSubcategory('') }}
+                      onChange={(e) => {
+                        const next = e.target.value
+                        setCategory(next)
+                        setSubcategory('')
+                        const nextEffective = useCustomCategory ? customCategory : next
+                        if (nextEffective.toLowerCase().includes('gorra')) {
+                          setSelectedStampLocations((prev) => stripDorsoStampLocations(prev))
+                        }
+                      }}
                       className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none"
                     >
                       <option value="">Seleccionar...</option>
@@ -382,7 +389,13 @@ export function ProductForm({
                     <input
                       type="text"
                       value={customCategory}
-                      onChange={(e) => setCustomCategory(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value
+                        setCustomCategory(val)
+                        if (val.toLowerCase().includes('gorra')) {
+                          setSelectedStampLocations((prev) => stripDorsoStampLocations(prev))
+                        }
+                      }}
                       placeholder="Nombre de la categoría"
                       className="w-full px-3 py-2.5 border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary rounded-none placeholder:text-muted-foreground"
                       autoFocus

@@ -1,4 +1,6 @@
-export const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+import { GARMENT_SIZES_ORDERED } from '@/shared/config/garment-sizes'
+
+export const SIZE_OPTIONS: string[] = [...GARMENT_SIZES_ORDERED]
 export const STAMP_SIZE_OPTIONS = ['Hasta 10 cm', '20x30', '30x40', '40x50']
 
 export function slugifyProductName(value: string) {

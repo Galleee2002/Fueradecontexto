@@ -56,8 +56,6 @@ export function ProductDetailCard({
     gsap.set(buttonRef.current, { y: 4 })
   }, [])
 
-  const autoSlideKey = autoSlide ? autoSlideDelayMs : -1
-
   useEffect(() => {
     if (!autoSlide || slides.length <= 1) return
 
@@ -71,7 +69,7 @@ export function ProductDetailCard({
     }, autoSlideDelayMs)
 
     return () => window.clearInterval(interval)
-  }, [slides.length, autoSlideKey])
+  }, [slides.length, autoSlide, autoSlideDelayMs])
 
   useEffect(() => {
     const pct = slides.length > 0 ? -(activeSlide * (100 / slides.length)) : 0

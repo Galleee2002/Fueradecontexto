@@ -10,7 +10,7 @@ interface ProductDetailProps {
   sizeGuide: SizeGuide | null
 }
 
-export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
+function ProductDetailInner({ product, sizeGuide }: ProductDetailProps) {
   const purchase = useProductPurchase(product)
 
   return (
@@ -48,4 +48,8 @@ export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
       </div>
     </section>
   )
+}
+
+export function ProductDetail({ product, sizeGuide }: ProductDetailProps) {
+  return <ProductDetailInner key={product.id} product={product} sizeGuide={sizeGuide} />
 }

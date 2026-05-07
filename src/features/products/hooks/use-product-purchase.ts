@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ProductFull } from '@/entities/product'
 import {
   getEffectiveStampSize,
@@ -24,9 +24,11 @@ export function useProductPurchase(product: ProductFull) {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false)
 
   const orderedSizes = useMemo(() => getOrderedSizes(product), [product])
+  const stampSideForStampOptions = isCap ? STAMP_SIDES[0] : selectedStampSide
+
   const filteredStampSizes = useMemo(
-    () => getFilteredStampSizes(product, selectedStampSide),
-    [product, selectedStampSide],
+    () => getFilteredStampSizes(product, stampSideForStampOptions),
+    [product, stampSideForStampOptions],
   )
   const effectiveSelectedStampSize = useMemo(
     () => getEffectiveStampSize(selectedStampSize, filteredStampSizes),
@@ -34,26 +36,19 @@ export function useProductPurchase(product: ProductFull) {
   )
   const isPurchasable = product.active && product.stock > 0
 
-  useEffect(() => {
-    if (isCap && selectedStampSide && selectedStampSide !== STAMP_SIDES[0]) {
-      setSelectedStampSide(STAMP_SIDES[0])
-    }
-  }, [isCap, selectedStampSide])
-
-  useEffect(() => {
-    if (!selectedStampSide) {
+  const setStampSide = useCallback((side: StampSide | null) => {
+    setSelectedStampSide(side)
+    if (side === null) {
       setSelectedStampSize(null)
-      if (selectedStampLocations.length > 0) {
-        setSelectedStampLocations([])
-      }
+      setSelectedStampLocations([])
     }
-  }, [selectedStampSide, selectedStampLocations.length])
+  }, [])
 
   return {
     quantity,
     selectedColor,
     selectedSize,
-    selectedStampSide,
+    selectedStampSide: stampSideForStampOptions,
     selectedStampLocations,
     orderedSizes,
     filteredStampSizes,
@@ -63,7 +58,7 @@ export function useProductPurchase(product: ProductFull) {
     setQuantity,
     setSelectedColor,
     setSelectedSize,
-    setSelectedStampSide,
+    setSelectedStampSide: setStampSide,
     setSelectedStampSize,
     setSelectedStampLocations,
     setSizeGuideOpen,

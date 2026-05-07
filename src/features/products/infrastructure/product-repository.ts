@@ -28,7 +28,7 @@ export async function findProducts(
         : sql`ORDER BY "createdAt" DESC`
 
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category
@@ -109,7 +109,7 @@ export async function findRelatedProducts(
   limit = 4
 ): Promise<ProductCard[]> {
   const rows = await sql`
-    SELECT p.id, p.slug, p.name, p.price::float, p.stock, p."imageUrl",
+    SELECT p.id, p.slug, p.name, p.description, p.price::float, p.stock, p."imageUrl",
            COALESCE(to_jsonb(p) -> 'images', '[]'::jsonb) AS images,
            COALESCE(to_jsonb(p) -> 'previewImages', to_jsonb(p) -> 'preview_images', '[]'::jsonb) AS "previewImages",
            p.category

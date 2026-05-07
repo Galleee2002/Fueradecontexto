@@ -17,11 +17,10 @@ const contentSecurityPolicy = [
 const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client', '@prisma/adapter-neon'],
   images: {
+    // Productos usan Cloudinary; agregá patterns si cargás imágenes desde otro host.
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' },
+      { protocol: 'https', hostname: '**.cloudinary.com', pathname: '/**' },
     ],
   },
   async headers() {

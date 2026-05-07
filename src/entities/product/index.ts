@@ -12,6 +12,7 @@ export interface ProductCard {
   id: string
   slug: string
   name: string
+  description: string | null
   price: number
   stock: number
   imageUrl: string
@@ -20,7 +21,6 @@ export interface ProductCard {
 }
 
 export interface ProductFull extends ProductCard {
-  description: string | null
   active: boolean
   createdAt: Date
   updatedAt: Date

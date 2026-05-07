@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit",
     "create-admin": "tsx scripts/create-admin.ts",
     "reconcile-paid-orders": "tsx scripts/reconcile-paid-orders.ts",
+    "smoke-prod-http": "tsx scripts/smoke-prod-http.ts",
     "postinstall": "prisma generate"
   },
   "keywords": [],

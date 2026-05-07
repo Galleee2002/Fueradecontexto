@@ -15,7 +15,7 @@ import {
 import { ColorSelector } from '../components/color-selector'
 import { MultiStampSelector } from '../components/multi-stamp-selector'
 import { QuantitySelector } from '../components/quantity-selector'
-import { ServiceStripe } from '../components/service-stripe'
+import { PurchaseTrustBadges } from '../components/purchase-trust-badges'
 import { SizeGuideModal } from '../components/size-guide-modal'
 import { SizeSelector } from '../components/size-selector'
 import { StampSelector } from '../components/stamp-selector'
@@ -206,7 +206,7 @@ export function ProductPurchasePanel({
           disabledLabel="Sin stock"
         />
 
-        <ServiceStripe />
+        <PurchaseTrustBadges />
       </div>
 
       <SizeGuideModal

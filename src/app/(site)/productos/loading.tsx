@@ -21,9 +21,11 @@ export default function ProductsLoading() {
           </aside>
 
           <section className="flex-1">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {Array.from({ length: SKELETON_ITEMS }).map((_, index) => (
-                <ProductCardSkeleton key={`product-card-skeleton-${index}`} />
+                <div key={`product-card-skeleton-${index}`} className="h-full min-w-0">
+                  <ProductCardSkeleton />
+                </div>
               ))}
             </div>
           </section>
