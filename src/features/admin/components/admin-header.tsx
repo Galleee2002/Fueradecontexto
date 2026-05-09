@@ -1,5 +1,6 @@
 import { SITE_NAME } from '@/shared/config/site'
-import { Shield, Menu } from 'lucide-react'
+import { Shield, Menu, LogOut } from 'lucide-react'
+import { logoutAction } from '@/features/auth'
 
 interface AdminHeaderProps {
   onToggleSidebar: () => void
@@ -23,6 +24,16 @@ export function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
         </p>
       </div>
       <div className="flex items-center gap-2">
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-background/80 px-4 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground transition-colors hover:border-primary hover:text-primary"
+          >
+            <LogOut className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <span className="hidden sm:inline">Cerrar sesión</span>
+            <span className="sm:hidden">Salir</span>
+          </button>
+        </form>
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
           <span className="text-xs font-medium text-primary">A</span>
         </div>

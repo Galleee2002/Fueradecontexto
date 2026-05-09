@@ -1,6 +1,11 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { auth } from '@/auth'
 import { LoginForm } from '@/features/auth/components/login-form'
-import { SITE_URL } from '@/shared/config/site'
+import {
+  getAuthenticatedLoginRedirect,
+  resolveLoginRedirectTarget,
+} from '@/features/auth/lib/login-routing'
 
 export const metadata: Metadata = {
   title: 'Iniciar sesión — Fueradecontexto',
@@ -12,30 +17,20 @@ interface LoginPageSearchParams {
   redirectTo?: string
 }
 
-function resolveRedirect(searchParams: LoginPageSearchParams) {
-  const candidate = searchParams.callbackUrl ?? searchParams.redirectTo
-  if (!candidate) return '/cuenta'
-  if (candidate.startsWith('/') && !candidate.startsWith('//')) {
-    return candidate
-  }
-
-  try {
-    const callbackUrl = new URL(candidate)
-    const siteUrl = new URL(SITE_URL)
-    if (callbackUrl.origin !== siteUrl.origin) return '/cuenta'
-    return `${callbackUrl.pathname}${callbackUrl.search}${callbackUrl.hash}` || '/cuenta'
-  } catch {
-    return '/cuenta'
-  }
-}
-
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<LoginPageSearchParams>
 }) {
+  const session = await auth()
+  const authenticatedRedirect = getAuthenticatedLoginRedirect(session)
+
+  if (authenticatedRedirect) {
+    redirect(authenticatedRedirect)
+  }
+
   const params = await searchParams
-  const redirectTo = resolveRedirect(params)
+  const redirectTo = resolveLoginRedirectTarget(params)
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface px-4">

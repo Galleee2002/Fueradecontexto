@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { AuthError } from 'next-auth'
 import { headers } from 'next/headers'
 import { signIn, signOut } from '@/auth'
+import { resolveLoginActionRedirect } from '@/features/auth/lib/login-routing'
 import {
   getLoginRateLimitState,
   registerLoginFailure,
@@ -14,13 +15,6 @@ const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
 })
-
-function resolveRedirect(rawRedirect: FormDataEntryValue | null) {
-  if (typeof rawRedirect !== 'string') return '/cuenta'
-  if (!rawRedirect.startsWith('/')) return '/cuenta'
-  if (rawRedirect.startsWith('//')) return '/cuenta'
-  return rawRedirect
-}
 
 async function buildLoginRateLimitKey(formData: FormData) {
   const headerStore = await headers()
@@ -60,7 +54,7 @@ export async function loginAction(formData: FormData) {
     await signIn('credentials', {
       email: parsed.data.email,
       password: parsed.data.password,
-      redirectTo: resolveRedirect(formData.get('redirectTo')),
+      redirectTo: resolveLoginActionRedirect(formData.get('redirectTo')),
     })
   } catch (error) {
     if (error instanceof AuthError) {
