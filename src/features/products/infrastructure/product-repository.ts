@@ -76,7 +76,7 @@ export async function findSizeGuideByCategory(category: string): Promise<SizeGui
   const rows = await sql`
     SELECT id, category, rows, "createdAt", "updatedAt"
     FROM "SizeGuide"
-    WHERE category = ${category}
+    WHERE LOWER(TRIM(category)) = LOWER(TRIM(${category}))
     LIMIT 1
   `
   return (rows[0] as SizeGuide) ?? null

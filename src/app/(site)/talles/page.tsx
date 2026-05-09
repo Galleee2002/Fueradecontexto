@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
 import { getProductCategories, getSizeGuides } from '@/features/products'
@@ -18,13 +17,24 @@ export const metadata: Metadata = {
 
 const CATEGORIES_WITHOUT_SIZE_GUIDE = new Set(['gorras'])
 
+function formatCell(value: unknown): string {
+  if (value === null || value === undefined) return '—'
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Number.isInteger(value) ? String(value) : String(value)
+  }
+  const s = String(value).trim()
+  return s === '' ? '—' : s
+}
+
 export default async function TallesPage() {
   const [categoriesRaw, guides] = await Promise.all([getProductCategories(), getSizeGuides()])
   const categories = categoriesRaw.filter(
     (category) => !CATEGORIES_WITHOUT_SIZE_GUIDE.has(category.trim().toLowerCase()),
   )
 
-  const guideByCategory = new Map(guides.map((guide) => [guide.category, guide]))
+  const guideByCategoryLower = new Map(
+    guides.map((guide) => [guide.category.trim().toLowerCase(), guide]),
+  )
 
   return (
     <main className="pb-20 lg:pb-0">
@@ -35,11 +45,11 @@ export default async function TallesPage() {
         />
 
         <section className="py-10 md:py-14 space-y-6">
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2 md:items-start">
             {categories.map((category) => {
-              const guide = guideByCategory.get(category)
-              const previewRows = Array.isArray(guide?.rows) ? guide.rows.slice(0, 3) : []
-              const firstRow = previewRows[0]
+              const guide = guideByCategoryLower.get(category.trim().toLowerCase())
+              const rows = Array.isArray(guide?.rows) ? guide.rows : []
+              const firstRow = rows[0]
               const columns = firstRow
                 ? PREFERRED_COLUMNS.flatMap((column) => {
                     const key = Object.keys(firstRow).find((candidate) =>
@@ -51,35 +61,48 @@ export default async function TallesPage() {
                 : []
 
               return (
-                <article key={category} className="rounded-xl border border-border bg-background p-5">
-                  <h3 className="text-lg font-serif text-foreground">{category}</h3>
+                <article
+                  key={category}
+                  className="min-w-0 flex flex-col rounded-xl border border-border bg-background p-5 md:p-6"
+                >
+                  <h3 className="text-lg font-serif text-foreground shrink-0">{category}</h3>
 
                   {!guide ? (
                     <p className="mt-3 text-sm text-muted-foreground">
                       Todavía no hay tabla para esta categoría.
                     </p>
-                  ) : previewRows.length === 0 ? (
+                  ) : rows.length === 0 ? (
                     <p className="mt-3 text-sm text-muted-foreground">
-                      Tabla cargada sin filas de ejemplo.
+                      Tabla cargada sin filas.
                     </p>
                   ) : (
-                    <div className="mt-4 overflow-x-auto">
-                      <table className="w-full text-left text-sm border-collapse">
-                        <thead>
-                          <tr className="border-b border-border">
+                    <div className="mt-4 min-h-0 min-w-0 flex-1 overflow-x-auto overscroll-x-contain rounded-lg border border-border/60 bg-surface/30 [scrollbar-width:thin]">
+                      <table className="w-full min-w-max border-collapse text-left text-sm">
+                        <thead className="bg-surface/90">
+                          <tr className="border-b border-border/80">
                             {columns.map((column) => (
-                              <th key={column.key} className="py-2 pr-4 font-medium text-muted-foreground uppercase text-xs tracking-wide">
+                              <th
+                                key={column.key}
+                                scope="col"
+                                className="whitespace-nowrap px-3 py-2.5 pr-5 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground first:pl-4 last:pr-4 sm:first:pl-5 sm:last:pr-5"
+                              >
                                 {column.label}
                               </th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
-                          {previewRows.map((row, index) => (
-                            <tr key={`${category}-${index}`} className="border-b border-border/60 last:border-b-0">
+                          {rows.map((row, index) => (
+                            <tr
+                              key={`${category}-${index}`}
+                              className="border-b border-border/50 last:border-b-0 even:bg-background/40"
+                            >
                               {columns.map((column) => (
-                                <td key={column.key} className="py-2 pr-4 text-foreground/90">
-                                  {String(row[column.key] ?? '-')}
+                                <td
+                                  key={column.key}
+                                  className="whitespace-nowrap px-3 py-2.5 pr-5 text-foreground/90 first:pl-4 last:pr-4 sm:first:pl-5 sm:last:pr-5 [&:not(:first-child)]:tabular-nums"
+                                >
+                                  {formatCell(row[column.key])}
                                 </td>
                               ))}
                             </tr>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { gsap } from 'gsap'
@@ -38,7 +38,6 @@ export function ProductDetailCard({
   const [activeSlide, setActiveSlide] = useState(0)
   const cardRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
-  const sliderTrackRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLAnchorElement>(null)
 
   const slides = useMemo(() => {
@@ -71,16 +70,6 @@ export function ProductDetailCard({
     return () => window.clearInterval(interval)
   }, [slides.length, autoSlide, autoSlideDelayMs])
 
-  useEffect(() => {
-    const pct = slides.length > 0 ? -(activeSlide * (100 / slides.length)) : 0
-    gsap.to(sliderTrackRef.current, {
-      xPercent: pct,
-      duration: 0.45,
-      ease: 'power3.out',
-      overwrite: 'auto',
-    })
-  }, [activeSlide, slides.length])
-
   const animateIn = useCallback(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return
@@ -109,15 +98,31 @@ export function ProductDetailCard({
     gsap.to(cardRef.current, { scale: 1, duration: 0.16, ease: 'power2.out', overwrite: 'auto' })
   }, [])
 
-  const goToPreviousSlide = useCallback(() => {
-    if (slides.length === 0) return
-    setActiveSlide((current) => (current - 1 + slides.length) % slides.length)
-  }, [slides.length])
+  const goToPreviousSlide = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (slides.length === 0) return
+      setActiveSlide((current) => (current - 1 + slides.length) % slides.length)
+    },
+    [slides.length],
+  )
 
-  const goToNextSlide = useCallback(() => {
-    if (slides.length === 0) return
-    setActiveSlide((current) => (current + 1) % slides.length)
-  }, [slides.length])
+  const goToNextSlide = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (slides.length === 0) return
+      setActiveSlide((current) => (current + 1) % slides.length)
+    },
+    [slides.length],
+  )
+
+  const goToSlide = useCallback((index: number) => (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setActiveSlide(index)
+  }, [])
 
   return (
     <article
@@ -133,20 +138,25 @@ export function ProductDetailCard({
       <div className="relative isolate">
         <div className="relative overflow-hidden rounded-t-3xl bg-surface">
           <Link href={`/productos/${slug}`} className="block min-w-0 max-w-full">
-            <div ref={sliderTrackRef} className="relative z-0 flex w-full min-w-0">
-              {slides.map((slide, index) => (
-                <div key={`${slide}-${index}`} className="relative aspect-[3/4] w-full min-w-0 shrink-0">
-                  <Image
-                    ref={index === activeSlide ? imageRef : null}
-                    src={slide}
-                    alt={`${name} — Fueradecontexto`}
-                    fill
-                    className="object-contain object-center sm:object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/25 to-transparent" />
-                </div>
-              ))}
+            <div className="relative aspect-[3/4] w-full min-w-0">
+              <div
+                className="relative z-0 flex h-full min-w-0 transition-transform duration-300 ease-out"
+                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+              >
+                {slides.map((slide, index) => (
+                  <div key={`${slide}-${index}`} className="relative h-full min-w-full shrink-0">
+                    <Image
+                      ref={index === activeSlide ? imageRef : null}
+                      src={slide}
+                      alt={`${name} — Fueradecontexto`}
+                      fill
+                      className="object-contain object-center sm:object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/25 to-transparent" />
+                  </div>
+                ))}
+              </div>
             </div>
           </Link>
 
@@ -167,7 +177,7 @@ export function ProductDetailCard({
                 <button
                   key={index}
                   type="button"
-                  onClick={() => setActiveSlide(index)}
+                  onClick={goToSlide(index)}
                   aria-label={`Ir a imagen ${index + 1}`}
                   className={
                     index === activeSlide
