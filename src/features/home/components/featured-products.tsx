@@ -9,14 +9,63 @@ interface FeaturedProductsProps {
 
 const MAX_FEATURED = 4
 
+type FeaturedTier = 'buzos' | 'remeras' | 'cobertores' | 'totebags' | 'other'
+
+const TIER_PRIORITY: FeaturedTier[] = ['buzos', 'remeras', 'cobertores', 'totebags']
+
+function productFeaturedTier(product: ProductCardType): FeaturedTier {
+  const cat = product.category.toLowerCase().trim()
+  const name = product.name.toLowerCase()
+  const slug = product.slug.toLowerCase()
+
+  if (cat === 'buzos' || cat.startsWith('buzo')) return 'buzos'
+  if (cat === 'remeras' || cat.startsWith('remera')) return 'remeras'
+  if (cat.includes('cobertor') || name.includes('cobertor') || slug.includes('cobertor')) {
+    return 'cobertores'
+  }
+  if (cat.includes('tote') || name.includes('tote') || slug.includes('tote')) return 'totebags'
+
+  return 'other'
+}
+
+function compareByStock(a: ProductCardType, b: ProductCardType): number {
+  const inStock = Number(b.stock > 0) - Number(a.stock > 0)
+  if (inStock !== 0) return inStock
+  return b.stock - a.stock
+}
+
 function pickFeaturedProducts(products: ProductCardType[]): ProductCardType[] {
-  return [...products]
-    .sort((a, b) => {
-      const inStock = Number(b.stock > 0) - Number(a.stock > 0)
-      if (inStock !== 0) return inStock
-      return b.stock - a.stock
-    })
-    .slice(0, MAX_FEATURED)
+  const buckets = new Map<FeaturedTier, ProductCardType[]>()
+  for (const tier of [...TIER_PRIORITY, 'other'] as const) {
+    buckets.set(tier, [])
+  }
+  for (const p of products) {
+    buckets.get(productFeaturedTier(p))!.push(p)
+  }
+  for (const list of buckets.values()) {
+    list.sort(compareByStock)
+  }
+
+  const picked: ProductCardType[] = []
+  const pickedIds = new Set<string>()
+
+  for (const tier of TIER_PRIORITY) {
+    const best = buckets.get(tier)![0]
+    if (best && picked.length < MAX_FEATURED) {
+      picked.push(best)
+      pickedIds.add(best.id)
+    }
+  }
+
+  if (picked.length < MAX_FEATURED) {
+    const rest = [...products].filter((p) => !pickedIds.has(p.id)).sort(compareByStock)
+    for (const p of rest) {
+      if (picked.length >= MAX_FEATURED) break
+      picked.push(p)
+    }
+  }
+
+  return picked
 }
 
 export function FeaturedProducts({ products }: FeaturedProductsProps) {

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { SITE_CONTACT_EMAIL } from '@/shared/config/site'
+import { WHATSAPP_NUMBER } from '@/features/navigation/constants/external-links'
+import { SITE_CONTACT_EMAIL, SITE_WHATSAPP_DISPLAY } from '@/shared/config/site'
 import { Container } from '@/shared/ui/layout/container'
 import { PageHeader } from '@/shared/ui/layout/page-header'
 
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
 }
 
 export default function AyudaPage() {
+  const whatsappHref = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}` : ''
+
   return (
     <main className="pb-20 lg:pb-0">
       <Container>
@@ -64,6 +67,21 @@ export default function AyudaPage() {
                 orden y la consulta específica para ayudarte más rápido.
               </p>
               <div className="mt-6 space-y-4 text-sm">
+                {whatsappHref ? (
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground">WhatsApp</p>
+                    <p className="mt-1">
+                      <a
+                        href={whatsappHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-foreground underline decoration-white/30 underline-offset-4 transition-colors hover:decoration-foreground"
+                      >
+                        {SITE_WHATSAPP_DISPLAY}
+                      </a>
+                    </p>
+                  </div>
+                ) : null}
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">Email</p>
                   <p className="mt-1 text-foreground">{SITE_CONTACT_EMAIL}</p>

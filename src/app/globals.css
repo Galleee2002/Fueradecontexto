@@ -445,3 +445,19 @@
     animation-range: exit 0% exit 65%;
   }
 }
+
+/*
+ * CTA secundario del hero (fondo foto): sin @layer para que gane a utilidades de Tailwind
+ * y al hover genérico `.brand-button-secondary:hover` (fondo foreground oscuro).
+ */
+a.brand-button-secondary.hero-secondary-solid {
+  background: var(--color-footer-bg) !important;
+  border: 1px solid transparent !important;
+  color: var(--color-footer-foreground) !important;
+}
+
+a.brand-button-secondary.hero-secondary-solid:hover {
+  background: var(--color-surface) !important;
+  border-color: var(--color-surface) !important;
+  color: var(--color-foreground) !important;
+}
