@@ -7,7 +7,7 @@ export function HeroSection() {
     <section className="relative overflow-hidden border-b border-border/80 bg-neutral-950">
       <div className="absolute inset-0">
         <Image
-          src="/img/hero-img.jpeg"
+          src="/img/hero.jpeg"
           alt="Colección de prendas en perchero"
           fill
           priority
