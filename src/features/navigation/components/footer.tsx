@@ -1,5 +1,17 @@
 import Link from 'next/link'
+import { Instagram } from 'lucide-react'
+import {
+  INSTAGRAM_DISPLAY,
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_URL,
+} from '@/features/navigation/constants/external-links'
+import { WhatsAppIcon } from '@/features/navigation/components/whatsapp-icon'
 import { SITE_NAME, SITE_DESCRIPTION } from '@/shared/config/site'
+
+const socialLinkClass =
+  'inline-flex items-center gap-2 text-xs leading-[2.41] text-footer-muted underline-offset-4 transition-colors hover:text-footer-foreground'
 
 const NAV_LINKS = [
   { label: 'Explorar', href: '/productos' },
@@ -31,6 +43,30 @@ export function Footer() {
             <p className="max-w-sm text-xs leading-[2.41] text-footer-muted">
               {SITE_DESCRIPTION}
             </p>
+            <div className="flex flex-col gap-2">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Instagram @${INSTAGRAM_HANDLE}`}
+                className={socialLinkClass}
+              >
+                <Instagram className="size-4 shrink-0" aria-hidden />
+                {INSTAGRAM_DISPLAY}
+              </a>
+              {WHATSAPP_URL ? (
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`WhatsApp ${WHATSAPP_DISPLAY}`}
+                  className={socialLinkClass}
+                >
+                  <WhatsAppIcon className="size-4 shrink-0" />
+                  {WHATSAPP_DISPLAY}
+                </a>
+              ) : null}
+            </div>
           </div>
 
           <div className="space-y-4">
